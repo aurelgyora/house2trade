@@ -1,0 +1,38 @@
+<?php if(!defined('BASEPATH')) exit('No direct script access allowed');
+
+$route['default_controller'] = "users_interface";
+$route['404_override'] = '';
+
+/*************************************************** AJAX INTRERFACE ***********************************************/
+
+$route['login-in']				= "ajax_interface/login";
+$route['text-load/:any/from/:num']	= "ajax_interface/text_load";
+
+/*************************************************** USERS INTRERFACE ***********************************************/
+
+$route['login']				= "users_interface/login";
+$route['signup']			= "users_interface/signup";
+
+$route['search']			= "users_interface/search";
+$route['how-it-works']		= "users_interface/howItWorks";
+$route['trading-concepts'] 	= "users_interface/tradingConcepts";
+$route['about-us']			= "users_interface/aboutUs";
+$route['contacts']			= "users_interface/contacts";
+// ***************************************************************** footer
+$route['search-for-one']	= "users_interface/searchForOne";
+$route['advanced-search']	= "users_interface/advancedSearch";
+$route['lastest-offers']	= "users_interface/lastestOffers";
+$route['properties-for-sale']= "users_interface/propertiesForSale";
+$route['company']			= "users_interface/company";
+$route['step-by-step']		= "users_interface/stepByStep";
+$route['virtual-tour']		= "users_interface/virtualTour";
+
+$route['logoff']			= "users_interface/logoff";
+
+/*************************************************** ADMIN INTRERFACE ***********************************************/
+
+$route['admin'] = "users_interface/login";
+$route['administrator/control-panel'] = "admin_interface/control_panel";
+$route['administrator/control-panel/pages'] = "admin_interface/control_pages";
+$route['administrator/control-panel/pages/:any'] = "admin_interface/control_pages";
+$route['administrator/control-panel/accounts'] = "admin_interface/control_accounts";
