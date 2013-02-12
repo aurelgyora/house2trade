@@ -34,7 +34,7 @@ class Users extends MY_Model{
 	
 	function auth_user($login,$password){
 		
-		$this->db->select('id,class,user_id,active');
+		$this->db->select('id,class,user_id,status');
 		$this->db->where('email',$login);
 		$this->db->where('password',md5($password));
 		$this->db->where('temporary_code','');

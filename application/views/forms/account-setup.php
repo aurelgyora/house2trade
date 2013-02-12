@@ -1,4 +1,4 @@
-<form action="/" id="account-setup" method="post" onsubmit="$('register_button').disabled = true">
+<form action="/" class="form-signup" id="account-setup" method="post" onsubmit="$('register_button').disabled = true">
 	<div class="grid_3">
 		<p>
 			<label>First Name</label>

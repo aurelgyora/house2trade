@@ -23,7 +23,7 @@ class Ajax_interface extends MY_Controller{
 			endfor;
 			if($dataval):
 				$user = $this->users->auth_user($dataval[0],$dataval[1]);
-				if($user && $user['active']):
+				if($user && $user['status']):
 					$statusval['status'] = TRUE;
 					$statusval['message'] = '';
 					$this->session->set_userdata(array('logon'=>md5($dataval[0]),'userid'=>$user['id']));
