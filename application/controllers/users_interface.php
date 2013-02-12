@@ -111,71 +111,21 @@ class Users_interface extends MY_Controller{
 		endif;
 	}
 	
-	public function activation_student(){
+	public function comfirm_registering(){
 		
-		$pagevar = array(
-			'languages'		=> $this->mdlanguages->visible_languages(),
-			'content'		=> 'Аккаунт успешно активирован!<br/>Для авторизации воспользуйтесь логином и паролем указаные при регистрации.',
-			'msgs'			=> $this->session->flashdata('msgs'),
-			'msgr'			=> $this->session->flashdata('msgr')
-		);
-		$user_id = $this->mdusers->user_exist('temporary_code',$this->uri->segment(4));
+		switch($this->uri->segment(2)):
+			case 'broker': $cabinetLink = 'broker/control-panel'; break;
+			case 'homeowner': $cabinetLink = 'homeowner/control-panel'; break;
+			default: show_404(); break;
+		endswitch;
+		$user_id = $this->users->user_exist('temporary_code',$this->uri->segment(4));
 		if($user_id):
-			$this->mdusers->update_field($user_id,'temporary_code','','users');
-			$this->mdusers->update_field($user_id,'active',1,'users');
+			$this->users->update_field($user_id,'temporary_code','','users');
+			$this->users->update_field($user_id,'status',1,'users');
+			redirect($cabinetLink);
 		else:
-			$pagevar['content'] = 'Указан не верный или устаревший код активации. Активация невозможна.';
+			redirect('signup');
 		endif;
-		$this->load->view("users_interface/registering/student-activation",$pagevar);
-	}
-	
-	public function activation_teacher(){
-		
-		$pagevar = array(
-			'languages'		=> $this->mdlanguages->visible_languages(),
-			'content'		=> 'Аккаунт успешно активирован!<br/>Для авторизации воспользуйтесь логином и паролем указаные при регистрации.',
-			'msgs'			=> $this->session->flashdata('msgs'),
-			'msgr'			=> $this->session->flashdata('msgr')
-		);
-		$user_id = $this->mdusers->user_exist('temporary_code',$this->uri->segment(4));
-		if($user_id):
-			$this->mdusers->update_field($user_id,'temporary_code','','users');
-			$this->mdusers->update_field($user_id,'active',1,'users');
-		else:
-			$pagevar['content'] = 'Указан не верный или устаревший код активации. Активация невозможна.';
-		endif;
-		$this->load->view("users_interface/registering/student-activation",$pagevar);
-	}
-	
-	public function register_successful_student(){
-		
-		if(!$this->session->flashdata('student_registering_flag')):
-			redirect('');
-		endif;
-		
-		$pagevar = array(
-			'languages'		=> $this->mdlanguages->visible_languages(),
-			'content'		=> 'Вы успешно зарегистрировались на International Ideas Art School в статусе студента.<br/>На Ваш Email выслано письмо. Подтвердите регистрацию!',
-			'msgs'			=> $this->session->flashdata('msgs'),
-			'msgr'			=> $this->session->flashdata('msgr')
-		);
-		$this->load->view("users_interface/registering/status-registering",$pagevar);
-	}
-	
-	public function register_successful_teacher(){
-		
-		if(!$this->session->flashdata('teacher_registering_flag')):
-			redirect('');
-		endif;
-		
-		$pagevar = array(
-			'languages'		=> $this->mdlanguages->visible_languages(),
-			'content'		=> 'Вы успешно зарегистрировались на International Ideas Art School в статусе преподавателя.<br/>На Ваш Email выслано письмо. Подтвердите регистрацию!',
-			'msgs'			=> $this->session->flashdata('msgs'),
-			'msgr'			=> $this->session->flashdata('msgr')
-		);
-		
-		$this->load->view("users_interface/registering/status-registering",$pagevar);
 	}
 	
 	/********************************************************************************************************************/

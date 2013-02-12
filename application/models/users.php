@@ -3,24 +3,21 @@
 class Users extends MY_Model{
 
 	var $id				= 0;
-	var $class			= 4;
+	var $class			= 2;
 	var $user_id		= 0;
 	var $email			= '';
-	var $photo			= '';
-	var $thumbnail		= '';
 	var $password		= '';
 	var $signdate		= '';
-	var $active			= 0;
 	var $temporary_code	= '';
-	var $language		= 1;
 
 	function __construct(){
 		parent::__construct();
+		$this->signdate = date("Y-m-d");
 	}
 	
 	function read_record($record_id,$table){
 		
-		$this->db->select('id,class,user_id,email,active,language');
+		$this->db->select('id,class,user_id,email,status');
 		$query = $this->db->get_where('users',array('id'=>$record_id),1,0);
 		$data = $query->result_array();
 		if($data) return $data[0];
@@ -31,30 +28,8 @@ class Users extends MY_Model{
 
 		$this->email 	= $data['email'];
 		$this->password	= md5($data['password']);
-		$this->signdate = date("Y-m-d");
-		
 		$this->db->insert('users',$this);
 		return $this->db->insert_id();
-	}
-	
-	function update_record($data){
-	
-		if(isset($data['photo'])):
-			$this->db->set('photo',$data['photo']);
-			$this->db->set('thumbnail',$data['thumbnail']);
-		endif;
-		$this->db->set('language',$data['language']);
-		$this->db->where('id',$data['id']);
-		$this->db->update('users');
-		return $this->db->affected_rows();
-	}
-	
-	function set_base_lang($language,$base_lang){
-
-		$this->db->set('language',$base_lang);
-		$this->db->where('language',$language);
-		$this->db->update('users');
-		return $this->db->affected_rows();
 	}
 	
 	function auth_user($login,$password){

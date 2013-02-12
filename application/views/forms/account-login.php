@@ -2,17 +2,18 @@
 	<div class="grid_3">
 		<p>
 			<label>Email</label>
-			<input class="valid-required FieldSend" id="login-email" data-trigger="focus" name="email" size="30" data-placement="right" role="tooltip" data-original-title="This field can not be blank" type="text">
+			<input class="valid-required FieldSend" id="login-email" name="email" size="30" <?=TOOLTIP_FIELD_BLANK;?> type="text">
 		</p>
 		<p>
 			<label>Password</label>
-			<input class="valid-required FieldSend" id="login-password" data-trigger="focus" name="password" size="30" data-placement="right" role="tooltip" data-original-title="This field can not be blank" type="password">
+			<input class="valid-required FieldSend" id="login-password" name="password" size="30" <?=TOOLTIP_FIELD_BLANK;?> type="password">
 		</p>
 	</div>
 	<div class="clear"></div>
+	<div id="block-message" class="grid_2"></div>
 	<div class="grid_7">
 		<p class="button-row">
-			<input class="btn-submit" id="login_button" data-trigger="click" data-placement="right" role="tooltip" data-original-title="" name="commit" type="submit" value="Submit Form">
+			<input class="btn-submit" id="login-button" name="commit" type="submit" value="Submit Form">
 		</p>
 	</div>
 	<div class="clear"> </div>

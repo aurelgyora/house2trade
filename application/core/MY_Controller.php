@@ -24,7 +24,7 @@ class MY_Controller extends CI_Controller{
 					$this->user['class'] = $userinfo['class'];
 					$this->user['class_translit'] = $this->usersclass->read_field($this->user['class'],'users_class','translit');
 					switch($this->user['class']):
-						case 1: $this->user['name'] = 'Администратор'; break;
+						case 1: $this->user['name'] = 'Administrator'; break;
 						case 2: $this->user['name'] = $this->institutions->read_field($userinfo['user_id'],'institutions','name'); break;
 						case 3: $this->user['name'] = $this->students->read_name($userinfo['user_id'],'teachers'); break;
 						case 4: $this->user['name'] = $this->students->read_name($userinfo['user_id'],'students'); break;
@@ -71,6 +71,7 @@ class MY_Controller extends CI_Controller{
 	
 	public function send_mail($to,$from_mail,$from_name,$subject,$text){
 		
+		$this->load->library('email');
 		$this->email->clear(TRUE);
 		$config['smtp_host'] = 'localhost';
 		$config['charset'] = 'utf-8';

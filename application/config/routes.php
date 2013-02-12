@@ -6,6 +6,7 @@ $route['404_override'] = '';
 /*************************************************** AJAX INTRERFACE ***********************************************/
 
 $route['login-in']				= "ajax_interface/login";
+$route['signup-broker']			= "ajax_interface/signup_broker";
 $route['text-load/:any/from/:num']	= "ajax_interface/text_load";
 
 /*************************************************** USERS INTRERFACE ***********************************************/
@@ -28,6 +29,7 @@ $route['step-by-step']		= "users_interface/stepByStep";
 $route['virtual-tour']		= "users_interface/virtualTour";
 
 $route['logoff']			= "users_interface/logoff";
+$route['comfirm-registering/:any/activation-code/:any'] = "users_interface/comfirm_registering";
 
 /*************************************************** ADMIN INTRERFACE ***********************************************/
 

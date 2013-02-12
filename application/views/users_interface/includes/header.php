@@ -2,11 +2,26 @@
 	<div class="container_12">
 		<a class="logo grid_4 none" href="#"><img src="<?=site_url('img/logo.png');?>" alt="House2Trade" /></a>
 		<nav class="grid_8">
+		<?php if($this->loginstatus):?>
 			<ul class="auth">
-					<li><?=anchor('login','Log in')?></li>
-					<li>&ndash; or &ndash;</li>
-					<li><?=anchor('signup','Sign up')?></li>
-				</ul>
+				<li><?=$this->user['name'];?></li>
+			<?php $cabinetLink = '';
+			switch($this->user['class']):
+				case 1: $cabinetLink = 'administrator/control-panel'; break;
+				case 2: $cabinetLink = ''; break;
+				case 3: $cabinetLink = ''; break;
+			endswitch;?>
+				<li><?=anchor($cabinetLink,'Cabinet')?></li>
+				<li>&ndash; or &ndash;</li>
+				<li><?=anchor('logoff','Log Off')?></li>
+			</ul>
+		<?php else:?>
+			<ul class="auth">
+				<li><?=anchor('login','Log in')?></li>
+				<li>&ndash; or &ndash;</li>
+				<li><?=anchor('signup','Sign up')?></li>
+			</ul>
+		<?php endif;?>
 			<ul class="main-nav">
 				<li><?=anchor('','Home');?></li>
 				<li><?=anchor('search','Search');?></li>

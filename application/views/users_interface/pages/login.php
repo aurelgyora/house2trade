@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
 <?php $this->load->view("users_interface/includes/head");?>
-<link rel="stylesheet" href="<?=site_url('css/bootstrap.css');?>" />
+<link rel="stylesheet" href="<?=site_url('css/tooltip.css');?>" />
 </head>
 <body>
 	<?php $this->load->view("users_interface/includes/header");?>
