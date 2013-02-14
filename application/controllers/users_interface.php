@@ -122,6 +122,7 @@ class Users_interface extends MY_Controller{
 		if($user_id):
 			$this->users->update_field($user_id,'temporary_code','','users');
 			$this->users->update_field($user_id,'status',1,'users');
+			$this->session->set_userdata(array('logon'=>md5($this->users->read_field($user_id,'users','email')),'userid'=>$user_id));
 			redirect($cabinetLink);
 		else:
 			redirect('signup');

@@ -7,6 +7,8 @@
 	<?php $this->load->view("admin_interface/includes/header");?>
 	<div class="container">
 		<div class="row">
+			<hr/>
+			<?php $this->load->view("admin_interface/includes/rightbar");?>
 			<div class="span9">
 				<ul class="thumbnails">
 					<li class="span2">
@@ -29,7 +31,6 @@
 					<div class="clear"></div>
 				</ul>
 			</div>
-		<?php $this->load->view("admin_interface/includes/rightbar");?>
 		</div>
 	</div>
 	<?php $this->load->view("admin_interface/includes/scripts");?>

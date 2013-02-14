@@ -3,7 +3,6 @@
 class Brokers extends MY_Model{
 
 	var $id		= 0;
-	var $user_id= 0;
 	var $fname	= '';
 	var $lname	= '';
 	var $phone	= '';
@@ -17,7 +16,6 @@ class Brokers extends MY_Model{
 	
 	function insert_record($data){
 
-		$this->user_id 	= $data['user_id'];
 		$this->fname 	= $data['fname'];
 		$this->lname 	= $data['lname'];
 		$this->phone 	= $data['phone'];

@@ -67,17 +67,18 @@ class Ajax_interface extends MY_Controller{
 					if($dataval['user_id']):
 						$this->load->model('brokers');
 						$brokerID = $this->brokers->insert_record($dataval);
+						$this->users->update_field($dataval['user_id'],'user_id',$brokerID,'users');
 						$this->session->set_userdata(array('logon'=>md5($dataval['email']),'userid'=>$dataval['user_id']));
 						$this->load->helper('string');
 						$activate_code = random_string('alpha',25);
 						$this->users->update_field($dataval['user_id'],'temporary_code',$activate_code,'users');
 						ob_start();?>
 <p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
-<p>Thank you for registering in Hause2Trade.<br/>Please activate your account the link below:<br/>
+<p>Thank you for registering at Hause2Trade.<br/>Please click the link below to activate your account:<br/>
 <?=anchor('comfirm-registering/broker/activation-code/'.$activate_code,base_url().'comfirm-registering/broker/activation-code/'.$activate_code,array('target'=>'_blank'));?></p><?
 $mailtext = ob_get_clean();
 						$this->send_mail($dataval['email'],'robot@house2trade.com','Hause2Trade','Register to Hause2Trade',$mailtext);
-						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> You are send a latter to confirm registration';
+						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to your email';
 						$statusval['status'] = TRUE;
 					endif;
 				else:
@@ -87,4 +88,70 @@ $mailtext = ob_get_clean();
 		endif;
 		echo json_encode($statusval);
 	}
+
+	function signup_properties(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$statusval = array('status'=>FALSE,'message'=>'Signup is impossible');
+		$data = trim($this->input->post('postdata'));
+		if($data):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$dataval[$dataid[0]] = trim($dataid[1]);
+				if($dataval[$dataid[0]] == ''):
+					$dataval = array();
+					break;
+				endif;
+			endfor;
+			if($dataval):
+				if(!$this->users->user_exist('email',$dataval['email'])):
+					$dataval['user_id'] = $this->users->insert_record($dataval);
+					if($dataval['user_id']):
+						$this->load->model('properties');
+						$propertiesID = $this->properties->insert_record($dataval);
+						$this->users->update_field($dataval['user_id'],'user_id',$propertiesID,'users');
+						$this->users->update_field($dataval['user_id'],'class',3,'users');
+						$this->load->helper('string');
+						$activate_code = random_string('alpha',25);
+						$this->users->update_field($dataval['user_id'],'temporary_code',$activate_code,'users');
+						ob_start();?>
+<p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
+<p>Thank you for registering at Hause2Trade.<br/>Please click the link below to activate your account:<br/>
+<?=anchor('comfirm-registering/homeowner/activation-code/'.$activate_code,base_url().'comfirm-registering/broker/activation-code/'.$activate_code,array('target'=>'_blank'));?></p><?
+$mailtext = ob_get_clean();
+						$this->send_mail($dataval['email'],'robot@house2trade.com','Hause2Trade','Register to Hause2Trade',$mailtext);
+						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
+						$statusval['status'] = TRUE;
+					endif;
+				else:
+					$statusval['message'] = "Email already exist";
+				endif;
+			endif;
+		endif;
+		echo json_encode($statusval);
+	}
+	
+	function change_user_status(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$statusval = array('status'=>FALSE);
+		$data = trim($this->input->post('postdata'));
+		if($data):
+			$currentStatus = $this->users->read_field($data,'users','status');
+			if(!$currentStatus):
+				$this->users->update_field($data,'status',1,'users');
+				$statusval['status'] = TRUE;
+			else:
+				$this->users->update_field($data,'status',0,'users');
+				$statusval['status'] = FALSE;
+			endif;
+		endif;
+		echo json_encode($statusval);
+	}
+
 }

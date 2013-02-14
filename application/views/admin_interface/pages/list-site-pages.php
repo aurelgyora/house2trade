@@ -8,6 +8,8 @@
 	<?php $this->load->view("admin_interface/includes/header");?>
 	<div class="container">
 		<div class="row">
+			<hr/>
+			<?php $this->load->view("admin_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
 					<div class="navbar-inner">
@@ -45,7 +47,6 @@
 				</table>
 			<?php endif;?>
 			</div>
-		<?php $this->load->view("admin_interface/includes/rightbar");?>
 		</div>
 	</div>
 	<?php $this->load->view("admin_interface/includes/scripts");?>

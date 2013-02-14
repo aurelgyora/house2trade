@@ -25,9 +25,8 @@ class MY_Controller extends CI_Controller{
 					$this->user['class_translit'] = $this->usersclass->read_field($this->user['class'],'users_class','translit');
 					switch($this->user['class']):
 						case 1: $this->user['name'] = 'Administrator'; break;
-						case 2: $this->user['name'] = $this->institutions->read_field($userinfo['user_id'],'institutions','name'); break;
-						case 3: $this->user['name'] = $this->students->read_name($userinfo['user_id'],'teachers'); break;
-						case 4: $this->user['name'] = $this->students->read_name($userinfo['user_id'],'students'); break;
+						case 2: $this->load->model('brokers');$this->user['name'] = $this->brokers->read_name($userinfo['user_id'],'brokers'); break;
+						case 3: $this->load->model('properties');$this->user['name'] = $this->properties->read_name($userinfo['user_id'],'properties'); break;
 					endswitch;
 					$this->loginstatus = TRUE;
 				endif;
@@ -41,6 +40,7 @@ class MY_Controller extends CI_Controller{
 	
 	public function pagination($url,$uri_segment,$total_rows,$per_page){
 		
+		$this->load->library('pagination');
 		$config['base_url'] 		= base_url()."$url/from/";
 		$config['uri_segment'] 		= $uri_segment;
 		$config['total_rows'] 		= $total_rows;
@@ -192,7 +192,7 @@ class MY_Controller extends CI_Controller{
 	public function setActiveUsers($usersList,$field = 'id'){
 		
 		$list = NULL;
-		$session_data = $this->mdusers->activeUserData();
+		$session_data = $this->users->activeUserData();
 		for($i=0;$i<count($session_data);$i++):
 			preg_match("/\"userid\"\;s\:[0-9]+\:\"([0-9]+)\"/i",$session_data[$i]['user_data'], $userid);
 			if(isset($userid[1])):
@@ -214,9 +214,8 @@ class MY_Controller extends CI_Controller{
 		
 		switch($class):
 		 	case 1: $info['name'] = 'Администратор'; return $info; break;
-			case 2: return $info = $this->mdinstitutions->read_record($user_id,'institutions');break;
-		 	case 3: return $info = $this->mdteachers->read_record($user_id,'teachers');break;
-			case 4: return $info = $this->mdstudents->read_record($user_id,'students');break;
+			case 2: $this->load->model('brokers'); return $info = $this->brokers->read_record($user_id,'brokers');break;
+		 	case 3: $this->load->model('properties'); return $info = $this->properties->read_record($user_id,'properties');break;
 			default : FALSE; break;
 		endswitch;
 	}

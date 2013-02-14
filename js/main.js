@@ -47,7 +47,8 @@ mt.ShowCut = function(element,event){
 $(function(){
 	$.fn.exists = function(){return $(this).length;}
 	$.fn.emptyValue = function(){if($(this).val() == ''){return true;}else{return false;}}
-	$(".digital").keypress(function(e){if(e.which!=8 && e.which!=46 && e.which!=0 && (e.which<48 || e.which>57)){return false;}});
+	$(".digital").keypress(function(e){if(e.which!=8 && e.which!=0 && (e.which<48 || e.which>57)){return false;}});
+	$(".numeric-float").keypress(function(e){if(e.which == 47){return false}; if(e.which!=8 && e.which!=46 && e.which!=0 && (e.which<46 || e.which>57)){return false}});
 	$(".none").click(function(event){event.preventDefault();});
 	$(".advanced").click(function(event){mt.ShowCut(this,event);});
 });

@@ -8,8 +8,8 @@
 			<?php $cabinetLink = '';
 			switch($this->user['class']):
 				case 1: $cabinetLink = 'administrator/control-panel'; break;
-				case 2: $cabinetLink = ''; break;
-				case 3: $cabinetLink = ''; break;
+				case 2: $cabinetLink = 'broker/control-panel'; break;
+				case 3: $cabinetLink = 'homeowner/control-panel'; break;
 			endswitch;?>
 				<li><?=anchor($cabinetLink,'Cabinet')?></li>
 				<li>&ndash; or &ndash;</li>

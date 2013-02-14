@@ -6,6 +6,16 @@ class MY_Model extends CI_Model{
 		parent::__construct();
 	}
 	
+	function activeUserData(){
+	
+		$last_activity = strtotime("now")-1800; //30 минут не активен
+		$this->db->select('user_data');
+		$query = $this->db->get_where('sessions',array('last_activity >='=>$last_activity));
+		$data = $query->result_array();
+		if($data) return $data;
+		return FALSE;
+	}
+	
 	function read_record($record_id,$table){
 		
 		$this->db->where('id',$record_id);
@@ -54,6 +64,16 @@ class MY_Model extends CI_Model{
 		$data = $query->result_array();
 		if(isset($data[0])) return $data[0][$field];
 		return FALSE;
+	}
+	
+	function read_name($id,$table){
+
+		$this->db->select('fname,lname');
+		$this->db->where('id',$id);
+		$query = $this->db->get($table,1);
+		$data = $query->result_array();
+		if(isset($data[0])) return $data[0]['fname'].' '.$data[0]['lname'];
+		return '';
 	}
 	
 	function read_field_translit($translit,$field,$table){

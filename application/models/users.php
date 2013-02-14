@@ -17,7 +17,7 @@ class Users extends MY_Model{
 	
 	function read_record($record_id,$table){
 		
-		$this->db->select('id,class,user_id,email,status');
+		$this->db->select('id,class,user_id,email,status,signdate');
 		$query = $this->db->get_where('users',array('id'=>$record_id),1,0);
 		$data = $query->result_array();
 		if($data) return $data[0];
@@ -64,15 +64,16 @@ class Users extends MY_Model{
 	}
 	
 	function classListByPages($class,$count,$from){
-	
-		$this->db->where('class',$class);
-		$this->db->order_by('signdate','DESC');
-		$this->db->order_by('id','DESC');
-		$this->db->limit($count,$from);
-		$query = $this->db->get('users');
+		
+		if($class == 2):
+			$query = "SELECT users.id AS uid,users.user_id,users.email,users.signdate,users.status,brokers.* FROM users INNER JOIN brokers ON users.user_id = brokers.id WHERE users.class = $class ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
+		else:
+			$query = "SELECT users.id AS uid,users.user_id,users.email,users.signdate,users.status,properties.* FROM users INNER JOIN properties ON users.user_id = properties.id WHERE users.class = $class ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
+		endif;
+		$query = $this->db->query($query);
 		$data = $query->result_array();
 		if(count($data)) return $data;
-		return NULL;
+		return FALSE;
 	}
 
 	function countClassList($class){

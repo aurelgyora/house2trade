@@ -10,4 +10,15 @@
 			return '';
 		endif;
 	}
+	
+	function getStatus($status){
+		
+		$html = '<div class="btn-group" data-toggle="buttons-radio">';
+		if($status):
+			$html .= '<button type="button" class="user-status btn btn-mini btn-success active">YES</button><button type="button" class="user-status btn btn-mini">NO</button>';
+		else:
+			$html .= '<button type="button" class="user-status btn btn-mini">YES</button><button type="button" class="user-status btn btn-mini btn-danger active">NO</button>';
+		endif;
+		return $html .= '</div>';
+	}
 ?>
