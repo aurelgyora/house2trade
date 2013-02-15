@@ -44,6 +44,7 @@ mt.ShowCut = function(element,event){
 	event.preventDefault();
 	$(element).next('cut').fadeIn('slow');$(element).remove();
 }
+mt.minLength = function(string,Len){if(string != ''){if(string.length < Len){return false}}return true}
 $(function(){
 	$.fn.exists = function(){return $(this).length;}
 	$.fn.emptyValue = function(){if($(this).val() == ''){return true;}else{return false;}}

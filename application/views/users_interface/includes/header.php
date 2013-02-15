@@ -1,6 +1,6 @@
 <header>
 	<div class="container_12">
-		<a class="logo grid_4 none" href="#"><img src="<?=site_url('img/logo.png');?>" alt="House2Trade" /></a>
+		<a class="logo grid_4" href="<?=site_url();?>"><img src="<?=site_url('img/logo.png');?>" alt="House2Trade" /></a>
 		<nav class="grid_8">
 		<?php if($this->loginstatus):?>
 			<ul class="auth">
@@ -41,7 +41,7 @@
 					The new advanced tools for Real Estate professionals will assist you at every step and help you to
 					find the best proposals. Our patented engine will help you to find the best match.
 				</p>
-				<a href="<?=site_url('');?>" class="btn-submit">Sign up today. <span class="btn-comment">It's free.</span></a>
+				<a href="<?=site_url('signup');?>" class="btn-submit">Sign up today. <span class="btn-comment">It's free.</span></a>
 			</div>
 		</div>
 	<?php endif;?>

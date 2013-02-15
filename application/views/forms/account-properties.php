@@ -1,5 +1,5 @@
 <?=form_open($this->uri->uri_string(),array('class'=>'form-horizontal')); ?>
-	<legend>Registration HomeOwner</legend>
+	<legend>HomeOwner data</legend>
 	<div class="span4">
 		<fieldset>
 			<div class="control-group">
@@ -21,6 +21,7 @@
 		</fieldset>
 	</div>
 	<div class="clear"></div>
+	<legend>Property data</legend>
 	<div class="span4">
 		<fieldset>
 			<div class="control-group">
@@ -115,7 +116,7 @@
 	</div>
 	<div class="clear"></div>
 	<div class="form-actions">
-		<button class="btn btn-success pull-right" type="submit" id="register-properties" name="submit" value="send">Add properties</button>
+		<button class="btn btn-success pull-right" type="submit" id="register-properties" name="submit" value="send">Register</button>
 		<span id="block-message"></span>
 	</div>
 <?= form_close(); ?>

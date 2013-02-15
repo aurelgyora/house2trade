@@ -10,9 +10,12 @@
 			<hr/>
 			<?php $this->load->view("broker_interface/includes/rightbar");?>
 			<div class="span9">
-				<div class="pull-right muted">
-					<a href="<?=site_url('broker/register-properties');?>" class="btn btn-mini set-operation" type="button">Add HomeOwner</a>
+				<div class="navbar">
+					<div class="navbar-inner">
+						<a href="<?=site_url('broker/register-properties');?>" class="btn btn-link btn-small pull-right" type="button">Add new Property</a>
+					</div>
 				</div>
+				<div class="clear"></div>
 			<?php if($properties):?>
 				<table class="table table-hover">
 					<thead>

@@ -122,6 +122,19 @@ class Users_interface extends MY_Controller{
 		if($user_id):
 			$this->users->update_field($user_id,'temporary_code','','users');
 			$this->users->update_field($user_id,'status',1,'users');
+			$user = $this->users->read_record($user_id,'users');
+			switch($user['class']):
+				case 2: $this->load->model('brokers');$user['name'] = $this->brokers->read_name($user['user_id'],'brokers'); break;
+				case 3: $this->load->model('properties');$user['name'] = $this->properties->read_name($user['user_id'],'properties'); break;
+			endswitch;
+			ob_start();?>
+<p>Hello <em><?=$user['name'];?></em>,</p>
+<p>Your account has activated successfully!<br/>
+To log in to your personal account, use the username and password specified during registration.<br/>
+<br/>Please click on the link below to go to your account:<br/>
+<?=anchor($cabinetLink,base_url().$cabinetLink,array('target'=>'_blank'));?></p><?
+			$mailtext = ob_get_clean();
+			$this->send_mail($user['email'],'robot@house2trade.com','House2Trade','Activated successfully',$mailtext);
 			$this->session->set_userdata(array('logon'=>md5($this->users->read_field($user_id,'users','email')),'userid'=>$user_id));
 			redirect($cabinetLink);
 		else:
