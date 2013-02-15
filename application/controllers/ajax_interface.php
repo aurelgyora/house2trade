@@ -113,8 +113,11 @@ $mailtext = ob_get_clean();
 <p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
 <p>Your account has been created at Hause2Trade !<br/>
 To log in to your personal account, use the username and password specified during registration.<br/>
-<br/>Please click on the link below to go to your account:<br/>
-<?=anchor($cabinetLink,base_url().$cabinetLink,array('target'=>'_blank'));?></p><?
+Your login: <?=$dataval['email'];?><br/>
+Your password: <?=$dataval['password'];?><br/>
+<strong>Attention! </strong>Do not forget to change your password!<br/>
+<br/>Please click on the link below to go to your profile:<br/>
+<?=anchor('homeowner/profile',base_url().'homeowner/profile',array('target'=>'_blank'));?></p><?
 $mailtext = ob_get_clean();
 						$this->send_mail($dataval['email'],'robot@house2trade.com','Hause2Trade','Register to Hause2Trade',$mailtext);
 						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';

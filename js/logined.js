@@ -18,7 +18,6 @@
 		$(".valid-required").tooltip("destroy");$("#block-message").html('');
 		$(".valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
 		if(!err && !mt.isValidEmailAddress(user_email)){$("#login-email").attr('data-original-title','Incorrect Email Address').tooltip('show');err = true;}
-		if(!err && !mt.minLength(user_password,6)){$("#login-password").attr('data-original-title','length of least 6 characters').tooltip('show');err = true;}
 		if(!err){
 			var postdata = mt.formSerialize($(".FieldSend"));
 			$.post(mt.baseURL+"signup-properties",{'postdata':postdata},
