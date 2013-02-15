@@ -60,7 +60,7 @@ class Properties extends MY_Model{
 		
 		$query = $this->db->get_where('properties',array('broker_id'=>$broker),1);
 		$data = $query->result_array();
-		if($data) return $data[0];
+		if($data) return $data;
 		return NULL;
 	}
 }

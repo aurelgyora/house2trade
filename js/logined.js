@@ -11,7 +11,6 @@
 	$(".set-operation").click(function(event){$.cookie('backpath',mt.currentURL,{path:"/"});});
 	$("#saveItem").click(function(event){$.cookie('operation',true,{path:"/"});});
 	$("#cancel").click(function(event){event.preventDefault();$.cookie('operation',null);mt.redirect($.cookie('backpath'))});
-	$(".valid-required").tooltip();
 	$("#register-properties").click(function(event){
 		event.preventDefault();
 		var err = false;
@@ -25,10 +24,29 @@
 				function(data){
 					$(".valid-required").tooltip("destroy");
 					$("#block-message").html(data.message);
-					if(data.status){$("#register-properties").remove();$(".valid-required").val('');}
+					if(data.status){$("#register-properties").remove();$(".FieldSend").val('');}
 				},"json");
 		}
 	})
+	
+	$("#save-profile").click(function(event){
+		event.preventDefault();
+		var err = false;
+		var user_password = $("#login-password").val();
+		var user_confirm_password = $("#comfirm-password").val();
+		$(".valid-required").tooltip("destroy");$("#block-message").html('');
+		$(".valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
+		if(!mt.matches_parameters(user_password,user_confirm_password)){$("#comfirm-password").attr('data-original-title','Passwords do not match').tooltip('show');return false;}
+		if(!err){
+				var postdata = mt.formSerialize($(".FieldSend"));
+				$.post(mt.baseURL+"save-profile",{'postdata':postdata},
+					function(data){
+						$("#block-message").html(data.message);
+						if(data.status){$("#login-password").val('');$("#comfirm-password").val('');}
+					},"json");
+			}
+	});
+	
 	$(".user-status").click(function(event){
 		if($(this).hasClass("active")){return false;}
 		var element = this;
@@ -40,4 +58,5 @@
 				},"json");
 		
 	})
+	$(".valid-required").change(function(){$(this).tooltip("destroy");});
 })(window.jQuery);

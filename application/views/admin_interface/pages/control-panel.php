@@ -23,7 +23,7 @@
 				<ul class="thumbnails">
 					<li class="span2">
 						<div class="thumbnail">
-							<?=anchor('administrator/control-panel/accounts','<img src="'.site_url('img/thumb.png').'" alt="" />',array('class'=>'thumbnail'));?>
+							<?=anchor('administrator/broker/accounts','<img src="'.site_url('img/thumb.png').'" alt="" />',array('class'=>'thumbnail'));?>
 							<h6>Section &laquo;Accounts&raquo;</h6>
 						</div>
 					</li>

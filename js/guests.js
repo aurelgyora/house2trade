@@ -17,7 +17,6 @@
 	});
 	$("#user-terms-of-service").click(function(){if($(this).is(":checked")){$("#register-button").removeAttr('disabled').css('background','#FFCC1D');}else{$("#register-button").attr('disabled','disabled').css('background','#C7C7C7');}$(".valid-required").tooltip("hide");$("#block-message").html('');})
 	$("#user-subcribe").click(function(){if($(this).is(":checked")){$(this).val(1);}else{$(this).val(0);}})
-	$(".valid-required").tooltip();
 	$("#register-button").click(function(event){
 		event.preventDefault();
 		if($("#user-terms-of-service").is(":checked")){
@@ -33,10 +32,10 @@
 					function(data){
 						$(".valid-required").tooltip("destroy");
 						$("#block-message").html(data.message);
-						if(data.status){$("#register-button").remove();$(".valid-required").val('');}
+						if(data.status){$("#register-button").remove();$(".FieldSend").val('');}
 					},"json");
 			}
 		}
 	});
-	
+	$(".valid-required").change(function(){$(this).tooltip("destroy");});
 })(window.jQuery);

@@ -6,7 +6,7 @@
 			<li num="accounts"><?=anchor('administrator/broker/accounts','Accounts');?></li>
 			<li class="nav-header">Tools</li>
 			<li num="control-panel"><?=anchor('administrator/control-panel','Control Panel');?></li>
-			<li num="profile"><?=anchor('administrator/control-panel/profile','Profile');?></li>
+			<li num="profile"><?=anchor('administrator/profile','Profile');?></li>
 			<li><?=anchor('logoff','Log Off');?></li>
 		</ul>
 	</div>

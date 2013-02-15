@@ -9,6 +9,7 @@ $route['login-in']				= "ajax_interface/login";
 $route['signup-broker']			= "ajax_interface/signup_broker";
 $route['signup-properties']		= "ajax_interface/signup_properties";
 $route['change-user-status']	= "ajax_interface/change_user_status";
+$route['save-profile']			= "ajax_interface/save_profile";
 $route['text-load/:any/from/:num']	= "ajax_interface/text_load";
 
 /*************************************************** USERS INTRERFACE ***********************************************/
@@ -55,3 +56,4 @@ $route['administrator/:any/accounts/from'] = "admin_interface/control_accounts";
 $route['administrator/:any/accounts/from/:num'] = "admin_interface/control_accounts";
 
 $route['administrator/account/:num'] = "admin_interface/account_profile";
+$route['administrator/profile'] = "admin_interface/profile";

@@ -1,36 +1,55 @@
 <form action="/" class="form-signup" id="account-setup" method="post" onsubmit="$('register_button').disabled = true">
 	<div class="grid_3">
 		<p>
-			<label>First Name</label>
+			<label>First Name*</label>
 			<input class="valid-required FieldSend" name="fname" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
 		<p>
-			<label>Last Name</label>
+			<label>Last Name*</label>
 			<input class="valid-required FieldSend" name="lname" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
 		<p>
-			<label>Phone</label>
-			<input class="valid-required FieldSend" name="phone" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+			<label>Email*</label>
+			<input id="login-email" class="valid-required FieldSend" name="email" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
-		<p id="license_id">
-			<label>License ID</label>
-			<input class="valid-required FieldSend" name="license" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+		<p>
+			<label>Password*</label>
+			<input id="login-password" class="valid-required FieldSend" name="password" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="password">
+		</p>
+		<p>
+			<label>Type password again*</label>
+			<input id="login-password-confirm" class="valid-required FieldSend" name="confirm" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="password">
+		</p>
+		<p>
+			<label>His phone number*</label>
+			<input class="valid-required FieldSend" name="phone" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
 	</div>
 	<div class="grid_3">
 		<p>
-			<label>Email</label>
-			<input id="login-email" class="valid-required FieldSend" name="email" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+			<label>Company name*</label>
+			<input class="valid-required FieldSend" name="company" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
 		<p>
-			<label>Password</label>
-			<input id="login-password" class="valid-required FieldSend" name="password" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="password">
+			<label>Company address*</label>
+			<input class="valid-required FieldSend" name="address" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
 		<p>
-			<label>Type password again</label>
-			<input id="login-password-confirm" class="valid-required FieldSend" name="confirm" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="password">
+			<label>Company phone*</label>
+			<input class="valid-required FieldSend" name="cphone" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
-		
+		<p>
+			<label>Company email*</label>
+			<input class="valid-required FieldSend" name="cmail" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+		</p>
+		<p>
+			<label>Company website</label>
+			<input class="FieldSend" name="website" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+		</p>
+		<p id="license_id">
+			<label>License ID</label>
+			<input class="FieldSend" name="license" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+		</p>
 	</div>
 	<div class="clear"></div>
 	<div class="grid_7">

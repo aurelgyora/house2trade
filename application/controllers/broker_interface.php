@@ -18,7 +18,6 @@ class Broker_interface extends MY_Controller{
 		$pagevar = array(
 			'properties' => $this->properties->read_records($this->user['uid'])
 		);
-		
 		$this->load->view("broker_interface/pages/control-panel",$pagevar);
 	}
 	
@@ -29,35 +28,9 @@ class Broker_interface extends MY_Controller{
 	
 	public function profile(){
 		
-		if($this->input->post('submit')):
-			unset($_POST['submit']);
-			$this->form_validation->set_rules('language',' ','required|trim');
-			$this->form_validation->set_rules('password',' ','trim');
-			$this->form_validation->set_rules('confirm',' ','matches[password]|trim');
-			if($this->form_validation->run()):
-				$update = $this->input->post();
-				if($_FILES['photo']['error'] != 4):
-					$this->image_manupulation($_FILES['photo']['tmp_name'],'width',TRUE,200,200);
-					$update['photo'] = file_get_contents($_FILES['photo']['tmp_name']);
-					$this->image_manupulation($_FILES['photo']['tmp_name'],'width',TRUE,64,64);
-					$update['thumbnail'] = file_get_contents($_FILES['photo']['tmp_name']);
-				endif;
-				$update['id'] = $this->user['uid'];
-				$resurl = $this->mdusers->update_record($update);
-				if($resurl):
-					$this->session->set_userdata('msgs','Профиль сохранен');
-				endif;
-				redirect($this->uri->uri_string());
-			else:
-				$this->session->set_userdata('msgr','Ошибка при заполнении полей');
-			endif;
-		endif;
-		$pagevar = array(
-			'profile' => $this->users->read_record($this->user['uid'],'users'),
-			'msgs' => $this->session->userdata('msgs'),
-			'msgr' => $this->session->userdata('msgr')
-		);
-		$this->session->unset_userdata(array('msgr'=>'','msgs'=>''));
+		$this->load->model('brokers');
+		$pagevar = array('profile' => $this->users->read_record($this->user['uid'],'users'));
+		$pagevar['profile']['info'] = $this->brokers->read_record($pagevar['profile']['user_id'],'brokers');
 		$this->load->view("broker_interface/pages/profile",$pagevar);
 	}
 	
@@ -86,63 +59,8 @@ class Broker_interface extends MY_Controller{
 	
 	public function account_profile(){
 		
-		if($this->input->post('submit')):
-			unset($_POST['submit']);
-			if($_POST['class'] > 1):
-				$this->form_validation->set_rules('name',' ','required|trim|xss_clean');
-				$this->form_validation->set_rules('address',' ','trim|xss_clean');
-				$this->form_validation->set_rules('contacts',' ','trim|xss_clean');
-			endif;
-			if($_POST['class'] == 2):
-				$this->form_validation->set_rules('fullname',' ','required|trim|xss_clean');
-				$this->form_validation->set_rules('note',' ','required|trim|xss_clean');
-			endif;
-			$this->form_validation->set_rules('language',' ','required|trim');
-			$this->form_validation->set_rules('password',' ','trim');
-			$this->form_validation->set_rules('confirm',' ','matches[password]|trim');
-			if($this->form_validation->run()):
-				$update = $this->input->post();
-				if($_FILES['photo']['error'] != 4):
-					$this->image_manupulation($_FILES['photo']['tmp_name'],'width',TRUE,200,200);
-					$update['photo'] = file_get_contents($_FILES['photo']['tmp_name']);
-					$this->image_manupulation($_FILES['photo']['tmp_name'],'width',TRUE,64,64);
-					$update['thumbnail'] = file_get_contents($_FILES['photo']['tmp_name']);
-				endif;
-				$update['id'] = $this->uri->segment(3);
-				$this->mdusers->update_record($update);
-				$update['user_id'] = $this->mdusers->read_field($update['id'],'users','user_id');
-				switch($update['class']):
-					case 2:$this->mdinstitutions->update_record($update); break;
-					case 3:$this->mdteachers->update_record($update); break;
-					case 4:$this->mdstudents->update_record($update); break;
-				endswitch;
-				if(!empty($update['password'])):
-					$this->mdusers->update_field($update['id'],'password',md5($update['password']),'users');
-				endif;
-			/************************ Settings *************************/
-			
-			if(isset($update['settings'])):
-				if(isset($update['settings']['active'])):
-					$this->mdusers->update_field($update['id'],'active',1,'users');
-					$this->send_notification(2,$update['id']);
-				endif;
-			endif;
-			
-			/********************** End settings ***********************/
-				
-				$this->session->set_userdata('msgs','Профиль сохраненен!');
-				redirect(current_url());
-			else:
-				$this->session->set_userdata('msgr','Ошибка при заполнении полей');
-			endif;
-		endif;
-		$pagevar = array(
-			'languages' => $this->mdlanguages->visible_languages(),
-			'profile' => $this->mdusers->read_record($this->uri->segment(3),'users'),
-			'msgs' => $this->session->userdata('msgs'),
-			'msgr' => $this->session->userdata('msgr')
-		);
-		$this->session->unset_userdata(array('msgr'=>'','msgs'=>''));
+		
+		$pagevar = array('profile' => $this->users->read_record($this->uri->segment(3),'users'));
 		$pagevar['profile']['info'] = $this->account_information($pagevar['profile']['user_id'],$pagevar['profile']['class']);
 		$this->load->view("admin_interface/lists/users/account-profile",$pagevar);
 	}

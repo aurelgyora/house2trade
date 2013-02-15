@@ -26,8 +26,8 @@
 					<thead>
 						<tr>
 							<th class="span1">№</th>
-							<th class="span2">Name</th>
-							<th class="span2">Email</th>
+							<th class="span3">Name</th>
+							<th class="span3">Email</th>
 							<th class="span2">Status</th>
 							<th class="span2">SignUp date</th>
 							<th>&nbsp;</th>

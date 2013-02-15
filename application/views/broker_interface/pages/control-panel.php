@@ -15,22 +15,20 @@
 				</div>
 			<?php if($properties):?>
 				<table class="table table-hover">
-					<caption>Pages list</caption>
 					<thead>
 						<tr>
-							<th class="span3">ID</th>
-							<th class="span5">address1</th>
-							<th class="span1">address2</th>
-							<th class="span1">emil</th>
+							<th class="span1">ID</th>
+							<th class="span3">Name</th>
+							<th class="span3">address1</th>
+							<th class="span1"></th>
 						</tr>
 					</thead>
 					<tbody>
 				<?php for($i=0;$i<count($properties);$i++):?>
 					<tr>
 						<td><?=$properties[$i]['id']?></td>
+						<td><?=$properties[$i]['fname'].' '.$properties[$i]['lname']?></td>
 						<td><?=$properties[$i]['address1']?></td>
-						<td><?=$properties[$i]['address2']?></td>
-						<td><?=$properties[$i]['emil']?></td>
 						<td>
 							<a href="<?=site_url(uri_string());?>" class="btn btn-mini set-operation" type="button"><i class="icon-edit"></i></a>
 						</td>
