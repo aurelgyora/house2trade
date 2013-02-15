@@ -107,13 +107,14 @@ $mailtext = ob_get_clean();
 						$propertiesID = $this->properties->insert_record($dataval);
 						$this->users->update_field($dataval['user_id'],'user_id',$propertiesID,'users');
 						$this->users->update_field($dataval['user_id'],'class',3,'users');
+						$this->users->update_field($dataval['user_id'],'status',1,'users');
 						$this->load->helper('string');
-						$activate_code = random_string('alpha',25);
-						$this->users->update_field($dataval['user_id'],'temporary_code',$activate_code,'users');
 						ob_start();?>
 <p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
-<p>Thank you for registering at Hause2Trade.<br/>Please click the link below to activate your account:<br/>
-<?=anchor('comfirm-registering/homeowner/activation-code/'.$activate_code,base_url().'comfirm-registering/broker/activation-code/'.$activate_code,array('target'=>'_blank'));?></p><?
+<p>Your account has been created at Hause2Trade !<br/>
+To log in to your personal account, use the username and password specified during registration.<br/>
+<br/>Please click on the link below to go to your account:<br/>
+<?=anchor($cabinetLink,base_url().$cabinetLink,array('target'=>'_blank'));?></p><?
 $mailtext = ob_get_clean();
 						$this->send_mail($dataval['email'],'robot@house2trade.com','Hause2Trade','Register to Hause2Trade',$mailtext);
 						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
