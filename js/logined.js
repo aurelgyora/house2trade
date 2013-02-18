@@ -28,7 +28,6 @@
 				},"json");
 		}
 	})
-	
 	$("#save-profile").click(function(event){
 		event.preventDefault();
 		var err = false;
@@ -47,7 +46,6 @@
 					},"json");
 			}
 	});
-	
 	$(".user-status").click(function(event){
 		if($(this).hasClass("active")){return false;}
 		var element = this;

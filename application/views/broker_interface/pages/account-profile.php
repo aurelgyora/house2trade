@@ -12,11 +12,11 @@
 			<div class="span9">
 				<div class="navbar">
 					<div class="navbar-inner">
-						<a class="brand" href="<?=site_url(uri_string());?>">Control panel</a>
+						<a class="brand" href="<?=site_url(uri_string());?>">Account information</a>
 					</div>
 				</div>
 				<div class="clear"></div>
-			
+				<?php $this->load->view('forms/edit-account-properties');?>
 			</div>
 		</div>
 	</div>

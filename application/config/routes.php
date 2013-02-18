@@ -37,7 +37,9 @@ $route['comfirm-registering/:any/activation-code/:any'] = "users_interface/comfi
 /*************************************************** BROKERS INTRERFACE ***********************************************/
 
 $route['broker/control-panel'] = "broker_interface/control_panel";
+$route['broker/accounts'] = "broker_interface/control_accounts";
 $route['broker/register-properties'] = "broker_interface/register_properties";
+$route['broker/accounts/profile/:num'] = "broker_interface/account_profile";
 $route['broker/profile'] = "broker_interface/profile";
 
 /*************************************************** OWNERS INTRERFACE ***********************************************/
