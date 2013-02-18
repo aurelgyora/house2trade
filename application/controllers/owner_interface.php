@@ -8,17 +8,26 @@ class Owner_interface extends MY_Controller{
 		if(!$this->loginstatus || ($this->user['class'] != 3)):
 			redirect('');
 		endif;
+		$password = $this->users->read_field($this->user['uid'],'users','password');
+		if(empty($password) && ($this->uri->segment(2) != 'set-password')):
+			redirect('homeowner/set-password');
+		endif;
 	}
 	
 	/******************************************** cabinet *******************************************************/
 	
+	public function setPassword(){
+		
+		$password = $this->users->read_field($this->user['uid'],'users','password');
+		if(!empty($password)):
+			redirect('broker/control-panel');
+		endif;
+		$this->load->view("owner_interface/pages/set-password");
+	}
+	
 	public function control_panel(){
 		
-		$pagevar = array(
-			
-		);
-		
-		$this->load->view("owner_interface/pages/control-panel",$pagevar);
+		$this->load->view("owner_interface/pages/control-panel");
 	}
 	
 	public function profile(){

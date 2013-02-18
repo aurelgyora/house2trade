@@ -12,14 +12,25 @@
 	<div id="main" class="single">
 		<div class="container_12 clearfix">
 			<div class="grid_12 clearfix">
-				<h1>Create a new account</h1>
-				<p>All fields are required. We will <a class="link-more" href="<?=site_url('');?>">take good care</a> of your info.</p>
+				<h1>Restore account password</h1>
+				<p>Enter your email address specified during registration.</p>
 			</div>
 			<div class="grid_7">
-			<?php $this->load->view("forms/account-setup");?>
-			</div>
-			<div class="grid_4">
-				<?=$page['content'];?>
+				<form action="/" class="form-forgot" method="post">
+					<div class="grid_7">
+						<p>
+							<label>Email*</label>
+							<input class="FieldSend" id="login-email" name="email" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+						</p>
+					</div>
+					<div class="grid_7">
+						<p class="button-row">
+							<input class="btn-submit" id="forgot-button" name="forgot" type="submit" value="Recovery">
+							<span id="block-message"></span>
+						</p>
+					</div>
+					<div class="clear"></div>
+				</form>
 			</div>
 		</div>
 	</div>

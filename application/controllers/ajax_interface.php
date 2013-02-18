@@ -41,12 +41,12 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($statusval);
 	}
 
-	function signup_broker(){
+	function signup_account(){
 		
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE,'message'=>'Signup is impossible');
+		$statusval = array('status'=>FALSE,'error'=>FALSE,'email'=>FALSE,'message'=>'');
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -55,29 +55,40 @@ class Ajax_interface extends MY_Controller{
 				$dataval[$dataid[0]] = trim($dataid[1]);
 			endfor;
 			if($dataval):
-				if($dataval['password'] != $dataval['confirm']):
-					$dataval = array();
-				endif;
 				if(!$this->users->user_exist('email',$dataval['email'])):
 					$dataval['user_id'] = $this->users->insert_record($dataval);
+					$this->load->helper('string');
+					$activate_code = random_string('alpha',25);
+					
 					if($dataval['user_id']):
-						$this->load->model('brokers');
-						$brokerID = $this->brokers->insert_record($dataval);
-						$this->users->update_field($dataval['user_id'],'user_id',$brokerID,'users');
-						$this->load->helper('string');
-						$activate_code = random_string('alpha',25);
-						$this->users->update_field($dataval['user_id'],'temporary_code',$activate_code,'users');
+						switch($dataval['class']):
+							case 2:
+								$this->load->model('brokers');
+								$brokerID = $this->brokers->insert_record($dataval);
+								$this->users->update_field($dataval['user_id'],'user_id',$brokerID,'users');
+								$this->users->update_field($dataval['user_id'],'temporary_code',$activate_code,'users');
+								$user_class = 'broker';
+								break;
+							case 3:
+								$this->load->model('properties');
+								$propertiesID = $this->properties->insert_record($dataval);
+								$this->users->update_field($dataval['user_id'],'user_id',$propertiesID,'users');
+								$this->users->update_field($dataval['user_id'],'class',3,'users');
+								$this->users->update_field($dataval['user_id'],'temporary_code',$activate_code,'users');
+								$user_class = 'homeowner';
+								break;
+						endswitch;
 						ob_start();?>
 <p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
 <p>Thank you for registering at House2Trade.<br/>Please click the link below to activate your account:<br/>
-<?=anchor('comfirm-registering/broker/activation-code/'.$activate_code,base_url().'comfirm-registering/broker/activation-code/'.$activate_code,array('target'=>'_blank'));?></p><?
+<?=anchor('comfirm-registering/'.$user_class.'/activation-code/'.$activate_code,base_url().'comfirm-registering/'.$user_class.'/activation-code/'.$activate_code,array('target'=>'_blank'));?></p><?
 $mailtext = ob_get_clean();
 						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade','Register to House2Trade',$mailtext);
-						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to your email';
 						$statusval['status'] = TRUE;
+						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to your email';
 					endif;
 				else:
-					$statusval['message'] = "Email already exist";
+					$statusval['email'] = TRUE;
 				endif;
 			endif;
 		endif;
@@ -108,7 +119,6 @@ $mailtext = ob_get_clean();
 						$this->users->update_field($dataval['user_id'],'user_id',$propertiesID,'users');
 						$this->users->update_field($dataval['user_id'],'class',3,'users');
 						$this->users->update_field($dataval['user_id'],'status',1,'users');
-						$this->load->helper('string');
 						ob_start();?>
 <p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
 <p>Your account has been created at Hause2Trade !<br/>
@@ -156,7 +166,7 @@ $mailtext = ob_get_clean();
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE,'message'=>'Profile saved');
+		$statusval = array('status'=>FALSE,'message'=>'Profile saved','redirect'=>'');
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -169,19 +179,79 @@ $mailtext = ob_get_clean();
 					$statusval['message'] = 'Passwords do not match';
 				else:
 					$statusval['status'] = TRUE;
+					if(!isset($dataval['setpswd'])):
+						switch($this->user['class']):
+							case 2:	$this->load->model('brokers');
+									$dataval['id'] = $this->users->read_field($this->user['uid'],'users','user_id');
+									$this->brokers->update_record($dataval);
+									break;
+							case 3:	$this->load->model('properties');
+									$dataval['id'] = $this->users->read_field($this->user['uid'],'users','user_id');
+									$this->properties->update_record($dataval);
+									break;
+						endswitch;
+					endif;
 					switch($this->user['class']):
-						case 2:	$this->load->model('brokers');
-								$dataval['id'] = $this->users->read_field($this->user['uid'],'users','user_id');
-								$this->brokers->update_record($dataval);
+						case 2:	$statusval['redirect'] = site_url('broker/control-panel');
 								break;
-						case 3:	$this->load->model('properties');
-								$dataval['id'] = $this->users->read_field($this->user['uid'],'users','user_id');
-								$this->properties->update_record($dataval);
+						case 3:	$statusval['redirect'] = site_url('homeowner/control-panel');
 								break;
 					endswitch;
 					if(!empty($dataval['password'])):
 						$this->users->update_field($this->user['uid'],'password',md5($dataval['password']),'users');
 					endif;
+				endif;
+			endif;
+		endif;
+		echo json_encode($statusval);
+	}
+	
+	function send_forgot_password(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$statusval = array('status'=>FALSE,'error'=>FALSE,'email'=>FALSE,'message'=>'');
+		$data = trim($this->input->post('postdata'));
+		if($data):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$dataval[$dataid[0]] = trim($dataid[1]);
+			endfor;
+			if($dataval):
+				$uid = $this->users->user_exist('email',$dataval['email']);
+				$status = $this->users->read_field($uid,'users','status');
+				if($status && $uid):
+					$user_id = $this->users->read_field($uid,'users','user_id');
+					$user_class = $this->users->read_field($uid,'users','class');
+					$this->load->helper('string');
+					$activate_code = random_string('alpha',25);
+					$this->users->update_field($uid,'temporary_code',$activate_code,'users');
+					if($user_id):
+						switch($user_class):
+							case 2:
+								$this->load->model('brokers');
+								$user_name = $this->brokers->read_name($user_id,'brokers');
+								$user_class = 'broker';
+								break;
+							case 3:
+								$this->load->model('properties');
+								$user_name = $this->properties->read_name($user_id,'properties');
+								$user_class = 'homeowner';
+								break;
+						endswitch;
+						ob_start();?>
+<p>Hello <em><?=$user_name;?></em>,</p>
+<p>You have requested a new password to access personal account. To do this, follow the links below:<br/>
+<?=anchor('password-recovery/'.$user_class.'/temporary-code/'.$activate_code,base_url().'password-recovery/'.$user_class.'/temporary-code/'.$activate_code,array('target'=>'_blank'));?></p><?
+$mailtext = ob_get_clean();
+						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade','Restore account password to House2Trade',$mailtext);
+						$statusval['status'] = TRUE;
+						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> Letter from further action was sent to your email';
+					endif;
+				else:
+					$statusval['email'] = TRUE;
 				endif;
 			endif;
 		endif;

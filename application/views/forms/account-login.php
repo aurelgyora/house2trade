@@ -14,6 +14,7 @@
 	<div class="grid_7">
 		<p class="button-row">
 			<input class="btn-submit" id="login-button" name="commit" type="submit" value="Submit Form">
+			<a href="<?=site_url('password-recovery')?>" class="">forgot password?</a>
 		</p>
 	</div>
 	<div class="clear"> </div>

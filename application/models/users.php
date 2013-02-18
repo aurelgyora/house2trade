@@ -27,7 +27,9 @@ class Users extends MY_Model{
 	function insert_record($data){
 
 		$this->email 	= $data['email'];
-		$this->password	= md5($data['password']);
+		if(isset($data['password']) && !empty($data['password'])):
+			$this->password	= md5($data['password']);
+		endif;
 		$this->db->insert('users',$this);
 		return $this->db->insert_id();
 	}

@@ -290,3 +290,5 @@ form .btn-submit { background: #FFCC1D; color: #333; text-shadow: none; font-wei
         page-break-after: avoid;
     }
 }
+
+p[data-class="homeowner"]{display: none;}

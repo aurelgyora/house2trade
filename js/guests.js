@@ -21,22 +21,54 @@
 		event.preventDefault();
 		if($("#user-terms-of-service").is(":checked")){
 			var err = false;
-			var user_email = $("#login-email").val();var user_password = $("#login-password").val();var user_confirm_password = $("#login-password-confirm").val();
+			var user_email = $("#login-email").val();
 			$(".valid-required").tooltip("destroy");$("#block-message").html('');
-			$(".valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
+			$(".valid-required:visible").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
 			if(!err && !mt.isValidEmailAddress(user_email)){$("#login-email").attr('data-original-title','Incorrect Email Address').tooltip('show');err = true;}
-			if(!err && !mt.matches_parameters(user_password,user_confirm_password)){$("#login-password-confirm").attr('data-original-title','Passwords do not match').tooltip('show');err = true;}
-			if(!err && !mt.minLength(user_password,6)){$("#login-password").attr('data-original-title','length of least 6 characters').tooltip('show');err = true;}
 			if(!err){
 				var postdata = mt.formSerialize($(".FieldSend"));
-				$.post(mt.baseURL+"signup-broker",{'postdata':postdata},
+				$.post(mt.baseURL+"signup-account",{'postdata':postdata},
 					function(data){
 						$(".valid-required").tooltip("destroy");
-						$("#block-message").html(data.message);
-						if(data.status){$("#register-button").remove();$(".FieldSend").val('');}
+						if(data.email){$("#login-email").attr('data-original-title','Email already exist').tooltip('show');}
+						if(data.error){$("#block-message").html('Signup is impossible');}
+						if(data.status){$("#register-button").remove();$("#register-cancel").remove();$(".FieldSend").val('');$("#block-message").html(data.message);}
 					},"json");
 			}
 		}
 	});
+	$("#forgot-button").click(function(event){
+		event.preventDefault();
+		var err = false;
+		var user_email = $("#login-email").val();
+		$("#login-email").tooltip("destroy");$("#block-message").html('');
+		if($("#login-email").emptyValue()){$("#login-email").tooltip('show');err = true;}
+		if(!err && !mt.isValidEmailAddress(user_email)){$("#login-email").attr('data-original-title','Incorrect Email Address').tooltip('show');err = true;}
+		if(!err){
+			var postdata = mt.formSerialize($(".FieldSend"));
+			$.post(mt.baseURL+"send-forgot-password",{'postdata':postdata},
+				function(data){
+					$("#login-email").tooltip("destroy");
+					if(data.email){$("#login-email").attr('data-original-title','Email is not found').tooltip('show');}
+					if(data.status){$("#forgot-button").remove();$(".FieldSend").val('');$("#block-message").html(data.message);}
+				},"json");
+		}
+	});
 	$(".valid-required").change(function(){$(this).tooltip("destroy");});
+	$(".rd-seller").click(function(){$("#seller").val($(this).val())});
+	$("#account-broker-setup").click(function(){
+		if(!$(this).hasClass('active')){
+			$("p[data-class='broker']").show().find("input").addClass("FieldSend");
+			$("p[data-class='homeowner']").hide().find("input").removeClass("FieldSend");
+		}
+	});
+	$("#account-homeowner-setup").click(function(){
+		if(!$(this).hasClass('active')){
+			$("p[data-class='homeowner']").show().find("input:not(:radio)").addClass("FieldSend");
+			$("p[data-class='broker']").hide().find("input").removeClass("FieldSend");
+		}
+	});
+	$(".change-signup-class").click(function(){$("#signup-class").val($(this).attr('data-class'))});
+	$("#register-cancel").click(function(){mt.redirect('/');});
+	
 })(window.jQuery);

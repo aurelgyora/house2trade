@@ -15,6 +15,7 @@ $head_variable = array(
 	'step_by_step' => array('title'=>'House2Trade / Step By Step','description'=>''),
 	'virtual_tour' => array('title'=>'House2Trade / Virtual Tour','description'=>''),
 	
+	'password_recovery' => array('title'=>'House2Trade / Password Recovery','description'=>'','keywords'=>''),
 	'signup' => array('title'=>'House2Trade / Sign Up','description'=>'','keywords'=>''),
 	'login' => array('title'=>'House2Trade / Log In','description'=>'','keywords'=>''),
 );

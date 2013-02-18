@@ -58,4 +58,22 @@
 		
 	})
 	$(".valid-required").change(function(){$(this).tooltip("destroy");});
+	$("#set-password").click(function(event){
+		event.preventDefault();
+		var err = false;
+		var user_password = $("#login-password").val();
+		var user_confirm_password = $("#comfirm-password").val();
+		$(".valid-required").tooltip("destroy");
+		$(".valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
+		if(!mt.matches_parameters(user_password,user_confirm_password)){$("#comfirm-password").attr('data-original-title','Passwords do not match').tooltip('show');return false;}
+		if(!err && !mt.minLength(user_password,6)){$("#login-password").attr('data-original-title','length of least 6 characters').tooltip('show');err = true;}
+		if(!err){
+				var postdata = mt.formSerialize($(".FieldSend"));
+				$.post(mt.baseURL+"save-profile",{'postdata':postdata},
+					function(data){
+						$("#block-message").html(data.message);
+						if(data.status){mt.redirect(data.redirect)}
+					},"json");
+			}
+	});
 })(window.jQuery);

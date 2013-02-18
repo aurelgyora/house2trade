@@ -1,4 +1,12 @@
 <form action="/" class="form-signup" id="account-setup" method="post" onsubmit="$('register_button').disabled = true">
+	<input type="hidden" class="FieldSend" name="class" id="signup-class" autocomplete="off" value="2">
+	<div class="grid_6">
+		<div class="btn-group" data-toggle="buttons-radio">
+			<button type="button" id="account-broker-setup" data-class="2" class="btn change-signup-class active">Register us Broker</button>
+			<button type="button" id="account-homeowner-setup" data-class="3" class="btn change-signup-class">Register us HomeOwner</button>
+		</div>
+	</div>
+	<div class="clear"> </div>
 	<div class="grid_3">
 		<p>
 			<label>First Name*</label>
@@ -13,49 +21,47 @@
 			<input id="login-email" class="valid-required FieldSend" name="email" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
 		<p>
-			<label>Password*</label>
-			<input id="login-password" class="valid-required FieldSend" name="password" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="password">
-		</p>
-		<p>
-			<label>Type password again*</label>
-			<input id="login-password-confirm" class="valid-required FieldSend" name="confirm" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="password">
-		</p>
-		<p>
-			<label>His phone number*</label>
+			<label>Phone number*</label>
 			<input class="valid-required FieldSend" name="phone" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
 	</div>
 	<div class="grid_3">
-		<p>
+		<p data-class="homeowner">
+			<input type="hidden" name="seller" id="seller" autocomplete="off" value="1">
+			<label>Are you planning to sell your property and buy another one?</label>
+			<input type="radio" name="rd" class="rd-seller" checked="checked" autocomplete="off" value="1"> YES
+			<input type="radio" name="rd" class="rd-seller" autocomplete="off" value="0"> NO
+		</p>
+		<p data-class="broker">
 			<label>Company name*</label>
-			<input class="valid-required FieldSend" name="company" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+			<input class="FieldSend" name="company" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
-		<p>
+		<p data-class="broker">
 			<label>Company address*</label>
-			<input class="valid-required FieldSend" name="address" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+			<input class="FieldSend" name="address" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
-		<p>
+		<p data-class="broker">
 			<label>Company phone*</label>
-			<input class="valid-required FieldSend" name="cphone" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+			<input class="FieldSend"name="cphone" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
-		<p>
+		<p data-class="broker">
 			<label>Company email*</label>
-			<input class="valid-required FieldSend" name="cmail" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+			<input class="FieldSend" name="cmail" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
-		<p>
+		<p data-class="broker">
 			<label>Company website</label>
 			<input class="FieldSend" name="website" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
-		<p id="license_id">
+		<p id="license_id" data-class="broker">
 			<label>License ID</label>
-			<input class="FieldSend" name="license" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+			<input class="FieldSend" name="license"<?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
 	</div>
 	<div class="clear"></div>
 	<div class="grid_7">
 		<p class="register-check">
 			<span class="checky">
-				<input id="user-terms-of-service" class="FieldSend" name="termsofservice]" autocomplete="off" type="checkbox" value="1">
+				<input id="user-terms-of-service" class="FieldSend" name="termsofservice" autocomplete="off" type="checkbox" value="1">
 			</span>
 			I agree to the <a href="<?=site_url();?>" class="link-more" target="_blank">Terms of Service</a> 
 			and the <a href="<?=site_url();?>" class="link-more" target="_blank">Privacy Policy</a>.
@@ -69,8 +75,9 @@
 		<div class="clear"></div>
 		<p class="button-row">
 			<input class="btn-submit pull-left" id="register-button" disabled="disabled" name="commit" type="submit" value="Submit Form">
+			<input class="btn-cancel pull-left" id="register-cancel" name="cancel" type="button" value="CANCEL">
 			<span id="block-message"></span>
 		</p>
 	</div>
-	<div class="clear"> </div>
+	<div class="clear"></div>
 </form>

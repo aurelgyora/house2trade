@@ -2,7 +2,7 @@
 
 class Properties extends MY_Model{
 	
-	var $id = 0;var $listing_id = 0;var $broker_id = 0;var $zip_code = 0;var $bathrooms = 0;var $bedrooms = 0;var $tax = 0;var $mls = 0;
+	var $id = 0;var $listing_id = 0;var $broker_id = 0;var $seller = 0;var $zip_code = 0;var $bathrooms = 0;var $bedrooms = 0;var $tax = 0;var $mls = 0;
 	var $fname = ''; var $lname = ''; var $address1 = '';var $address2 = '';var $city = '';var $state = '';var $type = '';var $sqf = '';var $description = '';
 	var $price = 0.00;
 	
@@ -11,24 +11,30 @@ class Properties extends MY_Model{
 	}
 	
 	function insert_record($data){
-
-		$this->broker_id = $this->user['uid'];
+		
+		if($this->loginstatus):
+			$this->broker_id = $this->user['uid'];
+		endif;
 		$this->fname = $data['fname'];
 		$this->lname = $data['lname'];
-		$this->zip_code = $data['zip_code'];
-		$this->bathrooms = $data['bathrooms'];
-		$this->bedrooms = $data['bedrooms'];
-		$this->tax = $data['tax'];
-		$this->mls = $data['mls'];
-		$this->address1 = $data['address1'];
-		$this->address2 = $data['address2'];
-		$this->city = $data['city'];
-		$this->state = $data['state'];
-		$this->type = $data['type'];
-		$this->sqf = $data['sqf'];
-		$this->description = $data['description'];
-		$this->price = $data['price'];
-		
+		if(isset($data['seller'])):
+			$this->seller = $data['seller'];
+		endif;
+		if(isset($data['mls']) && isset($data['zip_code'])):
+			$this->zip_code = $data['zip_code'];
+			$this->bathrooms = $data['bathrooms'];
+			$this->bedrooms = $data['bedrooms'];
+			$this->tax = $data['tax'];
+			$this->mls = $data['mls'];
+			$this->address1 = $data['address1'];
+			$this->address2 = $data['address2'];
+			$this->city = $data['city'];
+			$this->state = $data['state'];
+			$this->type = $data['type'];
+			$this->sqf = $data['sqf'];
+			$this->description = $data['description'];
+			$this->price = $data['price'];
+		endif;
 		$this->db->insert('properties',$this);
 		return $this->db->insert_id();
 	}

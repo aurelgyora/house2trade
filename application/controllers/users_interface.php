@@ -111,6 +111,12 @@ class Users_interface extends MY_Controller{
 		endif;
 	}
 	
+	public function pswdRecovery(){
+		
+		$pagevar = array('page'=>$this->pages->read_record(uri_string()));
+		$this->load->view("users_interface/pages/password-recovery",$pagevar);
+	}
+	
 	public function comfirm_registering(){
 		
 		switch($this->uri->segment(2)):
@@ -130,7 +136,7 @@ class Users_interface extends MY_Controller{
 			ob_start();?>
 <p>Hello <em><?=$user['name'];?></em>,</p>
 <p>Your account has activated successfully!<br/>
-To log in to your personal account, use the username and password specified during registration.<br/>
+To log in to your personal account, use the email specified during registration.<br/>
 <br/>Please click on the link below to go to your account:<br/>
 <?=anchor($cabinetLink,base_url().$cabinetLink,array('target'=>'_blank'));?></p><?
 			$mailtext = ob_get_clean();
@@ -139,6 +145,27 @@ To log in to your personal account, use the username and password specified duri
 			redirect($cabinetLink);
 		else:
 			redirect('signup');
+		endif;
+	}
+	
+	public function comfirm_temporary_code(){
+		
+		switch($this->uri->segment(2)):
+			case 'broker': $cabinetLink = 'broker/control-panel'; break;
+			case 'homeowner': $cabinetLink = 'homeowner/control-panel'; break;
+			default: show_404(); break;
+		endswitch;
+		$user_id = $this->users->user_exist('temporary_code',$this->uri->segment(4));
+		if($user_id):
+			$status = $this->users->read_field($user_id,'users','status');
+			if($status):
+				$this->users->update_field($user_id,'temporary_code','','users');
+				$user = $this->users->read_record($user_id,'users');
+				$this->session->set_userdata(array('logon'=>md5($this->users->read_field($user_id,'users','email')),'userid'=>$user_id));
+				redirect($cabinetLink);
+			endif;
+		else:
+			redirect('');
 		endif;
 	}
 	
