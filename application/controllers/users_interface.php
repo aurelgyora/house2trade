@@ -127,7 +127,6 @@ class Users_interface extends MY_Controller{
 		$user_id = $this->users->user_exist('temporary_code',$this->uri->segment(4));
 		if($user_id):
 			$this->users->update_field($user_id,'temporary_code','','users');
-			$this->users->update_field($user_id,'status',1,'users');
 			$user = $this->users->read_record($user_id,'users');
 			switch($user['class']):
 				case 2: $this->load->model('brokers');$user['name'] = $this->brokers->read_name($user['user_id'],'brokers'); break;
@@ -157,13 +156,10 @@ To log in to your personal account, use the email specified during registration.
 		endswitch;
 		$user_id = $this->users->user_exist('temporary_code',$this->uri->segment(4));
 		if($user_id):
-			$status = $this->users->read_field($user_id,'users','status');
-			if($status):
-				$this->users->update_field($user_id,'temporary_code','','users');
-				$user = $this->users->read_record($user_id,'users');
-				$this->session->set_userdata(array('logon'=>md5($this->users->read_field($user_id,'users','email')),'userid'=>$user_id));
-				redirect($cabinetLink);
-			endif;
+			$this->users->update_field($user_id,'temporary_code','','users');
+			$user = $this->users->read_record($user_id,'users');
+			$this->session->set_userdata(array('logon'=>md5($this->users->read_field($user_id,'users','email')),'userid'=>$user_id));
+			redirect($cabinetLink);
 		else:
 			redirect('');
 		endif;

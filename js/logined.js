@@ -76,4 +76,23 @@
 					},"json");
 			}
 	});
+	$("#set-properties-data").click(function(event){
+		
+		event.preventDefault();
+		var err = false;
+		var mls = $("#mls-parameter").val();
+		var zap = $("#zipcode-parameter").val();
+		$(".valid-required").tooltip("destroy");$("#block-message").html('');
+		$(".valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
+	});
+	$("#set-properties-manual-data").click(function(){
+		$(".valid-required").tooltip('destroy');
+		$("#div-choise-metod").addClass('hidden');
+		$("#div-account-properties").hide().removeClass('hidden').fadeIn('slow');
+	});
+	$("#set-properties-auto-data").click(function(){
+		$(".valid-required").tooltip('destroy');
+		$("#div-account-properties").hide().addClass('hidden');
+		$("#div-choise-metod").hide().removeClass('hidden').fadeIn('slow');
+	});
 })(window.jQuery);

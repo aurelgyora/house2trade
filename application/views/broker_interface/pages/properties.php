@@ -16,7 +16,13 @@
 					</div>
 				</div>
 				<div class="clear"></div>
-				<?php $this->load->view('forms/account-properties')?>
+				<div id="div-choise-metod">
+				<?php $this->load->view('forms/metod-properties-register');?>
+				</div>
+				<div class="clear"></div>
+				<div id="div-account-properties" class="hidden">
+					<?php $this->load->view('forms/account-properties');?>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -23,7 +23,7 @@ class Ajax_interface extends MY_Controller{
 			endfor;
 			if($dataval):
 				$user = $this->users->auth_user($dataval[0],$dataval[1]);
-				if($user && $user['status']):
+				if($user):
 					$statusval['status'] = TRUE;
 					$statusval['message'] = '';
 					$this->session->set_userdata(array('logon'=>md5($dataval[0]),'userid'=>$user['id']));
@@ -109,16 +109,19 @@ $mailtext = ob_get_clean();
 				$dataval[$dataid[0]] = trim($dataid[1]);
 			endfor;
 			if($dataval):
-				if(!$this->users->user_exist('email',$dataval['email'])):
+				$this->load->model('properties');
+				if(!$this->users->user_exist('email',$dataval['email']) && !$this->properties->properties_exits($dataval['mls'],$dataval['zip_code'])):
 					$this->load->helper('string');
 					$dataval['password'] = random_string('alnum',12);
 					$dataval['user_id'] = $this->users->insert_record($dataval);
 					if($dataval['user_id']):
-						$this->load->model('properties');
 						$propertiesID = $this->properties->insert_record($dataval);
 						$this->users->update_field($dataval['user_id'],'user_id',$propertiesID,'users');
 						$this->users->update_field($dataval['user_id'],'class',3,'users');
-						$this->users->update_field($dataval['user_id'],'status',1,'users');
+						
+						$status = $this->users->read_field($this->user['uid'],'users','status');
+						$this->users->update_field($dataval['user_id'],'status',$status,'users');
+						
 						ob_start();?>
 <p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
 <p>Your account has been created at Hause2Trade !<br/>
@@ -134,7 +137,7 @@ $mailtext = ob_get_clean();
 						$statusval['status'] = TRUE;
 					endif;
 				else:
-					$statusval['message'] = "Email already exist";
+					$statusval['message'] = "Property already exist";
 				endif;
 			endif;
 		endif;
@@ -221,8 +224,7 @@ $mailtext = ob_get_clean();
 			endfor;
 			if($dataval):
 				$uid = $this->users->user_exist('email',$dataval['email']);
-				$status = $this->users->read_field($uid,'users','status');
-				if($status && $uid):
+				if($uid):
 					$user_id = $this->users->read_field($uid,'users','user_id');
 					$user_class = $this->users->read_field($uid,'users','class');
 					$this->load->helper('string');

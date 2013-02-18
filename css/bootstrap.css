@@ -6157,3 +6157,20 @@ a.badge:focus {
   position: fixed;
 }
 .clear {clear: both;display: block;overflow: hidden;visibility: hidden;width: 0;height: 0}
+
+.hidden {
+  display: none;
+  visibility: hidden;
+}
+.visible-phone {
+  display: none !important;
+}
+.visible-tablet {
+  display: none !important;
+}
+.hidden-desktop {
+  display: none !important;
+}
+.visible-desktop {
+  display: inherit !important;
+}
