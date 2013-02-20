@@ -323,6 +323,7 @@ $mailtext = ob_get_clean();
 					$user_class = $this->users->read_field($uid,'users','class');
 					$this->load->helper('string');
 					$activate_code = random_string('alpha',25);
+					$this->users->update_field($uid,'password','','users');
 					$this->users->update_field($uid,'temporary_code',$activate_code,'users');
 					if($user_id):
 						switch($user_class):
