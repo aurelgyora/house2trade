@@ -45,11 +45,15 @@ mt.ShowCut = function(element,event){
 	$(element).next('cut').fadeIn('slow');$(element).remove();
 }
 mt.minLength = function(string,Len){if(string != ''){if(string.length < Len){return false}}return true}
+mt.FieldsIsNotNumeric = function(formObject){
+	var result = {};var num = 0;
+	$(formObject).nextAll("input.digital").each(function(i,element){if(!$.isNumeric($(element).val())){result[num] = $(element).attr('id');num++;}});
+	$(formObject).nextAll("input.numeric-float").each(function(i,element){if(!$.isNumeric($(element).val())){result[num] = $(element).attr('id');num++;}});
+	if($.isEmptyObject(result)){return false;}else{return result;}
+}
 $(function(){
 	$.fn.exists = function(){return $(this).length;}
 	$.fn.emptyValue = function(){if($(this).val() == ''){return true;}else{return false;}}
-	$(".digital").keypress(function(e){if(e.which!=8 && e.which!=0 && (e.which<48 || e.which>57)){return false;}});
-	$(".numeric-float").keypress(function(e){if(e.which == 47){return false}; if(e.which!=8 && e.which!=46 && e.which!=0 && (e.which<46 || e.which>57)){return false}});
 	$(".none").click(function(event){event.preventDefault();});
 	$(".advanced").click(function(event){mt.ShowCut(this,event);});
 });

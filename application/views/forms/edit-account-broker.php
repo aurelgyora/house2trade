@@ -80,14 +80,14 @@
 	<div class="span9">
 		<p class="register-check">
 			<span class="checky">
-				<input <?=($profile['info']['subcribe'])?'checked="checked" ':'';?>class="FieldSend" name="subcribe" type="checkbox" value="1">
+				<input <?=($profile['info']['subcribe'])?'checked="checked" ':'';?> id="subcribe" name="subcribe" type="checkbox" value="1">
 			</span>
 			Add me to the House2Trade mailing list to receive announcements.
 		</p>
 	</div>
 	<div class="clear"></div>
 	<div class="form-actions">
-		<button class="btn btn-success pull-right" id="save-profile" type="submit" name="submit" value="send">Save</button>
+		<button class="btn btn-success pull-right" id="save-profile" type="submit" name="submit" value="send">Save information</button>
 		<span id="block-message"></span>
 	</div>
 <?php endif;?>

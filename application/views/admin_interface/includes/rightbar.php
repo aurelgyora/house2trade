@@ -2,12 +2,12 @@
 	<div class="well sidebar-nav">
 		<ul class="nav nav-pills nav-stacked">
 			<li class="nav-header">Sections</li>
-			<li num="pages"><?=anchor('administrator/control-panel/pages','Pages content');?></li>
+			<li num="pages"><?=anchor(ADM_START_PAGE.'/pages','Pages content');?></li>
 			<li num="accounts"><?=anchor('administrator/broker/accounts','Accounts');?></li>
 			<li class="nav-header">Tools</li>
-			<li num="control-panel"><?=anchor('administrator/control-panel','Control Panel');?></li>
+			<li num="control-panel"><?=anchor(ADM_START_PAGE,'Control Panel');?></li>
 			<li num="profile"><?=anchor('administrator/profile','Profile');?></li>
-			<li><?=anchor('logoff','Log Off');?></li>
+			<li><?=anchor('logout','Logout');?></li>
 		</ul>
 	</div>
 </div>

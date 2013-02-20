@@ -1,10 +1,15 @@
 <div class="span3">
 	<div class="well sidebar-nav">
 		<ul class="nav nav-pills nav-stacked">
-			<li class="nav-header">Tools</li>
-			<li num="control-panel"><?=anchor('homeowner/control-panel','Control Panel');?></li>
-			<li num="profile"><?=anchor('homeowner/profile','Profile');?></li>
-			<li><?=anchor('logoff','Log Off');?></li>
+			<li class="nav-header">MENU</li>
+			<li num="search"><?=anchor('homeowner/search','Search');?></li>
+			<li num="profile"><?=anchor('homeowner/profile','My account');?></li>
+			<li num="properties"><?=anchor(OWNER_START_PAGE,'Properties');?></li>
+			<li num="favorite"><?=anchor('homeowner/favorite','Favorite');?></li>
+			<li num="potential-by"><?=anchor('homeowner/potential-by','Potential by');?></li>
+			<li num="instant-trade"><?=anchor('homeowner/instant-trade','Instant Trade');?></li>
+			<li num="match"><?=anchor('homeowner/match','Match');?></li>
+			<li><?=anchor('logout','Logout');?></li>
 		</ul>
 	</div>
 </div>

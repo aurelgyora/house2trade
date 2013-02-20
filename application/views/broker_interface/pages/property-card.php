@@ -13,20 +13,18 @@
 			<div class="span9">
 				<div class="navbar">
 					<div class="navbar-inner">
-						<a class="brand" href="<?=site_url(uri_string());?>">Register Property</a>
+						<a class="brand" href="<?=site_url(uri_string());?>">Edit property information</a>
 					</div>
 				</div>
-				<div class="clear"></div>
-				<div id="div-choise-metod">
-				<?php $this->load->view('forms/metod-properties-register');?>
+				<div id="div-property-information">
+				<?php $this->load->view('forms/edit-account-properties');?>
 				</div>
 				<div class="clear"></div>
-				<div id="div-account-properties" class="hidden">
-					<?php $this->load->view('forms/account-properties');?>
-				</div>
-				<div class="clear"></div>
-				<div id="div-insert-properties" class="hidden">
+				<div id="div-insert-photo-properties" class="hidden">
 					<?php $this->load->view('forms/insert-photos-properties');?>
+				</div>
+				<div id="div-remove-photo-properties" class="hidden">
+					<?php $this->load->view('forms/photos-properties');?>
 				</div>
 			</div>
 		</div>

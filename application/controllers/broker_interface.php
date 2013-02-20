@@ -19,18 +19,14 @@ class Broker_interface extends MY_Controller{
 	public function setPassword(){
 		$password = $this->users->read_field($this->user['uid'],'users','password');
 		if(!empty($password)):
-			redirect('broker/control-panel');
+			redirect(BROKER_START_PAGE);
 		endif;
 		$this->load->view("broker_interface/pages/set-password");
 	}
 	
-	public function control_panel(){
-		
-		$this->load->view("broker_interface/pages/control-panel");
-	}
-	
 	public function register_properties(){
 		
+		$this->session->unset_userdata(array('owner_id'=>'','property_id'=>''));
 		$this->load->view("broker_interface/pages/properties");
 	}
 	
@@ -42,29 +38,46 @@ class Broker_interface extends MY_Controller{
 		$this->load->view("broker_interface/pages/profile",$pagevar);
 	}
 	
-	/********************************************* users ********************************************************/
+	/********************************************* trading ********************************************************/
 	
-	public function control_accounts(){
+	
+	/********************************************* properties ********************************************************/
+	
+	public function properties(){
 		
 		$this->load->model('properties');
 		$this->load->model('union');
+		$this->load->model('images');
 		$from = (int)$this->uri->segment(4);
 		$pagevar = array(
-			'properties' => $this->union->propertiesListByPages(3,$this->user['uid'],10,$from),
-			'pages' => $this->pagination('broker/control-panel/',5,$this->properties->count_records('properties','broker_id',$this->user['uid']),10)
+			'properties' => $this->union->brokerPropertiesList(3,$this->user['uid'],10,$from),
+			'pages' => $this->pagination(BROKER_START_PAGE.'/',5,$this->properties->count_records('properties','owner_id',$this->user['uid']),10)
 		);
-		$this->load->view("broker_interface/pages/accounts",$pagevar);
+		for($i=0;$i<count($pagevar['properties']);$i++):
+			$pagevar['properties'][$i]['photo'] = $this->images->mainPhoto($pagevar['properties'][$i]['id']);
+			if(!$pagevar['properties'][$i]['photo']):
+				$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
+			endif;
+		endfor;
+		$this->session->set_userdata('backpath',uri_string());
+		$this->load->view("broker_interface/pages/list-properties",$pagevar);
 	}
 	
-	public function account_profile(){
+	public function edit_property(){
 		
+		$this->load->model('properties');
+		$this->load->model('owners');
+		$this->load->model('images');
 		$pagevar = array(
-			'profile' => $this->users->read_record($this->uri->segment(4),'users'),
-			'msgs' => $this->session->userdata('msgs'),
-			'msgr' => $this->session->userdata('msgr')
+			'property' => $this->properties->read_record($this->uri->segment(4),'properties'),
+			'images' => $this->images->read_records($this->uri->segment(4),'images')
 		);
-		$this->session->unset_userdata(array('msgr'=>'','msgs'=>''));
-		$pagevar['profile']['info'] = $this->account_information($pagevar['profile']['user_id'],$pagevar['profile']['class']);
-		$this->load->view("broker_interface/pages/account-profile",$pagevar);
+		if($pagevar['property']['broker_id'] != $this->user['uid']):
+			show_error('Access Denied!');
+		endif;
+		$pagevar['property']['user'] = $this->users->read_record($pagevar['property']['owner_id'],'users');
+		$pagevar['property']['owner'] = $this->owners->read_record($pagevar['property']['user']['user_id'],'owners');
+		$this->session->set_userdata(array('owner_id'=>$pagevar['property']['owner']['id'],'property_id'=>$pagevar['property']['id']));
+		$this->load->view("broker_interface/pages/property-card",$pagevar);
 	}
 }

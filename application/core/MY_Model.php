@@ -144,4 +144,13 @@ class MY_Model extends CI_Model{
 		$data = $query->result_array();
 		return $data[0][$field];
 	}
+
+	function nextID($table){
+		
+		$this->db->select_max('id','max');
+		$query = $this->db->get($table);
+		$data = $query->result_array();
+		if($data) return $data[0]['max']+1;
+		return 1;
+	}
 }

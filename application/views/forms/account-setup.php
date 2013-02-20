@@ -36,7 +36,7 @@
 			<label>Company name*</label>
 			<input class="FieldSend" name="company" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
-		<p data-class="broker">
+		<!--<p data-class="broker">
 			<label>Company address*</label>
 			<input class="FieldSend" name="address" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
@@ -51,7 +51,7 @@
 		<p data-class="broker">
 			<label>Company website</label>
 			<input class="FieldSend" name="website" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
-		</p>
+		</p>-->
 		<p id="license_id" data-class="broker">
 			<label>License ID</label>
 			<input class="FieldSend" name="license"<?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">

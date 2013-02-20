@@ -17,7 +17,7 @@ class Admin_interface extends MY_Controller{
 		if($this->input->post('submit')):
 			$update = $this->input->post();
 			$this->pages->update_record($update);
-			redirect('administrator/control-panel/pages');
+			redirect(ADM_START_PAGE.'/pages');
 		endif;
 		
 		if($this->uri->segment(4)):

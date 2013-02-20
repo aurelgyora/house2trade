@@ -101,7 +101,7 @@ class Users_interface extends MY_Controller{
 		$this->load->view("users_interface/pages/login",$pagevar);
 	}
 	
-	public function logoff(){
+	public function logout(){
 		
 		$this->session->unset_userdata(array('logon'=>'','userid'=>'','backpath'=>''));
 		if(isset($_SERVER['HTTP_REFERER'])):
@@ -120,8 +120,8 @@ class Users_interface extends MY_Controller{
 	public function comfirm_registering(){
 		
 		switch($this->uri->segment(2)):
-			case 'broker': $cabinetLink = 'broker/control-panel'; break;
-			case 'homeowner': $cabinetLink = 'homeowner/control-panel'; break;
+			case 'broker': $cabinetLink = BROKER_START_PAGE; break;
+			case 'homeowner': $cabinetLink = OWNER_START_PAGE; break;
 			default: show_404(); break;
 		endswitch;
 		$user_id = $this->users->user_exist('temporary_code',$this->uri->segment(4));
@@ -150,8 +150,8 @@ To log in to your personal account, use the email specified during registration.
 	public function comfirm_temporary_code(){
 		
 		switch($this->uri->segment(2)):
-			case 'broker': $cabinetLink = 'broker/control-panel'; break;
-			case 'homeowner': $cabinetLink = 'homeowner/control-panel'; break;
+			case 'broker': $cabinetLink = BROKER_START_PAGE; break;
+			case 'homeowner': $cabinetLink = OWNER_START_PAGE; break;
 			default: show_404(); break;
 		endswitch;
 		$user_id = $this->users->user_exist('temporary_code',$this->uri->segment(4));

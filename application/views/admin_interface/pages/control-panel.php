@@ -13,7 +13,7 @@
 				<ul class="thumbnails">
 					<li class="span2">
 						<div class="thumbnail">
-							<?=anchor('administrator/control-panel/pages','<img src="'.site_url('img/thumb.png').'" alt="" />',array('class'=>'thumbnail'));?>
+							<?=anchor(ADM_START_PAGE.'/pages','<img src="'.site_url('img/thumb.png').'" alt="" />',array('class'=>'thumbnail'));?>
 							<h6>Section &laquo;Pages&raquo;</h6>
 						</div>
 					</li>

@@ -26,7 +26,7 @@ class MY_Controller extends CI_Controller{
 					switch($this->user['class']):
 						case 1: $this->user['name'] = 'Administrator'; break;
 						case 2: $this->load->model('brokers');$this->user['name'] = $this->brokers->read_name($userinfo['user_id'],'brokers'); break;
-						case 3: $this->load->model('properties');$this->user['name'] = $this->properties->read_name($userinfo['user_id'],'properties'); break;
+						case 3: $this->load->model('owners');$this->user['name'] = $this->owners->read_name($userinfo['user_id'],'owners'); break;
 					endswitch;
 					$this->loginstatus = TRUE;
 				endif;
@@ -141,6 +141,7 @@ class MY_Controller extends CI_Controller{
 
 	public function filedelete($file){
 		
+		$file = getcwd().'/'.$file;
 		if(is_file($file)):
 			@unlink($file);
 			return TRUE;
@@ -215,7 +216,7 @@ class MY_Controller extends CI_Controller{
 		switch($class):
 		 	case 1: $info['name'] = 'Администратор'; return $info; break;
 			case 2: $this->load->model('brokers'); return $info = $this->brokers->read_record($user_id,'brokers');break;
-		 	case 3: $this->load->model('properties'); return $info = $this->properties->read_record($user_id,'properties');break;
+		 	case 3: $this->load->model('owners'); return $info = $this->owners->read_record($user_id,'owners');break;
 			default : FALSE; break;
 		endswitch;
 	}

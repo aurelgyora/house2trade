@@ -28,11 +28,11 @@ class Ajax_interface extends MY_Controller{
 					$statusval['message'] = '';
 					$this->session->set_userdata(array('logon'=>md5($dataval[0]),'userid'=>$user['id']));
 					switch($user['class']):
-						case 1: $statusval['redirect'] .= 'administrator/control-panel';
+						case 1: $statusval['redirect'] .= ADM_START_PAGE;
 							break;
-						case 2: $statusval['redirect'] .= 'broker/control-panel';
+						case 2: $statusval['redirect'] .= BROKER_START_PAGE;
 							break;
-						case 3: $statusval['redirect'] .= 'homeowner/control-panel';
+						case 3: $statusval['redirect'] .= OWNER_START_PAGE;
 							break;
 					endswitch;
 				endif;
@@ -59,7 +59,6 @@ class Ajax_interface extends MY_Controller{
 					$dataval['user_id'] = $this->users->insert_record($dataval);
 					$this->load->helper('string');
 					$activate_code = random_string('alpha',25);
-					
 					if($dataval['user_id']):
 						switch($dataval['class']):
 							case 2:
@@ -70,9 +69,11 @@ class Ajax_interface extends MY_Controller{
 								$user_class = 'broker';
 								break;
 							case 3:
+								$this->load->model('owners');
 								$this->load->model('properties');
-								$propertiesID = $this->properties->insert_record($dataval);
-								$this->users->update_field($dataval['user_id'],'user_id',$propertiesID,'users');
+								$ownerID = $this->owners->insert_record($dataval);
+								$this->properties->insert_record($dataval);
+								$this->users->update_field($dataval['user_id'],'user_id',$ownerID,'users');
 								$this->users->update_field($dataval['user_id'],'class',3,'users');
 								$this->users->update_field($dataval['user_id'],'temporary_code',$activate_code,'users');
 								$user_class = 'homeowner';
@@ -115,13 +116,14 @@ $mailtext = ob_get_clean();
 					$dataval['password'] = random_string('alnum',12);
 					$dataval['user_id'] = $this->users->insert_record($dataval);
 					if($dataval['user_id']):
-						$propertiesID = $this->properties->insert_record($dataval);
-						$this->users->update_field($dataval['user_id'],'user_id',$propertiesID,'users');
+						$this->load->model('owners');
+						$this->load->model('properties');
+						$ownerID = $this->owners->insert_record($dataval);
+						$property_id = $this->properties->insert_record($dataval);
+						$this->users->update_field($dataval['user_id'],'user_id',$ownerID,'users');
 						$this->users->update_field($dataval['user_id'],'class',3,'users');
-						
 						$status = $this->users->read_field($this->user['uid'],'users','status');
-						$this->users->update_field($dataval['user_id'],'status',$status,'users');
-						
+						$this->properties->update_field($property_id,'status',$status,'users');
 						ob_start();?>
 <p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
 <p>Your account has been created at Hause2Trade !<br/>
@@ -135,6 +137,7 @@ $mailtext = ob_get_clean();
 						$this->send_mail($dataval['email'],'robot@house2trade.com','Hause2Trade','Register to Hause2Trade',$mailtext);
 						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
 						$statusval['status'] = TRUE;
+						$this->session->set_userdata(array('owner_id'=>$dataval['user_id'],'property_id'=>$property_id));
 					endif;
 				else:
 					$statusval['message'] = "Property already exist";
@@ -164,7 +167,55 @@ $mailtext = ob_get_clean();
 		echo json_encode($statusval);
 	}
 	
-	function save_profile(){
+	function save_property_info(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$statusval = array('status'=>FALSE,'message'=>'Profile saved','redirect'=>'');
+		$data = trim($this->input->post('postdata'));
+		if($data):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$dataval[$dataid[0]] = trim($dataid[1]);
+			endfor;
+			if($dataval):
+				$dataval['password'] = $dataval['confirm'] = ''; //это пока не режат нужно ли управлять брокер паролем владельца
+				$this->load->model('owners');
+				$this->load->model('properties');
+				if($this->user['class'] == 2):
+					$broker = $this->properties->read_field($this->session->userdata('property_id'),'properties','broker_id');
+					if($broker != $this->user['uid']):
+						exit;
+					endif;
+				endif;
+				if($dataval['password'] != $dataval['confirm']):
+					$statusval['message'] = 'Passwords do not match';
+				else:
+					$statusval['status'] = TRUE;
+					if(!isset($dataval['setpswd'])):
+						if($this->user['class'] == 2):
+							$this->owners->update_record($this->session->userdata('owner_id'),$dataval);
+						endif;
+						$this->properties->update_record($this->session->userdata('property_id'),$dataval);
+					endif;
+					switch($this->user['class']):
+						case 2:	$statusval['redirect'] = site_url(BROKER_START_PAGE);
+								break;
+						case 3:	$statusval['redirect'] = site_url(OWNER_START_PAGE);
+								break;
+					endswitch;
+					if(($this->user['class'] != 2) && !empty($dataval['password'])):
+						$this->users->update_field($this->user['uid'],'password',md5($dataval['password']),'users');
+					endif;
+				endif;
+			endif;
+		endif;
+		echo json_encode($statusval);
+	}
+	
+	function saveProfile(){
 		
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
@@ -188,22 +239,65 @@ $mailtext = ob_get_clean();
 									$dataval['id'] = $this->users->read_field($this->user['uid'],'users','user_id');
 									$this->brokers->update_record($dataval);
 									break;
-							case 3:	$this->load->model('properties');
-									$dataval['id'] = $this->users->read_field($this->user['uid'],'users','user_id');
-									$this->properties->update_record($dataval);
+							case 3:	$this->load->model('owners');
+									$owner = $this->users->read_field($this->user['uid'],'users','user_id');
+									$this->owners->update_record($owner,$dataval);
 									break;
 						endswitch;
 					endif;
 					switch($this->user['class']):
-						case 2:	$statusval['redirect'] = site_url('broker/control-panel');
+						case 2:	$statusval['redirect'] = site_url(BROKER_START_PAGE);
 								break;
-						case 3:	$statusval['redirect'] = site_url('homeowner/control-panel');
+						case 3:	$statusval['redirect'] = site_url(OWNER_START_PAGE);
 								break;
 					endswitch;
 					if(!empty($dataval['password'])):
 						$this->users->update_field($this->user['uid'],'password',md5($dataval['password']),'users');
 					endif;
 				endif;
+			endif;
+		endif;
+		echo json_encode($statusval);
+	}
+	
+	function deletePropertyImages(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$statusval = array('status'=>FALSE,'message'=>'Images deleted');
+		$data = trim($this->input->post('postdata'));
+		if($data):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$dataval[$i] = trim($dataid[1]);
+			endfor;
+			if($dataval):
+				if($this->user['class'] == 2):
+					$this->load->model('properties');
+					$broker = $this->properties->read_field($this->session->userdata('property_id'),'properties','broker_id');
+					if($broker != $this->user['uid']):
+						exit;
+					endif;
+				endif;
+				$this->load->model('images');
+				$mainPhotoDeleted = FALSE;
+				for($i=0;$i<count($dataval);$i++):
+					$image = $this->images->read_record($dataval[$i],'images');
+					if($image['main']):
+						$mainPhotoDeleted = TRUE;
+					endif;
+					$this->filedelete($image['photo']);
+					$this->images->delete_record($image['id'],'images');
+				endfor;
+				if($mainPhotoDeleted):
+					$images = $this->images->read_records($this->session->userdata('property_id'));
+					if(isset($images[0]['id'])):
+						$this->images->update_field($images[0]['id'],'main',1,'images');
+					endif;
+				endif;
+				$statusval['status'] = TRUE;
 			endif;
 		endif;
 		echo json_encode($statusval);
@@ -259,5 +353,56 @@ $mailtext = ob_get_clean();
 		endif;
 		echo json_encode($statusval);
 	}
-
+	
+	function multiUpload(){
+		
+		$this->load->model('images');
+		$randomNumber = mt_rand(1,1000);
+		$nextPropertyID = $this->images->nextID('images');
+		$insert = array('main'=>0,'property_id'=>0,'photo'=>'','owner_id'=>0);
+		$insert['owner_id'] = $this->session->userdata('owner_id');
+		$insert['property_id'] = $this->session->userdata('property_id');
+		if($this->user['class'] == 3):
+			$this->load->model('owners');
+			$insert['broker_id'] = $this->owners->read_field($insert['owner_id'],'owners','broker_id');
+		endif;
+		if(!$insert['owner_id'] || !$insert['property_id']):
+			show_error('Missing data');
+		endif;
+		if(!$this->images->image_exist($insert['property_id'])):
+			$insert['main'] = 1;
+		endif;
+		$fn = (isset($_SERVER['HTTP_X_FILENAME'])?$_SERVER['HTTP_X_FILENAME']:false);
+		if($fn):
+			$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$fn);
+			file_put_contents(getcwd().'/upload_images/'.$newFileName,file_get_contents('php://input'));
+			echo "$fn uploaded";
+			$insert['photo'] = 'upload_images/'.$newFileName;
+			$this->images->insert_record($insert);
+			exit();
+		else:
+			if(isset($_FILES['fileselect'])):
+				$files = $_FILES['fileselect'];
+				$i = 0;
+				foreach($files['error'] as $id => $err):
+					if($err == UPLOAD_ERR_OK):
+						$fn = $files['name'][$id];
+						$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$fn);
+						move_uploaded_file($files['tmp_name'][$id],getcwd().'/upload_images/'.$newFileName);
+						if(!$i):
+							$insert['main'] = 1;
+						else:
+							$insert['main'] = 0;
+						endif;
+						$insert['photo'] = 'upload_images/'.$newFileName;
+						$this->images->insert_record($insert);
+						echo "<p>File $fn uploaded.</p>";
+						$i++;
+					endif;
+				endforeach;
+			else:
+				show_404();
+			endif;
+		endif;
+	}
 }

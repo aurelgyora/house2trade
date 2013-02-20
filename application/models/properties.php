@@ -2,8 +2,9 @@
 
 class Properties extends MY_Model{
 	
-	var $id = 0;var $listing_id = 0;var $broker_id = 0;var $seller = 0;var $zip_code = 0;var $bathrooms = 0;var $bedrooms = 0;var $tax = 0;var $mls = 0;
-	var $fname = ''; var $lname = ''; var $address1 = '';var $address2 = '';var $city = '';var $state = '';var $type = '';var $sqf = '';var $description = '';
+	var $id = 0;var $listing_id = 0;var $owner_id = 0;var $broker_id = 0;
+	var $zip_code = 0;var $bathrooms = 0;var $bedrooms = 0;var $tax = 0;var $mls = 0;
+	var $address1 = '';var $address2 = '';var $city = '';var $state = '';var $type = '';var $sqf = '';var $description = '';
 	var $price = 0.00;
 	
 	function __construct(){
@@ -15,11 +16,7 @@ class Properties extends MY_Model{
 		if($this->loginstatus):
 			$this->broker_id = $this->user['uid'];
 		endif;
-		$this->fname = $data['fname'];
-		$this->lname = $data['lname'];
-		if(isset($data['seller'])):
-			$this->seller = $data['seller'];
-		endif;
+		$this->owner_id = $data['user_id'];
 		if(isset($data['mls']) && isset($data['zip_code'])):
 			$this->zip_code = $data['zip_code'];
 			$this->bathrooms = $data['bathrooms'];
@@ -39,10 +36,8 @@ class Properties extends MY_Model{
 		return $this->db->insert_id();
 	}
 	
-	function update_record($data){
+	function update_record($id,$data){
 
-		$this->db->set('fname',$data['fname']);
-		$this->db->set('lname',$data['lname']);
 		$this->db->set('zip_code',$data['zip_code']);
 		$this->db->set('bathrooms',$data['bathrooms']);
 		$this->db->set('bedrooms',$data['bedrooms']);
@@ -57,7 +52,7 @@ class Properties extends MY_Model{
 		$this->db->set('description',$data['description']);
 		$this->db->set('price',$data['price']);
 		
-		$this->db->where('id',$data['id']);
+		$this->db->where('id',$id);
 		$this->db->update('properties');
 		return $this->db->affected_rows();
 	}
@@ -79,4 +74,5 @@ class Properties extends MY_Model{
 		if(count($data)) return $data[0]['id'];
 		return FALSE;
 	}
+
 }
