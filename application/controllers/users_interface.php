@@ -117,7 +117,7 @@ class Users_interface extends MY_Controller{
 		$this->load->view("users_interface/pages/password-recovery",$pagevar);
 	}
 	
-	public function comfirm_registering(){
+	public function confirm_registering(){
 		
 		switch($this->uri->segment(2)):
 			case 'broker': $cabinetLink = BROKER_START_PAGE; break;
@@ -147,7 +147,7 @@ To log in to your personal account, use the email specified during registration.
 		endif;
 	}
 	
-	public function comfirm_temporary_code(){
+	public function confirm_temporary_code(){
 		
 		switch($this->uri->segment(2)):
 			case 'broker': $cabinetLink = BROKER_START_PAGE; break;

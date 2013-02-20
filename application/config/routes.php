@@ -37,8 +37,8 @@ $route['virtual-tour']		= "users_interface/virtualTour";
 
 $route['password-recovery']	= "users_interface/pswdRecovery";
 $route['logout']			= "users_interface/logout";
-$route['comfirm-registering/:any/activation-code/:any'] = "users_interface/comfirm_registering";
-$route['password-recovery/:any/temporary-code/:any'] = "users_interface/comfirm_temporary_code";
+$route['confirm-registering/:any/activation-code/:any'] = "users_interface/confirm_registering";
+$route['password-recovery/:any/temporary-code/:any'] = "users_interface/confirm_temporary_code";
 
 /*************************************************** BROKERS INTRERFACE ***********************************************/
 

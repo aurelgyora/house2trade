@@ -70,8 +70,8 @@
 				<input class="span4 FieldSend" id="login-password" name="password" <?=TOOLTIP_FIELD_BLANK;?> type="password">
 			</div>
 			<div class="control-group">
-				<label for="confirm">Comfirm password: </label>
-				<input class="span4 FieldSend" id="comfirm-password" name="confirm" <?=TOOLTIP_FIELD_BLANK;?> type="password">
+				<label for="confirm">Confirm password: </label>
+				<input class="span4 FieldSend" id="confirm-password" name="confirm" <?=TOOLTIP_FIELD_BLANK;?> type="password">
 			</div>
 		</fieldset>
 	</div>

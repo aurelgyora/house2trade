@@ -82,7 +82,7 @@ class Ajax_interface extends MY_Controller{
 						ob_start();?>
 <p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
 <p>Thank you for registering at House2Trade.<br/>Please click the link below to activate your account:<br/>
-<?=anchor('comfirm-registering/'.$user_class.'/activation-code/'.$activate_code,base_url().'comfirm-registering/'.$user_class.'/activation-code/'.$activate_code,array('target'=>'_blank'));?></p><?
+<?=anchor('confirm-registering/'.$user_class.'/activation-code/'.$activate_code,base_url().'confirm-registering/'.$user_class.'/activation-code/'.$activate_code,array('target'=>'_blank'));?></p><?
 $mailtext = ob_get_clean();
 						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade','Register to House2Trade',$mailtext);
 						$statusval['status'] = TRUE;

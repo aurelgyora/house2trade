@@ -25,10 +25,10 @@ class Brokers extends MY_Model{
 		$this->lname 	= $data['lname'];
 		$this->phone 	= $data['phone'];
 		$this->company 	= $data['company'];
-		$this->address 	= $data['address'];
-		$this->cphone 	= $data['cphone'];
-		$this->cmail 	= $data['cmail'];
-		$this->website 	= $data['website'];
+//		$this->address 	= $data['address'];
+//		$this->cphone 	= $data['cphone'];
+//		$this->cmail 	= $data['cmail'];
+//		$this->website 	= $data['website'];
 		$this->license 	= $data['license'];
 		$this->subcribe = $data['subcribe'];
 		$this->db->insert('brokers',$this);

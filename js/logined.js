@@ -46,11 +46,11 @@
 		var user_password = ''; var user_confirm_password = '';
 		if($("#login-password").val()){
 			user_password = $("#login-password").val();
-			user_confirm_password = $("#comfirm-password").val();
+			user_confirm_password = $("#confirm-password").val();
 		}
 		$(".valid-required").tooltip("destroy");$("#block-message").html('');
 		$("#form-edit-property-info .valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
-		if(!mt.matches_parameters(user_password,user_confirm_password)){$("#comfirm-password").attr('data-original-title','Passwords do not match').tooltip('show');return false;}
+		if(!mt.matches_parameters(user_password,user_confirm_password)){$("#confirm-password").attr('data-original-title','Passwords do not match').tooltip('show');return false;}
 		if(!err && !mt.minLength(user_password,6)){$("#login-password").attr('data-original-title','length of least 6 characters').tooltip('show');err = true;}
 		var notNumerics = mt.FieldsIsNotNumeric($("#form-edit-property-info"));
 		if(notNumerics){
@@ -63,7 +63,7 @@
 				$.post(mt.baseURL+"save-property-info",{'postdata':postdata},
 					function(data){
 						$("#block-message").html(data.message);
-						if(data.status){$("#login-password").val('');$("#comfirm-password").val('');}
+						if(data.status){$("#login-password").val('');$("#confirm-password").val('');}
 					},"json");
 			}
 	});
@@ -84,10 +84,10 @@
 		event.preventDefault();
 		var err = false;
 		var user_password = $("#login-password").val();
-		var user_confirm_password = $("#comfirm-password").val();
+		var user_confirm_password = $("#confirm-password").val();
 		$("input.valid-required").tooltip("destroy");
 		$("input.valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
-		if(!mt.matches_parameters(user_password,user_confirm_password)){$("#comfirm-password").attr('data-original-title','Passwords do not match').tooltip('show');return false;}
+		if(!mt.matches_parameters(user_password,user_confirm_password)){$("#confirm-password").attr('data-original-title','Passwords do not match').tooltip('show');return false;}
 		if(!err && !mt.minLength(user_password,6)){$("#login-password").attr('data-original-title','length of least 6 characters').tooltip('show');err = true;}
 		if(!err){
 				var postdata = mt.formSerialize($("input.FieldSend"));
@@ -117,10 +117,10 @@
 		event.preventDefault();
 		var err = false;
 		var user_password = $("#login-password").val();
-		var user_confirm_password = $("#comfirm-password").val();
+		var user_confirm_password = $("#confirm-password").val();
 		$(".valid-required").tooltip("destroy");$("#block-message").html('');
 		$(".valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
-		if(!mt.matches_parameters(user_password,user_confirm_password)){$("#comfirm-password").attr('data-original-title','Passwords do not match').tooltip('show');return false;}
+		if(!mt.matches_parameters(user_password,user_confirm_password)){$("#confirm-password").attr('data-original-title','Passwords do not match').tooltip('show');return false;}
 		if(!err && !mt.minLength(user_password,6)){$("#login-password").attr('data-original-title','length of least 6 characters').tooltip('show');err = true;}
 		if(!err){
 				var postdata = mt.formSerialize($(".FieldSend"));
@@ -128,7 +128,7 @@
 				$.post(mt.baseURL+"save-profile",{'postdata':postdata},
 					function(data){
 						$("#block-message").html(data.message);
-						if(data.status){$("#login-password").val('');$("#comfirm-password").val('');}
+						if(data.status){$("#login-password").val('');$("#confirm-password").val('');}
 					},"json");
 			}
 	});
