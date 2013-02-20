@@ -14,7 +14,7 @@ class Union extends CI_Model{
 		$query = $this->db->query($query);
 		$data = $query->result_array();
 		if($data) return $data;
-		return FALSE;
+		return NULL;
 	}
 	
 	function ownerPropertiesList($count,$from){
@@ -23,7 +23,7 @@ class Union extends CI_Model{
 		$query = $this->db->query($query);
 		$data = $query->result_array();
 		if($data) return $data;
-		return FALSE;
+		return NULL;
 	}
 	
 	/*****************************************************************************************************************/

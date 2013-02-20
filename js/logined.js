@@ -32,7 +32,7 @@
 					if(data.status){
 						$("#div-choise-metod").remove();
 						$("#div-account-properties").remove();
-						$("#div-insert-photos-properties").hide().removeClass('hidden').fadeIn('slow');
+						$("#div-insert-photo-properties").hide().removeClass('hidden').fadeIn('slow');
 						$(".FieldSend").val('');
 						$("#photos-block-message").html(data.message);
 					}

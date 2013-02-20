@@ -25,7 +25,7 @@
 					<?php $this->load->view('forms/account-properties');?>
 				</div>
 				<div class="clear"></div>
-				<div id="div-insert-properties" class="hidden">
+				<div id="div-insert-photo-properties" class="hidden">
 					<?php $this->load->view('forms/insert-photos-properties');?>
 				</div>
 			</div>

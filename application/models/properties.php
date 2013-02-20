@@ -71,7 +71,7 @@ class Properties extends MY_Model{
 		$this->db->where('zip_code',$zip_code);
 		$query = $this->db->get('properties',1);
 		$data = $query->result_array();
-		if(count($data)) return $data[0]['id'];
+		if($data) return $data[0]['id'];
 		return FALSE;
 	}
 

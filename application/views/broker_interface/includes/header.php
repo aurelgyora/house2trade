@@ -3,7 +3,7 @@
 		<div class="row">
 			<div class="span12">
 				<h1 class="admin-header">
-					<span class="small pull-right">Broker Tools</span>
+					<span class="small pull-right">Broker Cabinet</span>
 				</h1>
 			</div>
 		</div>
