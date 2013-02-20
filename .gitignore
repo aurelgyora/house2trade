@@ -9,4 +9,5 @@ application/logs/*
 !application/logs/.htaccess
 .project
 ckeditor/*
+upload_images/*
 house2trade.clpprj
