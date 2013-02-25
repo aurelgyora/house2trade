@@ -15,9 +15,9 @@
 						<a class="brand" href="<?=site_url(ADM_START_PAGE.'/pages');?>">Pages content</a>
 						<ul class="nav pull-right">
 							<li><a href="<?=site_url(ADM_START_PAGE.'/pages/home');?>">Home page</a></li>
-							<li><a href="<?=site_url(ADM_START_PAGE'/pages/about-us');?>">About Us</a></li>
-							<li><a href="<?=site_url(ADM_START_PAGE'/pages/contacts');?>">Contacts</a></li>
-							<li><a href="<?=site_url(ADM_START_PAGE'/pages/company');?>">Company</a></li>
+							<li><a href="<?=site_url(ADM_START_PAGE.'/pages/about-us');?>">About Us</a></li>
+							<li><a href="<?=site_url(ADM_START_PAGE.'/pages/contacts');?>">Contacts</a></li>
+							<li><a href="<?=site_url(ADM_START_PAGE.'/pages/company');?>">Company</a></li>
 						</ul>
 					</div>
 				</div>
