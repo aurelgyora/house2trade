@@ -1,10 +1,11 @@
 <form id="upload" action="<?=site_url('multi-upload');?>" method="POST" enctype="multipart/form-data">
-	<span class="pull-right" id="photos-block-message"></span>
+	<p id="photos-block-message"></p>
 	<div class="clear"></div>
 	<fieldset>
-		<legend>Use the form below to download the images for property</legend>
+		<legend>Use the form below to upload property images</legend>
 		<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="5000000" />
-		<div>
+		<div class="control-group">
+			<p>&nbsp;</p>
 			<label for="fileselect">Files to upload:</label>
 			<input type="file" id="fileselect" size="45" autocomplete="off" name="fileselect[]" multiple="multiple" />
 			<div id="filedrag">or drop files here</div>

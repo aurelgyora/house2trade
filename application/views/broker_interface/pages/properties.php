@@ -13,7 +13,7 @@
 			<div class="span9">
 				<div class="navbar">
 					<div class="navbar-inner">
-						<a class="brand" href="<?=site_url(uri_string());?>">Register Property</a>
+						<a class="brand" href="<?=site_url(uri_string());?>">House2Trade property registration</a>
 					</div>
 				</div>
 				<div class="clear"></div>

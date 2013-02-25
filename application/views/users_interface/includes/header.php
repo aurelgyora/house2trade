@@ -4,15 +4,15 @@
 		<nav class="grid_8">
 		<?php if($this->loginstatus):?>
 			<ul class="auth">
-				<li><?=$this->user['name'];?></li>
+				<!-- <li><?=$this->user['name'];?></li> -->
 			<?php $cabinetLink = '';
 			switch($this->user['class']):
 				case 1: $cabinetLink = ADM_START_PAGE; break;
 				case 2: $cabinetLink = BROKER_START_PAGE; break;
 				case 3: $cabinetLink = OWNER_START_PAGE; break;
 			endswitch;?>
-				<li><?=anchor($cabinetLink,'Cabinet')?></li>
-				<li>&ndash; or &ndash;</li>
+				<li><?=anchor($cabinetLink,'My account')?></li>
+				<li>&nbsp;|&nbsp;</li>
 				<li><?=anchor('logout','Logout')?></li>
 			</ul>
 		<?php else:?>

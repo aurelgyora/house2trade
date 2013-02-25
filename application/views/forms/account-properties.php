@@ -76,11 +76,10 @@
 	</div>
 	<div class="clear"></div>
 	<div class="form-actions">
-		<span class="pull-right" id="block-message"></span>
+		<div class="alert" id="block-message"> </div>
 		<div class="clear"></div>
-		<button class="btn btn-success pull-right" type="submit" id="register-properties" name="submit" value="send">Register property info</button>
-		<div class="span4" id="span-properties-auto-data">
-			<a class="none pull-right muted" id="set-properties-auto-data" href="#">I want to add property info by via MLS ID</a>
-		</div>
+		<button class="btn btn-success" type="submit" id="register-properties" name="submit" value="send">Add property</button>
+		<span class="decision">or</span>
+		<a class="none link-more" id="set-properties-auto-data" href="#">Add property info by MLS ID</a>
 	</div>
 <?= form_close(); ?>

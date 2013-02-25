@@ -14,7 +14,7 @@
 	</div>
 	<div class="clear"></div>
 	<div class="form-actions">
-		<button class="btn btn-success pull-right" id="set-password" type="submit" name="submit" value="send">Set password</button>
+		<button class="btn btn-success" id="set-password" type="submit" name="submit" value="send">Set password</button>
 		<span id="block-message"></span>
 	</div>
 <?= form_close(); ?>

@@ -23,8 +23,7 @@
 				</div>
 				<div class="clear"></div>
 		<?php if($pages):?>
-				<table class="table table-hover">
-					<caption>Pages list</caption>
+				<table class="table table-hover table-striped">
 					<thead>
 						<tr>
 							<th class="span3">URL</th>
@@ -38,7 +37,7 @@
 							<td><?=$pages[$i]['url']?></td>
 							<td><?=$pages[$i]['title']?></td>
 							<td>
-								<a href="<?=site_url(uri_string().'/'.$pages[$i]['url']);?>" class="btn btn-mini set-operation" type="button"><i class="icon-edit"></i></a>
+								<a href="<?=site_url(uri_string().'/'.$pages[$i]['url']);?>" class="btn set-operation" type="button">Edit</a>
 							</td>
 						</tr>
 				<?php endfor;?>
