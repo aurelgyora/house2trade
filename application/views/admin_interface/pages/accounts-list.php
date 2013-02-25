@@ -25,11 +25,11 @@
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th class="span1">№</th>
+							<th class="span1">#</th>
 							<th class="span3">Name</th>
 							<th class="span3">Email</th>
 							<th class="span2">Status</th>
-							<th class="span2">SignUp date</th>
+							<th class="span2">Signup date</th>
 							<th>&nbsp;</th>
 						</tr>
 					</thead>
@@ -44,7 +44,7 @@
 							<td><?=getStatus($users[$i]['status']);?></td>
 							<td><?=swap_dot_date_without_time($users[$i]['signdate']);?></td>
 							<td>
-								<a href="<?=site_url('administrator/account/'.$users[$i]['uid']);?>" class="btn btn-mini set-operation" type="button"><i class="icon-user"></i></a>
+								<a href="<?=site_url('administrator/account/'.$users[$i]['uid']);?>" class="btn btn-mini set-operation" type="button">Profile</a>
 							</td>
 						</tr>
 				<?php endfor;?>

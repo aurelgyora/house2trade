@@ -10,11 +10,12 @@
 		</p>
 	</div>
 	<div class="clear"></div>
-	<div id="block-message" class="grid_2"></div>
+	<p id="block-message" class="grid_2"></p>
 	<div class="grid_7">
 		<p class="button-row">
-			<input class="btn-submit" id="login-button" name="commit" type="submit" value="Submit Form">
-			<a href="<?=site_url('password-recovery')?>" class="">forgot password?</a>
+			<input class="btn-submit" id="login-button" name="commit" type="submit" value="Log in">
+			<span class="decision"> </span>
+			<a href="<?=site_url('password-recovery')?>" class="link-more" hidefocus="true">Forgot password?</a>
 		</p>
 	</div>
 	<div class="clear"> </div>

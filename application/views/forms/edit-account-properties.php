@@ -90,12 +90,9 @@
 	<div class="clear"></div>
 <?php endif;?>
 	<div class="form-actions">
-		<span class="pull-right" id="block-message"></span>
-		<div class="clear"></div>
-		<button class="btn btn-success pull-right" id="save-property" type="submit" name="submit" value="send">Save property info</button>
-		<div class="span4">
-			<a class="none btn add-property-images"><i class="icon-plus"></i> Add images</a>
-			<a class="none btn" id="remove-property-images"><i class="icon-minus"></i>Remove images</a>
-		</div>
+		<p id="block-message"></p>
+		<button class="btn btn-success" id="save-property" type="submit" name="submit" value="send">Save property info</button>
+		<a class="none btn add-property-images"><i class="icon-plus"></i> Add images</a>
+		<a class="none btn" id="remove-property-images"><i class="icon-minus"></i>Remove images</a>
 	</div>
 <?= form_close(); ?>
