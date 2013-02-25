@@ -130,7 +130,7 @@ class Users_interface extends MY_Controller{
 			$user = $this->users->read_record($user_id,'users');
 			switch($user['class']):
 				case 2: $this->load->model('brokers');$user['name'] = $this->brokers->read_name($user['user_id'],'brokers'); break;
-				case 3: $this->load->model('properties');$user['name'] = $this->properties->read_name($user['user_id'],'properties'); break;
+				case 3: $this->load->model('owners');$user['name'] = $this->owners->read_name($user['user_id'],'owners'); break;
 			endswitch;
 			ob_start();?>
 <p>Hello <em><?=$user['name'];?></em>,</p>

@@ -72,7 +72,6 @@ class Ajax_interface extends MY_Controller{
 								$this->load->model('owners');
 								$this->load->model('properties');
 								$ownerID = $this->owners->insert_record($dataval);
-								$this->properties->insert_record($dataval);
 								$this->users->update_field($dataval['user_id'],'user_id',$ownerID,'users');
 								$this->users->update_field($dataval['user_id'],'class',3,'users');
 								$this->users->update_field($dataval['user_id'],'temporary_code',$activate_code,'users');

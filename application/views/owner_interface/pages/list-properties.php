@@ -13,11 +13,11 @@
 				<div class="navbar">
 					<div class="navbar-inner">
 						<a class="brand" href="<?=site_url(uri_string());?>">My properties</a>
-					<?php if(!$my_broker):?>
-						<a href="<?=site_url('homeowner/register-properties');?>" class="btn btn-link btn-small pull-right" type="button">Add new Property</a>
-					<?php endif;?>
 					</div>
 				</div>
+			<?php if(!$my_broker):?>
+				<a href="<?=site_url('homeowner/register-properties');?>" class="none disabled btn btn-link btn-small pull-right" type="button">Add new Property</a>
+			<?php endif;?>
 				<div class="clear"></div>
 				<?php $this->load->helper('text');?>
 			<?php for($i=0;$i<count($properties);$i++):?>
