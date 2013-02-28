@@ -52,7 +52,7 @@ class Admin_interface extends MY_Controller{
 		$class = $this->usersclass->getClassID($this->uri->segment(2));
 		$pagevar = array(
 			'users' => $this->users->classListByPages($class,$per_page,$from),
-			'pages' => $this->pagination('administrator/brokers/accounts',5,$this->users->countClassList($class),$per_page),
+			'pages' => $this->pagination('administrator/'.$this->uri->segment(2).'/accounts',5,$this->users->countClassList($class),$per_page),
 			'msgs' => $this->session->userdata('msgs'),
 			'msgr' => $this->session->userdata('msgr')
 		);

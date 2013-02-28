@@ -4,15 +4,16 @@
 		<fieldset>
 			<div class="control-group">
 				<label for="fname">First Name*: </label>
-				<input class="span4 valid-required FieldSend" name="fname" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$owner['fname'];?>">
+				<input class="span4 valid-required FieldSend" name="fname" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$profile['info']['fname'];?>">
 			</div>
 			<div class="control-group">
 				<label for="lname">Last Name*: </label>
-				<input class="span4 valid-required FieldSend" name="lname" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$owner['lname'];?>">
+				<input class="span4 valid-required FieldSend" name="lname" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$profile['info']['lname'];?>">
 			</div>
 		</fieldset>
 	</div>
 	<div class="clear"></div>
+<?php if($profile['id'] == $this->user['uid']):?>
 	<legend>Change password</legend>
 	<div class="span4">
 		<fieldset>
@@ -40,4 +41,5 @@
 		<button class="btn btn-success pull-right" id="save-profile" type="submit" name="submit" value="send">Save profile</button>
 		<span class="pull-right" id="block-message"></span>
 	</div>
+<?php endif;?>
 <?= form_close(); ?>

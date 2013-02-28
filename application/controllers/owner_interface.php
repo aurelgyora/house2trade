@@ -32,7 +32,7 @@ class Owner_interface extends MY_Controller{
 			'profile' => $this->users->read_record($this->user['uid'],'users'),
 			'owner' => array(),
 		);
-		$pagevar['owner'] = $this->owners->read_record($pagevar['profile']['user_id'],'owners');
+		$pagevar['profile']['info'] = $this->owners->read_record($pagevar['profile']['user_id'],'owners');
 		$this->load->view("owner_interface/pages/profile",$pagevar);
 	}
 	

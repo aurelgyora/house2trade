@@ -24,7 +24,7 @@
 				<?php if($profile['class'] == 2):
 					$this->load->view('forms/edit-account-broker');
 				elseif($profile['class'] == 3):
-					$this->load->view('forms/edit-account-properties');
+					$this->load->view('forms/edit-account-owner');
 				endif;?>
 			</div>
 		</div>

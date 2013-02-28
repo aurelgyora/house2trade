@@ -18,7 +18,7 @@
 		</p>
 		<p data-class="broker">
 			<label>Company name *</label>
-			<input class="FieldSend" name="company" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+			<input id="login-company" class="valid-required FieldSend" name="company" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
 	</div>
 	<div class="grid_3">
@@ -28,11 +28,11 @@
 		</p>
 		<p>
 			<label>Phone *</label>
-			<input class="valid-required FieldSend" name="phone" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+			<input id="login-phone" class="valid-required FieldSend" name="phone" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
 		<p id="license_id" data-class="broker">
 			<label>License ID</label>
-			<input class="FieldSend" name="license"<?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+			<input class="FieldSend" name="license" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
 		</p>
 	</div>
 	<div class="clear"></div>

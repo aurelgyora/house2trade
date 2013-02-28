@@ -53,6 +53,7 @@
 		if ($("#user-terms-of-service").is(":checked")) {
 			var err = false;
 			var user_email = $("#login-email").val();
+			var user_phone = $("#login-phone").val();
 			$(".valid-required").tooltip("destroy");
 			$("#block-message").html('');
 			$(".valid-required:visible").each(function(i, element) {
@@ -61,11 +62,15 @@
 					err = true;
 				}
 			});
-			if (!err && !mt.isValidEmailAddress(user_email)) {
+			if(!err && !mt.isValidEmailAddress(user_email)){
 				$("#login-email").attr('data-original-title', 'Incorrect Email Address').tooltip('show');
 				err = true;
 			}
-			if (!err) {
+			if(!err && !mt.isValidPhone(user_phone)){
+				$("#login-phone").attr('data-original-title', 'Incorrect phone number').tooltip('show');
+				err = true;
+			}
+			if(!err){
 				var postdata = mt.formSerialize($(".FieldSend"));
 				$.post(mt.baseURL + "signup-account", {
 					'postdata' : postdata
@@ -126,12 +131,14 @@
 	});
 	$("#account-broker-setup").click(function() {
 		if (!$(this).hasClass('active')) {
+			$("#login-company").addClass('valid-required');
 			$("p[data-class='broker']").show().find("input").addClass("FieldSend");
 			$("p[data-class='homeowner']").hide().find("input").removeClass("FieldSend");
 		}
 	});
 	$("#account-homeowner-setup").click(function() {
 		if (!$(this).hasClass('active')) {
+			$("#login-company").removeClass('valid-required');
 			$("p[data-class='homeowner']").show().find("input:not(:radio)").addClass("FieldSend");
 			$("p[data-class='broker']").hide().find("input").removeClass("FieldSend");
 		}

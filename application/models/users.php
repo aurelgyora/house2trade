@@ -70,7 +70,7 @@ class Users extends MY_Model{
 		if($class == 2):
 			$query = "SELECT users.id AS uid,users.user_id,users.email,users.signdate,users.status,brokers.* FROM users INNER JOIN brokers ON users.user_id = brokers.id WHERE users.class = $class ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
 		else:
-			$query = "SELECT users.id AS uid,users.user_id,users.email,users.signdate,users.status,properties.* FROM users INNER JOIN properties ON users.user_id = properties.id WHERE users.class = $class ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
+			$query = "SELECT users.id AS uid,users.user_id,users.email,users.signdate,users.status,owners.* FROM users INNER JOIN owners ON users.user_id = owners.id WHERE users.class = $class ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
 		endif;
 		$query = $this->db->query($query);
 		$data = $query->result_array();

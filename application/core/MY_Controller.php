@@ -211,7 +211,7 @@ class MY_Controller extends CI_Controller{
 		return $usersList;
 	} //добавляет поле online которое показывает активность пользователя в сети за последние 15 минут
 	
-	function account_information($user_id,$class){
+	public function account_information($user_id,$class){
 		
 		switch($class):
 		 	case 1: $info['name'] = 'Администратор'; return $info; break;
