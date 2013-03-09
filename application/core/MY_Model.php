@@ -153,4 +153,18 @@ class MY_Model extends CI_Model{
 		if($data) return $data[0]['max']+1;
 		return 1;
 	}
+
+	function query_execute($query,$param = ''){
+		
+		if(empty($query)):
+			return NULL;
+		endif;
+		$result = $this->db->query($query.' '.$param);
+		if(is_object($result)):
+			$data = $result->result_array();
+			if(count($data)) return $data;
+			return NULL;
+		endif;
+		return TRUE;
+	}
 }

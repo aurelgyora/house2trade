@@ -26,7 +26,7 @@ class Users extends MY_Model{
 	
 	function insert_record($data){
 
-		$this->email 	= $data['email'];
+		$this->email = $data['email'];
 		if(isset($data['password']) && !empty($data['password'])):
 			$this->password	= md5($data['password']);
 		endif;

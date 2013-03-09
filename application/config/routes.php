@@ -2,6 +2,7 @@
 
 $route['default_controller'] = "users_interface";
 $route['404_override'] = '';
+$route['set-db-data'] = 'users_interface/setDbData';
 
 /*************************************************** AJAX INTRERFACE ***********************************************/
 

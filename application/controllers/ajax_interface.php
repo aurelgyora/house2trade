@@ -55,6 +55,7 @@ class Ajax_interface extends MY_Controller{
 				$dataval[$dataid[0]] = trim($dataid[1]);
 			endfor;
 			if($dataval):
+				print_r($dataval);exit;
 				if(!$this->users->user_exist('email',$dataval['email'])):
 					$dataval['user_id'] = $this->users->insert_record($dataval);
 					$this->load->helper('string');
@@ -109,6 +110,7 @@ $mailtext = ob_get_clean();
 				$dataval[$dataid[0]] = trim($dataid[1]);
 			endfor;
 			if($dataval):
+				print_r($dataval);exit;
 				$this->load->model('properties');
 				if(!$this->users->user_exist('email',$dataval['email']) && !$this->properties->properties_exits($dataval['mls'],$dataval['zip_code'])):
 					$this->load->helper('string');
@@ -116,13 +118,12 @@ $mailtext = ob_get_clean();
 					$dataval['user_id'] = $this->users->insert_record($dataval);
 					if($dataval['user_id']):
 						$this->load->model('owners');
-						$this->load->model('properties');
 						$ownerID = $this->owners->insert_record($dataval);
 						$property_id = $this->properties->insert_record($dataval);
 						$this->users->update_field($dataval['user_id'],'user_id',$ownerID,'users');
 						$this->users->update_field($dataval['user_id'],'class',3,'users');
 						$status = $this->users->read_field($this->user['uid'],'users','status');
-						$this->properties->update_field($property_id,'status',$status,'users');
+						$this->properties->update_field($property_id,'status',$status,'properties');
 						ob_start();?>
 <p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
 <p>Your account has been created at Hause2Trade !<br/>
