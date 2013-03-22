@@ -51,7 +51,7 @@ class Broker_interface extends MY_Controller{
 		$from = (int)$this->uri->segment(4);
 		$pagevar = array(
 			'properties' => $this->union->brokerPropertiesList(3,$this->user['uid'],10,$from),
-			'pages' => $this->pagination(BROKER_START_PAGE.'/',5,$this->properties->count_records('properties','owner_id',$this->user['uid']),10)
+			'pages' => $this->pagination(BROKER_START_PAGE.'/',4,$this->properties->count_records('properties','broker_id',$this->user['uid']),10)
 		);
 		for($i=0;$i<count($pagevar['properties']);$i++):
 			$pagevar['properties'][$i]['photo'] = $this->images->mainPhoto($pagevar['properties'][$i]['id']);

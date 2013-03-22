@@ -107,7 +107,7 @@ class MY_Model extends CI_Model{
 			$this->db->where($field,$value);
 			$query = $this->db->get($table,1);
 			$data = $query->result_array();
-			if(isset($data[0])) return $data[0]['cnt'];
+			if($data) return $data[0]['cnt'];
 			return 0;
 		else:
 			return $this->db->count_all($table);

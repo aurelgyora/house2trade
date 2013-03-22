@@ -6,7 +6,7 @@
 	if($.cookie('operation') != null){
 		$.cookie('operation',null,{path:"/"});
 		$.cookie('backpath',null,{path:"/"});
-		$.jGrowl('<img src="'+mt.baseURL+'img/check.png" alt="" /> <span class="text-info">Operation successful</span>',{life:2000});
+		$("#form-request").html('<img src="'+mt.baseURL+'img/check.png" alt="" /> <span class="text-info">Operation successful</span>');
 	}
 	$(".set-operation").click(function(event){$.cookie('backpath',mt.currentURL,{path:"/"});});
 	$("#saveItem").click(function(event){$.cookie('operation',true,{path:"/"});});
@@ -112,7 +112,6 @@
 			}
 		}
 	});
-	
 	$("#save-profile").click(function(event){
 		event.preventDefault();
 		var err = false;
@@ -147,7 +146,6 @@
 				}
 			},"json");
 	});
-
 	$("#set-properties-manual-data").click(function(){
 		$(".valid-required").tooltip('destroy');
 		$("#div-choise-metod").addClass('hidden');

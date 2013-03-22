@@ -5,6 +5,7 @@
 var mt = mt || {};
 mt.baseURL = 'http://'+window.location.hostname+'/';
 mt.currentURL = window.location.href;
+mt.currentElement = 0;
 mt.isValidEmailAddress = function(emailAddress){
 	var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
 	return pattern.test(emailAddress);
@@ -28,22 +29,17 @@ mt.matches_parameters = function(parameter1,parameter2){
 	return false;
 };
 mt.exist_email = function(emailInput){
-	
 	var user_email = $(emailInput).val();
 	$(emailInput).tooltip('destroy');
 	if(user_email != ''){
 		if(!mt.isValidEmailAddress(user_email)){$(emailInput).attr('data-original-title','Not valid email address').tooltip('show');}
 		else{
-			$.post(mt.baseURL+"administrator/valid/exist-email",{'parametr':user_email,'type':'email'},
+			$.post(mt.baseURL+"valid/exist-email",{'parametr':user_email,'type':'email'},
 				function(data){if(!data.status){$(emailInput).attr('data-original-title','Email already exist').tooltip('show');}},"json");
 		}
 	}
 };
 mt.redirect = function(path){window.location=path;}
-mt.ShowCut = function(element,event){
-	event.preventDefault();
-	$(element).next('cut').fadeIn('slow');$(element).remove();
-}
 mt.minLength = function(string,Len){if(string != ''){if(string.length < Len){return false}}return true}
 mt.FieldsIsNotNumeric = function(formObject){
 	var result = {};var num = 0;
@@ -55,5 +51,15 @@ $(function(){
 	$.fn.exists = function(){return $(this).length;}
 	$.fn.emptyValue = function(){if($(this).val() == ''){return true;}else{return false;}}
 	$(".none").click(function(event){event.preventDefault();});
-	$(".advanced").click(function(event){mt.ShowCut(this,event);});
+	$(":input.unique-email").blur(function(){mt.exist_email(this);});
+	$("a.link-operation-account").click(function(){mt.currentElement = $(this).parents("div.list-item-block").attr("data-src")});
+	$("#btn-modal-confirm-user").click(function(){
+		if(mt.currentElement){
+			var url = $("a.link-operation-account[data-src='"+mt.currentElement+"']").attr('data-url');
+			$.post(url,{'parameter':mt.currentElement},function(data){
+				if(data.status){$("div.list-item-block[data-src="+mt.currentElement+"]").parents(".media").html(data.message);}
+				$("#confirm-user").modal('hide');
+			},"json");
+		}
+	});
 });

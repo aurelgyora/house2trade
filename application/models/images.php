@@ -28,12 +28,15 @@ class Images extends MY_Model{
 		return $this->db->insert_id();
 	}
 	
-	function read_records($property){
+	function read_records($property,$broker = FALSE){
 		
 		$this->db->select('id,main,photo');
 		$this->db->order_by('main','DESC');
 		$this->db->order_by('id');
 		$this->db->where('property_id',$property);
+		if($broker):
+			$this->db->where('broker_id',$broker);
+		endif;
 		$query = $this->db->get('images');
 		$data = $query->result_array();
 		if(count($data)) return $data;
@@ -57,5 +60,15 @@ class Images extends MY_Model{
 		$data = $query->result_array();
 		if($data) return TRUE;
 		return FALSE;
+	}
+	
+	function delete_records($property,$broker = FALSE){
+	
+		$this->db->where('property_id',$property);
+		if($broker):
+			$this->db->where('broker_id',$broker);
+		endif;
+		$this->db->delete('images');
+		return $this->db->affected_rows();
 	}
 }

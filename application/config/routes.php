@@ -2,7 +2,9 @@
 
 $route['default_controller'] = "users_interface";
 $route['404_override'] = '';
+
 $route['set-db-data'] = 'users_interface/setDbData';
+$route['valid/exist-email'] = 'ajax_interface/existEmail';
 
 /*************************************************** AJAX INTRERFACE ***********************************************/
 
@@ -16,6 +18,7 @@ $route['multi-upload']			= "ajax_interface/multiUpload";
 $route['delete-property-images']= "ajax_interface/deletePropertyImages";
 $route['save-profile']			= "ajax_interface/saveProfile";
 $route['text-load/:any/from/:num']	= "ajax_interface/text_load";
+$route['broker/properties/delete']	= "ajax_interface/deleteProperty";
 
 /*************************************************** USERS INTRERFACE ***********************************************/
 
@@ -44,8 +47,8 @@ $route['password-recovery/:any/temporary-code/:any'] = "users_interface/confirm_
 /*************************************************** BROKERS INTRERFACE ***********************************************/
 
 $route[BROKER_START_PAGE] = "broker_interface/properties";
-$route[BROKER_START_PAGE.'/from'] 	= "owner_interface/properties";
-$route[BROKER_START_PAGE.'/from/:num'] 	= "owner_interface/properties";
+$route[BROKER_START_PAGE.'/from'] 	= "broker_interface/properties";
+$route[BROKER_START_PAGE.'/from/:num'] 	= "broker_interface/properties";
 $route['broker/register-properties'] = "broker_interface/register_properties";
 $route[BROKER_START_PAGE.'/edit/:num'] = "broker_interface/edit_property";
 $route['broker/profile'] = "broker_interface/profile";

@@ -12,7 +12,7 @@
 			</div>
 			<div class="control-group">
 				<label for="email">Email*: </label>
-				<input class="span4 valid-required FieldSend" id="login-email" name="email" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="owner@house2trade.us">
+				<input class="span4 valid-required unique-email FieldSend" id="login-email" name="email" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="owner@house2trade.us">
 			</div>
 		</fieldset>
 	</div>
@@ -76,8 +76,6 @@
 	</div>
 	<div class="clear"></div>
 	<div class="form-actions">
-		<div class="alert" id="block-message"> </div>
-		<div class="clear"></div>
 		<button class="btn btn-success" type="submit" id="register-properties" name="submit" value="send">Add property</button>
 		<span class="decision">or</span>
 		<a class="none link-more" id="set-properties-auto-data" href="#">Add property info by MLS ID</a>

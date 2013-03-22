@@ -6,6 +6,23 @@ class Ajax_interface extends MY_Controller{
 		
 		parent::__construct();
 	}
+	
+	function existEmail(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('В доступе отказано');
+		endif;
+		$statusval = array('status'=>FALSE);
+		$parametr = trim($this->input->post('parametr'));
+		if($parametr):
+			if(!$this->users->record_exist('users','email',$parametr)):
+				$statusval['status'] = TRUE;
+			endif;
+		else:
+			$statusval['status'] = TRUE;
+		endif;
+		echo json_encode($statusval);
+	}
 
 	/******************************************** accounts *******************************************************/
 	function login(){
@@ -55,7 +72,6 @@ class Ajax_interface extends MY_Controller{
 				$dataval[$dataid[0]] = trim($dataid[1]);
 			endfor;
 			if($dataval):
-				print_r($dataval);exit;
 				if(!$this->users->user_exist('email',$dataval['email'])):
 					$dataval['user_id'] = $this->users->insert_record($dataval);
 					$this->load->helper('string');
@@ -110,7 +126,6 @@ $mailtext = ob_get_clean();
 				$dataval[$dataid[0]] = trim($dataid[1]);
 			endfor;
 			if($dataval):
-				print_r($dataval);exit;
 				$this->load->model('properties');
 				if(!$this->users->user_exist('email',$dataval['email']) && !$this->properties->properties_exits($dataval['mls'],$dataval['zip_code'])):
 					$this->load->helper('string');
@@ -172,7 +187,7 @@ $mailtext = ob_get_clean();
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE,'message'=>'Profile saved','redirect'=>'');
+		$statusval = array('status'=>FALSE,'message'=>'Property saved','redirect'=>'');
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -181,7 +196,7 @@ $mailtext = ob_get_clean();
 				$dataval[$dataid[0]] = trim($dataid[1]);
 			endfor;
 			if($dataval):
-				$dataval['password'] = $dataval['confirm'] = ''; //это пока не режат нужно ли управлять брокер паролем владельца
+				$dataval['password'] = $dataval['confirm'] = ''; //это пока не решат нужно ли управлять брокер паролем владельца
 				$this->load->model('owners');
 				$this->load->model('properties');
 				if($this->user['class'] == 2):
@@ -258,6 +273,35 @@ $mailtext = ob_get_clean();
 			endif;
 		endif;
 		echo json_encode($statusval);
+	}
+	
+	function deleteProperty(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('В доступе отказано');
+		endif;
+		$property = $this->input->post('parameter');
+		$json_request = array('status'=>FALSE,'message'=>'');
+		if($property):
+			$this->load->model('images');
+			$this->load->model('properties');
+			$this->load->model('owners');
+			$images = $this->images->read_records($property,$this->user['uid']);
+			for($i=0;$i<count($images);$i++):
+				$this->filedelete($images[$i]['photo']);
+			endfor;
+			$this->images->delete_records($property,$this->user['uid']);
+			$owner = $this->properties->read_field($property,'properties','owner_id');
+			$ownerID = $this->users->read_field($owner,'users','user_id');
+			$this->properties->delete_record($property,'properties');
+			$this->users->delete_record($owner,'users');
+			$this->owners->delete_record($ownerID,'owners');
+			$json_request['status'] = TRUE;
+			$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property deleted';
+		else:
+			$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error deleting<hr/>';
+		endif;
+		echo json_encode($json_request);
 	}
 	
 	function deletePropertyImages(){
