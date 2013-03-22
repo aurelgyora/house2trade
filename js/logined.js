@@ -36,7 +36,7 @@
 						$(".FieldSend").val('');
 						$("#photos-block-message").html(data.message);
 					}
-					$("#block-message").html(data.message);
+					$("#form-request").html(data.message);
 				},"json");
 		}
 	})
@@ -168,5 +168,7 @@
 		$("#div-insert-photo-properties").hide().addClass('hidden');
 		$("#div-remove-photo-properties").hide().removeClass('hidden').fadeIn('slow');
 	});
-	
+	$("#input-select-property").change(function(){
+		mt.redirect(mt.baseURL+'broker/properties/information/'+$(this).val());
+	});
 })(window.jQuery);

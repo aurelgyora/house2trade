@@ -14,6 +14,7 @@
 					<div class="navbar-inner">
 					</div>
 				</div>
+				<div class="clear"></div>
 				<a href="<?=site_url('broker/register-properties');?>" class="btn btn-small btn-link pull-right" type="button">Add new Property</a>
 				<div class="clear"></div>
 				<?php $this->load->helper('text');?>
@@ -22,10 +23,11 @@
 					<a class="none pull-left" href="#">
 						<img class="span2 img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">
 					</a>
-					<div class="media-body list-item-block" data-src="<?=$properties[$i]['id'];?>">
-						<a class="btn btn-mini pull-right link-operation-account" href="#confirm-user" data-toggle="modal" data-src="<?=$properties[$i]['id'];?>" data-url="<?=site_url(BROKER_START_PAGE.'/delete');?>">Delete property</a>
+					<div class="media-body">
 						<a href="<?=site_url(BROKER_START_PAGE.'/edit/'.$properties[$i]['id']);?>" class="btn btn-mini pull-right" type="button">Edit property</a>
-						<h4 class="media-heading"><?=$properties[$i]['address1'];?></h4>
+						<h4 class="media-heading">
+							<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$properties[$i]['id']);?>"><?=$properties[$i]['address1'];?></a>
+						</h4>
 						<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 						<p>
 							<?=$properties[$i]['city'].', '.$properties[$i]['state'].', '.$properties[$i]['type'];?><br/>
@@ -38,7 +40,6 @@
 			<?=$pages;?>
 			</div>
 		</div>
-		<?php $this->load->view("modal/confirm-user");?>
 	</div>
 	<?php $this->load->view("broker_interface/includes/scripts");?>
 </body>

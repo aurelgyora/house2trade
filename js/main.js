@@ -52,13 +52,12 @@ $(function(){
 	$.fn.emptyValue = function(){if($(this).val() == ''){return true;}else{return false;}}
 	$(".none").click(function(event){event.preventDefault();});
 	$(":input.unique-email").blur(function(){mt.exist_email(this);});
-	$("a.link-operation-account").click(function(){mt.currentElement = $(this).parents("div.list-item-block").attr("data-src")});
+	$("a.link-operation-account").click(function(){mt.currentElement = $(this).attr("data-src");});
 	$("#btn-modal-confirm-user").click(function(){
 		if(mt.currentElement){
 			var url = $("a.link-operation-account[data-src='"+mt.currentElement+"']").attr('data-url');
 			$.post(url,{'parameter':mt.currentElement},function(data){
-				if(data.status){$("div.list-item-block[data-src="+mt.currentElement+"]").parents(".media").html(data.message);}
-				$("#confirm-user").modal('hide');
+				if(data.status){mt.redirect(data.redirect);}
 			},"json");
 		}
 	});

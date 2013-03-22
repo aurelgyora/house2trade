@@ -63,6 +63,28 @@ class Broker_interface extends MY_Controller{
 		$this->load->view("broker_interface/pages/list-properties",$pagevar);
 	}
 	
+	public function property(){
+		
+		$this->load->model('properties');
+		$this->load->model('union');
+		$this->load->model('images');
+		$property = (int)$this->uri->segment(4);
+		$pagevar = array(
+			'properties' => $this->union->brokerProperties(3,$this->user['uid']),
+			'property' => array(),
+			'images' => array()
+		);
+		if($pagevar['properties']):
+			$pagevar['property'] = $this->union->brokerProperty($property,3,$this->user['uid']);
+			$pagevar['property']['photo'] = $this->images->mainPhoto($pagevar['property']['id']);
+			if(!$pagevar['property']['photo']):
+				$pagevar['property']['photo'] = 'img/thumb.png';
+			endif;
+			$pagevar['images'] = $this->images->read_records($pagevar['property']['id'],$this->user['uid']);
+		endif;
+		$this->load->view("broker_interface/pages/property-information",$pagevar);
+	}
+	
 	public function edit_property(){
 		
 		$this->load->model('properties');

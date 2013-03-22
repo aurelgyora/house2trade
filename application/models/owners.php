@@ -7,6 +7,8 @@ class Owners extends MY_Model{
 	var $seller = 0;
 	var $fname = '';
 	var $lname = '';
+	var $cell = '';
+	var $phone = '';
 	
 	function __construct(){
 		parent::__construct();

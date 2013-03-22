@@ -155,7 +155,7 @@ $mailtext = ob_get_clean();
 						$this->session->set_userdata(array('owner_id'=>$dataval['user_id'],'property_id'=>$property_id));
 					endif;
 				else:
-					$statusval['message'] = "Property already exist";
+					$statusval['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" />  Property already exist';
 				endif;
 			endif;
 		endif;
@@ -281,7 +281,7 @@ $mailtext = ob_get_clean();
 			show_error('В доступе отказано');
 		endif;
 		$property = $this->input->post('parameter');
-		$json_request = array('status'=>FALSE,'message'=>'');
+		$json_request = array('status'=>FALSE,'redirect'=>site_url(BROKER_START_PAGE),'messages'=>'');
 		if($property):
 			$this->load->model('images');
 			$this->load->model('properties');
@@ -297,7 +297,7 @@ $mailtext = ob_get_clean();
 			$this->users->delete_record($owner,'users');
 			$this->owners->delete_record($ownerID,'owners');
 			$json_request['status'] = TRUE;
-			$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property deleted';
+			$this->session->set_userdata('msgs','<img src="'.site_url('img/check.png').'" alt="" /> Property deleted');
 		else:
 			$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error deleting<hr/>';
 		endif;

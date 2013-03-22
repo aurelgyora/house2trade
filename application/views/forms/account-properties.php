@@ -76,6 +76,7 @@
 	</div>
 	<div class="clear"></div>
 	<div class="form-actions">
+		<div id="form-request"></div>
 		<button class="btn btn-success" type="submit" id="register-properties" name="submit" value="send">Add property</button>
 		<span class="decision">or</span>
 		<a class="none link-more" id="set-properties-auto-data" href="#">Add property info by MLS ID</a>
