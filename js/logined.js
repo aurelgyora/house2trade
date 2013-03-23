@@ -73,7 +73,8 @@
 		var postdata = $(element).parents('tr').attr('data-account');
 		$.post(mt.baseURL+"change-user-status",{'postdata':postdata},
 				function(data){
-					$(".user-status").removeClass('btn-success').removeClass('btn-danger');
+					$(element).removeClass('btn-success').removeClass('btn-danger');
+					$(element).siblings(':button').removeClass('btn-success').removeClass('btn-danger');
 					if(data.status){$(element).addClass('btn-success');}else{$(element).addClass('btn-danger');}
 				},"json");
 		
@@ -168,7 +169,15 @@
 		$("#div-insert-photo-properties").hide().addClass('hidden');
 		$("#div-remove-photo-properties").hide().removeClass('hidden').fadeIn('slow');
 	});
-	$("#input-select-property").change(function(){
-		mt.redirect(mt.baseURL+'broker/properties/information/'+$(this).val());
+	$("#input-select-property").change(function(){mt.redirect(mt.baseURL+'broker/properties/information/'+$(this).val());});
+	$("#btn-add-to-potential-buy").click(function(){
+		var _this = this;
+		var postdata = $(this).attr('data-src');
+		$.post(mt.baseURL+"add-to-potential-by",{'postdata':postdata},
+				function(data){
+					if(data.status){
+						$(_this).removeClass('btn-info').addClass('btn-success').attr('disabled','disabled').html('Successfull');
+					}
+				},"json");
 	});
 })(window.jQuery);

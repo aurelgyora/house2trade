@@ -14,8 +14,10 @@
 					<div class="navbar-inner">
 					</div>
 				</div>
+			<?php if($this->uri->segment(2) == 'properties'):?>
 				<div class="clear"></div>
 				<a href="<?=site_url('broker/register-properties');?>" class="btn btn-small btn-link pull-right" type="button">Add new Property</a>
+			<?php endif;?>
 				<div class="clear"></div>
 				<?php $this->load->helper('text');?>
 			<?php for($i=0;$i<count($properties);$i++):?>
@@ -24,9 +26,8 @@
 						<img class="span2 img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">
 					</a>
 					<div class="media-body">
-						<a href="<?=site_url(BROKER_START_PAGE.'/edit/'.$properties[$i]['id']);?>" class="btn btn-mini pull-right" type="button">Edit property</a>
 						<h4 class="media-heading">
-							<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$properties[$i]['id']);?>"><?=$properties[$i]['address1'];?></a>
+							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$properties[$i]['id']);?>"><?=$properties[$i]['address1'];?></a>
 						</h4>
 						<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 						<p>

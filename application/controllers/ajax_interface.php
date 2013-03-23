@@ -10,7 +10,7 @@ class Ajax_interface extends MY_Controller{
 	function existEmail(){
 		
 		if(!$this->input->is_ajax_request()):
-			show_error('В доступе отказано');
+			show_error('Access denied');
 		endif;
 		$statusval = array('status'=>FALSE);
 		$parametr = trim($this->input->post('parametr'));
@@ -278,7 +278,7 @@ $mailtext = ob_get_clean();
 	function deleteProperty(){
 		
 		if(!$this->input->is_ajax_request()):
-			show_error('В доступе отказано');
+			show_error('Access denied');
 		endif;
 		$property = $this->input->post('parameter');
 		$json_request = array('status'=>FALSE,'redirect'=>site_url(BROKER_START_PAGE),'messages'=>'');
@@ -450,4 +450,131 @@ $mailtext = ob_get_clean();
 			endif;
 		endif;
 	}
+
+	function searchProperty(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$data = $this->input->post('postdata');
+		$json_request = array('status'=>FALSE,'redirect'=>site_url('broker/search/result'),'messages'=>'');
+		if($data):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$dataval[$dataid[0]] = trim($dataid[1]);
+			endfor;
+			if($dataval):
+				$sql = 'SELECT users.id AS uid,users.email,users.status,owners.id AS oid,owners.fname,owners.lname,properties.*';
+				$sql .= ' FROM users INNER JOIN owners ON users.user_id = owners.id INNER JOIN properties ON users.id = properties.owner_id';
+				$sql .= ' WHERE properties.broker_id != '.$this->user['uid'];
+				if(!empty($dataval['property_mls'])):
+					$sql .= ' AND properties.mls = '.$dataval['property_mls'];
+				endif;
+				if(!empty($dataval['beds_num'])):
+					$sql .= ' AND properties.bedrooms = '.$dataval['beds_num'];
+				endif;
+				if(!empty($dataval['baths_num'])):
+					$sql .= ' AND properties.bathrooms = '.$dataval['baths_num'];
+				endif;
+				if(!empty($dataval['property_min_price'])):
+					$sql .= ' AND properties.price >= '.$dataval['property_min_price'];
+				endif;
+				if(!empty($dataval['property_max_price'])):
+					$sql .= ' AND properties.price <= '.$dataval['property_max_price'];
+				endif;
+				if(!empty($dataval['square_feet'])):
+					$sql .= ' AND properties.sqf <= '.$dataval['square_feet'];
+				endif;
+				if(!empty($dataval['type'])):
+					$sql .= ' AND properties.type = '.$dataval['type'];
+				endif;
+				$sql .= ' ORDER BY users.signdate DESC,users.id';
+				$this->load->model('properties');
+				$properties = $this->properties->query_execute($sql);
+				if($properties):
+					$this->session->set_userdata('search_sql',$sql);
+					$json_request['status'] = TRUE;
+				else:
+					$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> nothing found';
+				endif;
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+
+	function addToFavorite(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
+		if($property):
+			$this->load->model('property_favorite');
+			$this->load->model('properties');
+			if($this->properties->record_exist('properties','id',$property) && !$this->property_favorite->record_exist('property_favorite','property',$property)):
+				$this->property_favorite->insert_record($property);
+				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function removeToFavorite(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
+		if($property):
+			$this->load->model('property_favorite');
+			$this->load->model('properties');
+			$favoriteID = $this->property_favorite->record_exist($property,$this->user['uid']);
+			if($favoriteID):
+				$this->property_favorite->delete_record($favoriteID,'property_favorite');
+				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from favorite';
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function addToPotentialBy(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
+		if($property):
+			$this->load->model('property_potentialby');
+			$this->load->model('properties');
+			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist('property_potentialby','property',$property)):
+				$this->property_potentialby->insert_record($property);
+				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function removeToPotentialBy(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
+		if($property):
+			$this->load->model('property_potentialby');
+			$this->load->model('properties');
+			$favoriteID = $this->property_potentialby->record_exist($property,$this->user['uid']);
+			if($favoriteID):
+				$this->property_potentialby->delete_record($favoriteID,'property_potentialby');
+				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from potential by';
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
 }

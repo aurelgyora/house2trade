@@ -61,4 +61,56 @@ $(function(){
 			},"json");
 		}
 	});
+	$("#search-properties").submit(function(){
+		var error = true;$("#form-request").html('');
+		$("#search-properties input[type='text'],select").each(function(i,element){if(!$(element).emptyValue()){error = false;}});
+		if(!error){
+			var postdata = mt.formSerialize($("#search-properties :input"));
+			$.post(mt.baseURL+"search-properties",{'postdata':postdata},function(data){if(data.status){mt.redirect(data.redirect);}else{$("#form-request").html(data.message)}},"json");
+		}else{
+			$("#form-request").html('Not specified your search terms!');
+			return false;
+		}
+		return false;
+	});
+	$("#a-search-property").click(function(){
+		$(this).remove();
+		$("#div-search-property").removeClass('hidden');
+	});
+	$("#btn-property-add-favorite").click(function(){
+		var parameter = $(this).attr('data-src');
+		var _this = this;
+		$.post(mt.baseURL+"add-to-favorite",{'parameter':parameter},function(data){
+			$(_this).off('click').html(data.message);
+			$("#btn-property-add-potential-by").show();
+		},"json");
+	});
+	$("#btn-property-remove-favorite").click(function(){
+		var parameter = $(this).attr('data-src');
+		var _this = this;
+		$.post(mt.baseURL+"remove-to-favorite",{'parameter':parameter},
+			function(data){
+				$(_this).off('click').html(data.message);
+				$("#btn-property-add-potential-by").remove();
+			}
+		,"json");
+	});
+	$("#btn-property-add-potential-by").click(function(){
+		var parameter = $(this).attr('data-src');
+		var _this = this;
+		$.post(mt.baseURL+"add-to-potential-by",{'parameter':parameter},
+			function(data){
+				$(_this).off('click').html(data.message);
+			}
+		,"json");
+	});
+	$("#btn-property-remove-potential-by").click(function(){
+		var parameter = $(this).attr('data-src');
+		var _this = this;
+		$.post(mt.baseURL+"remove-to-potential-by",{'parameter':parameter},
+			function(data){
+				$(_this).off('click').html(data.message);
+			}
+		,"json");
+	});
 });

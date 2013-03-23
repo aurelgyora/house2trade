@@ -19,7 +19,11 @@ $route['delete-property-images']= "ajax_interface/deletePropertyImages";
 $route['save-profile']			= "ajax_interface/saveProfile";
 $route['text-load/:any/from/:num']	= "ajax_interface/text_load";
 $route['broker/properties/delete']	= "ajax_interface/deleteProperty";
-
+$route['search-properties'] = "ajax_interface/searchProperty";
+$route['add-to-favorite'] = "ajax_interface/addToFavorite";
+$route['remove-to-favorite'] = "ajax_interface/removeToFavorite";
+$route['add-to-potential-by'] = "ajax_interface/addToPotentialBy";
+$route['remove-to-potential-by'] = "ajax_interface/removeToPotentialBy";
 /*************************************************** USERS INTRERFACE ***********************************************/
 
 $route['login']				= "users_interface/login";
@@ -47,13 +51,23 @@ $route['password-recovery/:any/temporary-code/:any'] = "users_interface/confirm_
 /*************************************************** BROKERS INTRERFACE ***********************************************/
 
 $route[BROKER_START_PAGE] = "broker_interface/properties";
-$route[BROKER_START_PAGE.'/information/:num'] = "broker_interface/property";
+$route['broker/:any/information/:num'] = "broker_interface/property";
 $route[BROKER_START_PAGE.'/from'] 	= "broker_interface/properties";
 $route[BROKER_START_PAGE.'/from/:num'] 	= "broker_interface/properties";
 $route['broker/register-properties'] = "broker_interface/register_properties";
 $route[BROKER_START_PAGE.'/edit/:num'] = "broker_interface/edit_property";
-$route['broker/profile'] = "broker_interface/profile";
+$route['broker/search'] = "broker_interface/searchProperty";
+$route['broker/search/result'] = "broker_interface/searchProperty";
+$route['broker/search/result/from'] = "broker_interface/searchProperty";
+$route['broker/search/result/from/:num'] = "broker_interface/searchProperty";
+$route['broker/favorite'] = "broker_interface/favoriteProperty";
+$route['broker/favorite/from'] = "broker_interface/favoriteProperty";
+$route['broker/favorite/from/:num'] = "broker_interface/favoriteProperty";
+$route['broker/potential-by'] = "broker_interface/potentialByProperty";
+$route['broker/potential-by/from'] = "broker_interface/potentialByProperty";
+$route['broker/potential-by/from/:num'] = "broker_interface/potentialByProperty";
 
+$route['broker/profile'] = "broker_interface/profile";
 $route['broker/set-password'] = "broker_interface/setPassword";
 
 /*************************************************** OWNERS INTRERFACE ***********************************************/

@@ -8,7 +8,6 @@ class Users_interface extends MY_Controller{
 		$this->load->model('pages');
 	}
 	
-	
 	function setDbData(){
 		//заполняем брокеров
 		$this->load->helper('string');
@@ -111,7 +110,6 @@ class Users_interface extends MY_Controller{
 		echo 'Недвижимость создана<br/>';
 	}
 	
-	
 	public function index(){
 		
 		$pagevar = array('page'=>$this->pages->read_record('home'));
@@ -120,7 +118,11 @@ class Users_interface extends MY_Controller{
 	
 	public function search(){
 		
-		$pagevar = array('page'=>$this->pages->read_record(uri_string()));
+		$this->load->model('property_type');
+		$pagevar = array(
+			'page'=>$this->pages->read_record(uri_string()),
+			'property_type'=>$this->property_type->read_records('property_type')
+		);
 		$this->load->view("users_interface/pages/search",$pagevar);
 	}
 	

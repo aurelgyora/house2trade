@@ -38,7 +38,11 @@
 			</div>
 			<div class="control-group">
 				<label for="type">Type*: </label>
-				<input class="span2 valid-required FieldSend" name="type" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="Living">
+				<select id="input-select-type" class="span4 FieldSend" name="type">
+				<?php for($i=0;$i<count($property_type);$i++):?>
+					<option value="<?=$property_type[$i]['id'];?>"><?=$property_type[$i]['title'];?></option>
+				<?php endfor;?>
+				</select>
 			</div>
 			<div class="control-group">
 				<label for="zip_code">Zip code*: </label>
