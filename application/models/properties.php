@@ -57,9 +57,9 @@ class Properties extends MY_Model{
 		return $this->db->affected_rows();
 	}
 	
-	function read_records($broker){
+	function read_records($owner){
 		
-		$query = $this->db->get_where('properties',array('broker_id'=>$broker),1);
+		$query = $this->db->get_where('properties',array('owner_id'=>$owner));
 		$data = $query->result_array();
 		if($data) return $data;
 		return NULL;
@@ -74,5 +74,5 @@ class Properties extends MY_Model{
 		if($data) return $data[0]['id'];
 		return FALSE;
 	}
-
+	
 }

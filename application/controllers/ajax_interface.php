@@ -151,6 +151,7 @@ Your password: <?=$dataval['password'];?><br/>
 $mailtext = ob_get_clean();
 						$this->send_mail($dataval['email'],'robot@house2trade.com','Hause2Trade','Register to Hause2Trade',$mailtext);
 						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
+						$this->session->set_userdata('current_owner',$dataval['user_id']);
 						$statusval['status'] = TRUE;
 						$this->session->set_userdata(array('owner_id'=>$dataval['user_id'],'property_id'=>$property_id));
 					endif;
@@ -484,7 +485,7 @@ $mailtext = ob_get_clean();
 					$sql .= ' AND properties.price <= '.$dataval['property_max_price'];
 				endif;
 				if(!empty($dataval['square_feet'])):
-					$sql .= ' AND properties.sqf <= '.$dataval['square_feet'];
+					$sql .= ' AND properties.sqf >= '.$dataval['square_feet'];
 				endif;
 				if(!empty($dataval['type'])):
 					$sql .= ' AND properties.type = '.$dataval['type'];
@@ -494,6 +495,7 @@ $mailtext = ob_get_clean();
 				$properties = $this->properties->query_execute($sql);
 				if($properties):
 					$this->session->set_userdata('search_sql',$sql);
+					$this->session->set_userdata('search_json_data',json_encode($dataval));
 					$json_request['status'] = TRUE;
 				else:
 					$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> nothing found';
@@ -513,8 +515,10 @@ $mailtext = ob_get_clean();
 		if($property):
 			$this->load->model('property_favorite');
 			$this->load->model('properties');
-			if($this->properties->record_exist('properties','id',$property) && !$this->property_favorite->record_exist('property_favorite','property',$property)):
-				$this->property_favorite->insert_record($property);
+			if($this->properties->record_exist('properties','id',$property) && !$this->property_favorite->record_exist($property,$this->session->userdata('current_owner'))):
+				$insert['property'] = $property;
+				$insert['owner'] = $this->session->userdata('current_owner');
+				$this->property_favorite->insert_record($insert);
 				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
 			endif;
 		endif;
@@ -531,7 +535,7 @@ $mailtext = ob_get_clean();
 		if($property):
 			$this->load->model('property_favorite');
 			$this->load->model('properties');
-			$favoriteID = $this->property_favorite->record_exist($property,$this->user['uid']);
+			$favoriteID = $this->property_favorite->record_exist($property,$this->session->userdata('current_owner'));
 			if($favoriteID):
 				$this->property_favorite->delete_record($favoriteID,'property_favorite');
 				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from favorite';
@@ -550,8 +554,10 @@ $mailtext = ob_get_clean();
 		if($property):
 			$this->load->model('property_potentialby');
 			$this->load->model('properties');
-			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist('property_potentialby','property',$property)):
-				$this->property_potentialby->insert_record($property);
+			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($property,$this->session->userdata('current_owner'))):
+				$insert['property'] = $property;
+				$insert['owner'] = $this->session->userdata('current_owner');
+				$this->property_potentialby->insert_record($insert);
 				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
 			endif;
 		endif;
@@ -568,13 +574,25 @@ $mailtext = ob_get_clean();
 		if($property):
 			$this->load->model('property_potentialby');
 			$this->load->model('properties');
-			$favoriteID = $this->property_potentialby->record_exist($property,$this->user['uid']);
+			$favoriteID = $this->property_potentialby->record_exist($property,$this->session->userdata('current_owner'));
 			if($favoriteID):
 				$this->property_potentialby->delete_record($favoriteID,'property_potentialby');
 				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from potential by';
 			endif;
 		endif;
 		echo json_encode($json_request);
+	}
+	
+	function setCurrentOwner(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$owner = $this->input->post('parameter');
+		if($owner):
+			$this->session->set_userdata('current_owner',$owner);
+		endif;
+		echo json_encode(array('redirect'=>site_url($this->session->userdata('backpath'))));
 	}
 	
 }

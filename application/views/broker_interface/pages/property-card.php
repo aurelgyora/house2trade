@@ -13,7 +13,6 @@
 			<div class="span9">
 				<div class="navbar">
 					<div class="navbar-inner">
-						<a class="brand" href="<?=site_url(uri_string());?>">Edit property information</a>
 						<?=anchor('broker/properties/information/'.$this->uri->segment(4),'Back');?>
 					</div>
 				</div>

@@ -15,17 +15,6 @@
 						<?=anchor($this->session->userdata('backpath'),'Back');?>
 					</div>
 				</div>
-			<?php if(!$this->session->userdata('search_sql')):?>
-				<select id="input-select-property" class="span7" name="property">
-				<?php for($i=0;$i<count($properties);$i++):?>
-					<option value="<?=$properties[$i]['id'];?>" <?=($properties[$i]['id'] == $this->uri->segment(4))?'selected="selected"':'';?>>
-						<?=$properties[$i]['fname'].' '.$properties[$i]['lname'].' '.$properties[$i]['address1'];?>
-					</option>
-				<?php endfor;?>
-				</select>
-				<div class="clear"></div>
-				<hr/>
-			<?php endif;?>
 			<?php if($property):?>
 				<div class="span4">
 					<a class="none pull-left" href="#">
@@ -36,7 +25,7 @@
 						Price: <br/>Bedrooms: <br/>Bathrooms: <br/>Square:
 					</div>
 					<div class="span1">
-						$<?=$property['price'];?><br/><?=$property['bathrooms'];?><br/><?=$property['bathrooms'];?><br/><?=$property['sqf'];?>
+						$<?=$property['price'];?><br/><?=$property['bedrooms'];?><br/><?=$property['bathrooms'];?><br/><?=$property['sqf'];?>
 					</div>
 				</div>
 				<div class="span4">
@@ -64,22 +53,24 @@
 				</div>
 				<?php else:?>
 				<div>
-				<?php if(isset($property['favorite']) && !$property['favorite']):?>
-					<button class="btn btn-mini btn-link" data-src="<?=$property['id'];?>" id="btn-property-add-favorite">Add to favorite</button>
-					<button class="btn btn-mini btn-link" style="display: none;" data-src="<?=$property['id'];?>" id="btn-property-add-potential-by">Add to potential by</button>
-					<?php if(isset($property['potentialby']) && $property['potentialby']):?>
-					<button class="btn btn-mini btn-link" data-src="<?=$property['id'];?>" id="btn-property-remove-potential-by">Remove from potential by</button>
+				<?php if(!$property['favorite']):?>
+					<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$property['id'];?>">Add to favorite</button>
+					<button class="btn btn-mini btn-link btn-property-add-potential-by" style="display: none;" data-src="<?=$property['id'];?>">Add to potential by</button>
+					<?php if($property['potentialby']):?>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-src="<?=$property['id'];?>">Remove from potential by</button>
 					<?php endif;?>
-				<?php elseif(isset($property['favorite']) && $property['favorite']):?>
-					<button class="btn btn-mini btn-link" data-src="<?=$property['id'];?>" id="btn-property-remove-favorite">Remove from favorite</button>
-					<?php if(isset($property['potentialby']) && !$property['potentialby']):?>
-					<button class="btn btn-mini btn-link" data-src="<?=$property['id'];?>" id="btn-property-add-potential-by">Add to potential by</button>
-					<?php elseif(isset($property['potentialby']) && $property['potentialby']):?>
-					<button class="btn btn-mini btn-link" data-src="<?=$property['id'];?>" id="btn-property-remove-potential-by">Remove from potential by</button>
+				<?php elseif($property['favorite']):?>
+					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-src="<?=$property['id'];?>">Remove from favorite</button>
+					<?php if(!$property['potentialby']):?>
+					<button class="btn btn-mini btn-link btn-property-add-potential-by" data-src="<?=$property['id'];?>">Add to potential by</button>
+					<?php elseif($property['potentialby']):?>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-src="<?=$property['id'];?>">Remove from potential by</button>
 					<?php endif;?>
 				<?php endif;?>
 				</div>
 				<?php endif;?>
+			<?php else:?>
+				<h3>Information is missing</h3>
 			<?php endif;?>
 			</div>
 		</div>

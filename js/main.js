@@ -3,7 +3,7 @@
  */
  
 var mt = mt || {};
-mt.baseURL = 'http://dev.realitygroup.ru/house2trade/';
+mt.baseURL = 'http://house2trade/';
 mt.currentURL = window.location.href;
 mt.currentElement = 0;
 mt.isValidEmailAddress = function(emailAddress){
@@ -63,7 +63,7 @@ $(function(){
 	});
 	$("#search-properties").submit(function(){
 		var error = true;$("#form-request").html('');
-		$("#search-properties input[type='text'],select").each(function(i,element){if(!$(element).emptyValue()){error = false;}});
+		$(this).find("input[type='text'],select").each(function(i,element){if(!$(element).emptyValue()){error = false;}});
 		if(!error){
 			var postdata = mt.formSerialize($("#search-properties :input"));
 			$.post(mt.baseURL+"search-properties",{'postdata':postdata},function(data){if(data.status){mt.redirect(data.redirect);}else{$("#form-request").html(data.message)}},"json");
@@ -77,25 +77,25 @@ $(function(){
 		$(this).remove();
 		$("#div-search-property").removeClass('hidden');
 	});
-	$("#btn-property-add-favorite").click(function(){
+	$("button.btn-property-add-favorite").click(function(){
 		var parameter = $(this).attr('data-src');
 		var _this = this;
 		$.post(mt.baseURL+"add-to-favorite",{'parameter':parameter},function(data){
 			$(_this).off('click').html(data.message);
-			$("#btn-property-add-potential-by").show();
+			$(_this).siblings("button.btn-property-add-potential-by").show();
 		},"json");
 	});
-	$("#btn-property-remove-favorite").click(function(){
+	$("button.btn-property-remove-favorite").click(function(){
 		var parameter = $(this).attr('data-src');
 		var _this = this;
 		$.post(mt.baseURL+"remove-to-favorite",{'parameter':parameter},
 			function(data){
 				$(_this).off('click').html(data.message);
-				$("#btn-property-add-potential-by").remove();
+				$(_this).siblings("button.btn-property-add-potential-by").remove();
 			}
 		,"json");
 	});
-	$("#btn-property-add-potential-by").click(function(){
+	$("button.btn-property-add-potential-by").click(function(){
 		var parameter = $(this).attr('data-src');
 		var _this = this;
 		$.post(mt.baseURL+"add-to-potential-by",{'parameter':parameter},
@@ -104,7 +104,7 @@ $(function(){
 			}
 		,"json");
 	});
-	$("#btn-property-remove-potential-by").click(function(){
+	$("button.btn-property-remove-potential-by").click(function(){
 		var parameter = $(this).attr('data-src');
 		var _this = this;
 		$.post(mt.baseURL+"remove-to-potential-by",{'parameter':parameter},

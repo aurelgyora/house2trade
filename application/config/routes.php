@@ -17,6 +17,7 @@ $route['send-forgot-password']	= "ajax_interface/send_forgot_password";
 $route['multi-upload']			= "ajax_interface/multiUpload";
 $route['delete-property-images']= "ajax_interface/deletePropertyImages";
 $route['save-profile']			= "ajax_interface/saveProfile";
+$route['set-current-owner']			= "ajax_interface/setCurrentOwner";
 $route['text-load/:any/from/:num']	= "ajax_interface/text_load";
 $route['broker/properties/delete']	= "ajax_interface/deleteProperty";
 $route['search-properties'] = "ajax_interface/searchProperty";
@@ -52,8 +53,6 @@ $route['password-recovery/:any/temporary-code/:any'] = "users_interface/confirm_
 
 $route[BROKER_START_PAGE] = "broker_interface/properties";
 $route['broker/:any/information/:num'] = "broker_interface/property";
-$route[BROKER_START_PAGE.'/from'] 	= "broker_interface/properties";
-$route[BROKER_START_PAGE.'/from/:num'] 	= "broker_interface/properties";
 $route['broker/register-properties'] = "broker_interface/register_properties";
 $route[BROKER_START_PAGE.'/edit/:num'] = "broker_interface/edit_property";
 $route['broker/search'] = "broker_interface/searchProperty";

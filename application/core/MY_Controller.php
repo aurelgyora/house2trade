@@ -46,10 +46,10 @@ class MY_Controller extends CI_Controller{
 		$config['total_rows'] 		= $total_rows;
 		$config['per_page'] 		= $per_page;
 		$config['num_links'] 		= 4;
-		$config['first_link']		= 'В начало';
-		$config['last_link'] 		= 'В конец';
-		$config['next_link'] 		= 'Далее &raquo;';
-		$config['prev_link'] 		= '&laquo; Назад';
+		$config['first_link']		= 'First';
+		$config['last_link'] 		= 'Last';
+		$config['next_link'] 		= 'Next &raquo;';
+		$config['prev_link'] 		= '&laquo; Prev';
 		$config['cur_tag_open']		= '<li class="active"><a href="#">';
 		$config['cur_tag_close'] 	= '</a></li>';
 		$config['full_tag_open'] 	= '<div class="pagination"><ul>';

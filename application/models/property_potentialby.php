@@ -10,10 +10,10 @@ class Property_potentialby extends MY_Model{
 		parent::__construct();
 	}
 	
-	function insert_record($property){
+	function insert_record($data){
 		
-		$this->owner = $this->user['uid'];
-		$this->property = $property;
+		$this->owner = $data['owner'];
+		$this->property = $data['property'];
 		$this->db->insert('property_potentialby',$this);
 		return $this->db->insert_id();
 	}
@@ -27,4 +27,24 @@ class Property_potentialby extends MY_Model{
 		if(count($data)) return $data[0]['id'];
 		return FALSE;
 	}
+	
+	function record_exists($properties,$owner){
+		
+		$this->db->select('property');
+		$this->db->where_in('property',$properties);
+		$this->db->where('owner',$owner);
+		$query = $this->db->get('property_potentialby');
+		$result = array();
+		foreach($query->result() as $row):
+			foreach($row as $value):
+				$result[$value] = TRUE;
+			endforeach;
+		endforeach;
+		if($result):
+			return $result;
+		else:
+			return NULL;
+		endif;
+	}
+	
 }

@@ -11,13 +11,11 @@
 			<?php $this->load->view("broker_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-					<div class="navbar-inner">
-					</div>
+					<?php $this->load->view("forms/select-active-owner");?>
+				<?php if($this->uri->segment(2) == 'properties'):?>
+					<a href="<?=site_url('broker/register-properties');?>" class="btn btn-small btn-link pull-right" type="button">Add new Property</a>
+				<?php endif;?>
 				</div>
-			<?php if($this->uri->segment(2) == 'properties'):?>
-				<div class="clear"></div>
-				<a href="<?=site_url('broker/register-properties');?>" class="btn btn-small btn-link pull-right" type="button">Add new Property</a>
-			<?php endif;?>
 				<div class="clear"></div>
 				<?php $this->load->helper('text');?>
 			<?php for($i=0;$i<count($properties);$i++):?>
@@ -32,13 +30,29 @@
 						<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 						<p>
 							<?=$properties[$i]['city'].', '.$properties[$i]['state'].', '.$properties[$i]['type'];?><br/>
-							Bathrooms: <?=$properties[$i]['bathrooms'];?>, Bedrooms: <?=$properties[$i]['bathrooms'];?>, Square: <?=$properties[$i]['sqf'];?>,
+							Bathrooms: <?=$properties[$i]['bathrooms'];?>, Bedrooms: <?=$properties[$i]['bedrooms'];?>, Square: <?=$properties[$i]['sqf'];?>,
 							Tax: <?=$properties[$i]['tax'];?>, Price: <?=$properties[$i]['price'];?>.
 						</p>
 					</div>
+				<?php if(!$properties[$i]['favorite']):?>
+					<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
+					<button class="btn btn-mini btn-link btn-property-add-potential-by" style="display: none;" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
+					<?php if($properties[$i]['potentialby']):?>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+					<?php endif;?>
+				<?php elseif($properties[$i]['favorite']):?>
+					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
+					<?php if(!$properties[$i]['potentialby']):?>
+					<button class="btn btn-mini btn-link btn-property-add-potential-by" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
+					<?php elseif($properties[$i]['potentialby']):?>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+					<?php endif;?>
+				<?php endif;?>
 				</div>
 			<?php endfor;?>
-			<?=$pages;?>
+			<?php if(!$properties):?>
+				<h3>List is empty or not selected homeowner</h3>
+			<?php endif;?>
 			</div>
 		</div>
 	</div>

@@ -4,7 +4,7 @@ DirectoryIndex index.php
 php_value upload_max_filesize 50M
 
 RewriteEngine On
-RewriteBase /dev/
+RewriteBase /
 RewriteCond $1 !^(index\.php|images|robots\.txt|public)
 RewriteCond %{REQUEST_URI} !\.(css?js?jpg?gif)$
 RewriteCond %{REQUEST_FILENAME} !-f

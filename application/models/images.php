@@ -54,6 +54,32 @@ class Images extends MY_Model{
 		return '';
 	}
 	
+	function mainPhotos($propertiesID){
+		
+		$this->db->select('property_id,photo');
+		$this->db->where('main',1);
+		$this->db->where_in('property_id',$propertiesID);
+		$query = $this->db->get('images');
+		$result = array();
+		foreach($query->result() as $row):
+			$i = 0; $index = 0;
+			foreach($row as $value):
+				if(!$i):
+					$index = $value;
+					$result[$index] = '';
+				else:
+					$result[$index] = $value;
+				endif;
+				$i++;
+			endforeach;
+		endforeach;
+		if($result):
+			return $result;
+		else:
+			return NULL;
+		endif;
+	}
+	
 	function image_exist($property){
 		
 		$query = $this->db->get_where('images',array('property_id'=>$property),1);
