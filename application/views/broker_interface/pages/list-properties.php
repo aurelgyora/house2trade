@@ -34,6 +34,7 @@
 							Tax: <?=$properties[$i]['tax'];?>, Price: <?=$properties[$i]['price'];?>.
 						</p>
 					</div>
+			<?php if($properties[$i]['owner_id'] != $this->session->userdata('current_owner')):?>
 				<?php if(!$properties[$i]['favorite']):?>
 					<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
 					<button class="btn btn-mini btn-link btn-property-add-potential-by" style="display: none;" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
@@ -48,6 +49,7 @@
 					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
 					<?php endif;?>
 				<?php endif;?>
+			<?php endif;?>
 				</div>
 			<?php endfor;?>
 			<?php if(!$properties):?>

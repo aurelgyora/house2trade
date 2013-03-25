@@ -205,6 +205,7 @@ class Broker_interface extends MY_Controller{
 			$mainPhotos = $this->images->mainPhotos($ids);
 			for($i=0;$i<count($pagevar['properties']);$i++):
 				$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
+				$pagevar['properties'][$i]['favorite'] = $pagevar['properties'][$i]['potentialby'] = FALSE;
 				if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
 					$pagevar['properties'][$i]['photo'] = $mainPhotos[$pagevar['properties'][$i]['id']];
 				endif;
