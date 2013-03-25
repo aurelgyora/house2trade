@@ -11,8 +11,7 @@
 			<?php $this->load->view("broker_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-					<div class="navbar-inner">
-					</div>
+					<div class="navbar-inner">Search properties</div>
 				</div>
 				<div class="clear"></div>
 				<div id="div-search-property" <?=($this->session->userdata('search_sql'))?'class="hidden"':'';?>>

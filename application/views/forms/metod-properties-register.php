@@ -3,7 +3,7 @@
 	<div class="span2">
 		<fieldset>
 			<div class="control-group">
-				<label for="fname">MLS *</label>
+				<label for="fname">Address *</label>
 				<input class="span2 digital valid-required FieldSend" id="mls-parameter" name="mls" <?=TOOLTIP_FIELD_BLANK;?> type="text">
 			</div>
 			<div class="control-group">

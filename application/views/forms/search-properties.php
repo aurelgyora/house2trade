@@ -9,7 +9,9 @@
 	</ul>
 	<p>
 		<label>Address, City, Zip, Neighborhood or #MLS</label>
-		<input id="property_mls" name="property_mls" size="30" type="text" placeholder="To search for an MLS Listing Number, please type a # symbol in front of the number">
+		<input id="property_mls" name="property_mls" size="30" type="text" placeholder="To search for an MLS Listing Number, please type a # symbol in front of the number"> <br/>
+		<input id="property_min_price" name="property_min_price" size="30" type="text" placeholder="$ Min"> <span class="decision">to</span>
+		<input id="property_max_price" name="property_max_price" size="30" type="text" placeholder="$ Max">  <br/>
 		<select id="property_beds_num" name="beds_num">
 			<option value="">Beds</option>
 			<option value="1">1</option>
@@ -25,11 +27,7 @@
 			<option value="3">3</option>
 			<option value="4">4</option>
 			<option value="5">5</option>
-		</select>
-	</p>
-	<p>
-		<input id="property_min_price" name="property_min_price" size="30" type="text" placeholder="$ Min"> <span class="decision">to</span>
-		<input id="property_max_price" name="property_max_price" size="30" type="text" placeholder="$ Max"> 
+		</select> <br/> 
 		<select id="property_square_feet" name="square_feet" class="tall">
 			<option value="">Square Feet</option>
 			<option value="1">Any</option>
@@ -43,11 +41,11 @@
 		<?php for($i=0;$i<count($property_type);$i++):?>
 			<option value="<?=$property_type[$i]['id'];?>"><?=$property_type[$i]['title'];?></option>
 		<?php endfor;?>
-		</select>
+		</select> 
 	</p>
 	<p class="button-row">
 		<div id="form-request"></div>
-		<input class="btn-submit" id="search_button" name="commit" type="submit" value="Search">
+		<input class="btn btn-submit" id="search_button" name="commit" type="submit" value="Search">
 	</p>
 	<div class="clear"> </div>
 <?= form_close(); ?>

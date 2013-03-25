@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-$config['base_url'] 			= "http://house2trade/";
+$config['base_url'] 			= "http://dev.realitygroup.ru/house2trade/";
 $config['index_page'] 			= '';
 $config['uri_protocol']			= 'AUTO';
 $config['url_suffix'] 			= '';
