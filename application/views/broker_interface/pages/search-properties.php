@@ -25,7 +25,32 @@
 				<hr/>
 				<?php $this->load->helper('text');?>
 				<div id="div-search-property-result">
+					<?php if(isset($zillow) && $zillow):?>
+						<div class="media">
+							<a class="none pull-left" href="#">
+								<img class="span2 img-polaroid media-object" src="<?=site_url($zillow['photo']);?>" alt="">
+							</a>
+							<div class="media-body">
+								<h4 class="media-heading">
+								<?php if($zillow_exist_id):?>
+									<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$zillow['id']);?>"><?=$zillow['address1'];?></a>
+								<?php else:?>
+									[Property is not in our list] <?=$zillow['address1'];?>
+								<?php endif;?>
+								</h4>
+								<p><em><?=word_limiter($zillow['description'],100);?></em></p>
+								<p>
+									<?=$zillow['city'].', '.$zillow['state'].', '.$zillow['type'];?><br/>
+									Bathrooms: <?=$zillow['bathrooms'];?>, Bedrooms: <?=$zillow['bedrooms'];?>, Square: <?=$zillow['sqf'];?>,
+									Tax: <?=$zillow['tax'];?>, Price: <?=$zillow['price'];?>.
+								</p>
+							</div>
+						</div>
+					<?php endif;?>
 				<?php for($i=0;$i<count($properties);$i++):?>
+					<?php if(isset($zillow_exist_id) && ($properties[$i]['id'] == $zillow_exist_id)):?>
+						<?php continue;?>
+					<?php endif;?>
 					<div class="media">
 						<a class="none pull-left" href="#">
 							<img class="span2 img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">

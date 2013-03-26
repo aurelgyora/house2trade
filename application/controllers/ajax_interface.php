@@ -33,27 +33,7 @@ class Ajax_interface extends MY_Controller{
 		$address = trim($this->input->post('address'));
 		$zip = trim($this->input->post('zip'));
 		if($address && $zip):
-			$this->load->library('zillow_api');
-			$zws_id = 'X1-ZWz1dj3m0o5c7f_6bk45';
-			$zillow_api = new Zillow_Api($zws_id);
-			$search_result = $zillow_api->GetDeepSearchResults(array('address'=>$address,'citystatezip'=>$zip));
-			$json_request['result'] = array(
-				'property-fname' => '',
-				'property-lname' => '',
-				'login-email' => '',
-				'property-city' => (string)$search_result->response->results->result->address->city,
-				'property-state' => (string)$search_result->response->results->result->address->state,
-				'property-address1' => (string)$search_result->response->results->result->address->street,
-				'property-zipcode' => (string)$search_result->response->results->result->address->zipcode,
-				'property-type' => (string)$search_result->response->results->result->useCode,
-				'property-bathrooms' => (int)$search_result->response->results->result->bathrooms,
-				'property-bedrooms' => (int)$search_result->response->results->result->bedrooms,
-				'property-sqf' => (int)$search_result->response->results->result->finishedSqFt,
-				'property-price' => (int)$search_result->response->results->result->lastSoldPrice,
-				'property-tax' => (float)$search_result->response->results->result->taxAssessment,
-				'property-mls' => '',
-				'property-discription' => ''
-			);
+			$json_request['result'] = $this->zillowApi($address,$zip);
 			$json_request['status'] = TRUE;
 		else:
 			$json_request['status'] = FALSE;
@@ -168,7 +148,7 @@ class Ajax_interface extends MY_Controller{
 			endfor;
 			if($dataval):
 				$this->load->model('properties');
-				if(!$this->users->user_exist('email',$dataval['email']) && !$this->properties->properties_exits($dataval['mls'],$dataval['zip_code'])):
+				if(!$this->users->user_exist('email',$dataval['email']) && !$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
 					$this->load->helper('string');
 					$dataval['password'] = random_string('alnum',12);
 					$dataval['user_id'] = $this->users->insert_record($dataval);
@@ -509,9 +489,12 @@ class Ajax_interface extends MY_Controller{
 			if($dataval):
 				$sql = 'SELECT users.id AS uid,users.email,users.status,owners.id AS oid,owners.fname,owners.lname,properties.*';
 				$sql .= ' FROM users INNER JOIN owners ON users.user_id = owners.id INNER JOIN properties ON users.id = properties.owner_id';
-				$sql .= ' WHERE properties.broker_id != '.$this->user['uid'];
-				if(!empty($dataval['property_mls'])):
-					$sql .= ' AND properties.mls = '.$dataval['property_mls'];
+				$sql .= ' WHERE TRUE';
+				if(!empty($dataval['property_address'])):
+					$sql .= ' AND properties.address1 LIKE "%'.$dataval['property_address'].'%"';
+				endif;
+				if(!empty($dataval['property_zip'])):
+					$sql .= ' AND (properties.state LIKE "%'.$dataval['property_zip'].'%" OR properties.city LIKE "%'.$dataval['property_zip'].'%" OR properties.zip_code LIKE "%'.$dataval['property_zip'].'%")';
 				endif;
 				if(!empty($dataval['beds_num'])):
 					$sql .= ' AND properties.bedrooms = '.$dataval['beds_num'];
@@ -534,7 +517,12 @@ class Ajax_interface extends MY_Controller{
 				$sql .= ' ORDER BY users.signdate DESC,users.id';
 				$this->load->model('properties');
 				$properties = $this->properties->query_execute($sql);
-				if($properties):
+				$zillow_result = FALSE;
+				if(!empty($dataval['property_address']) && !empty($dataval['property_zip'])):
+					$this->session->set_userdata(array('zillow_address'=>$dataval['property_address'],'zillow_zip'=>$dataval['property_zip']));
+					$zillow_result = $this->zillowApi($dataval['property_address'],$dataval['property_zip']);
+				endif;
+				if($properties || $zillow_result):
 					$this->session->set_userdata('search_sql',$sql);
 					$this->session->set_userdata('search_json_data',json_encode($dataval));
 					$json_request['status'] = TRUE;

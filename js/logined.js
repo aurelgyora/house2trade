@@ -172,7 +172,6 @@
 				}
 			},"json");
 	});
-	
 	$("#set-properties-auto-data").click(function(){
 		$(".valid-required").tooltip('destroy');
 		$("#div-account-properties").hide().addClass('hidden');

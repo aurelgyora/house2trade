@@ -71,7 +71,8 @@ $(function(){
 		$(this).find("input[type='text'],select").each(function(i,element){if(!$(element).emptyValue()){error = false;}});
 		if(!error){
 			var postdata = mt.formSerialize($("#search-properties :input"));
-			$.post(mt.baseURL+"search-properties",{'postdata':postdata},function(data){if(data.status){mt.redirect(data.redirect);}else{$("#form-request").html(data.message)}},"json");
+			$("span.wait-request").removeClass('hidden');
+			$.post(mt.baseURL+"search-properties",{'postdata':postdata},function(data){if(data.status){mt.redirect(data.redirect);}else{$("#form-request").html(data.message);$("span.wait-request").addClass('hidden');}},"json");
 		}else{$("#form-request").html('Not specified your search terms!');}
 		return false;
 	});

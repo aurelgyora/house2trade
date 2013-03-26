@@ -17,7 +17,7 @@ class Properties extends MY_Model{
 			$this->broker_id = $this->user['uid'];
 		endif;
 		$this->owner_id = $data['user_id'];
-		if(isset($data['mls']) && isset($data['zip_code'])):
+		if(isset($data['state']) && isset($data['zip_code'])):
 			$this->zip_code = $data['zip_code'];
 			$this->bathrooms = $data['bathrooms'];
 			$this->bedrooms = $data['bedrooms'];
@@ -65,9 +65,9 @@ class Properties extends MY_Model{
 		return NULL;
 	}
 
-	function properties_exits($mls,$zip_code){
+	function properties_exits($state,$zip_code){
 		
-		$this->db->where('mls',$mls);
+		$this->db->where('state',$state);
 		$this->db->where('zip_code',$zip_code);
 		$query = $this->db->get('properties',1);
 		$data = $query->result_array();

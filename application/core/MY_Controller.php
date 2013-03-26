@@ -221,4 +221,35 @@ class MY_Controller extends CI_Controller{
 		endswitch;
 	}
 	
+	
+	public function zillowApi($address,$zip){
+		
+		$this->load->library('zillow_api');
+		$zws_id = 'X1-ZWz1dj3m0o5c7f_6bk45';
+		$zillow_api = new Zillow_Api($zws_id);
+		$search_result = $zillow_api->GetDeepSearchResults(array('address'=>$address,'citystatezip'=>$zip));
+		$code = (int)$search_result->message->code;
+		if(!$code):
+			$result = array(
+				'property-fname' => '',
+				'property-lname' => '',
+				'login-email' => '',
+				'property-city' => (string)$search_result->response->results->result->address->city,
+				'property-state' => (string)$search_result->response->results->result->address->state,
+				'property-address1' => (string)$search_result->response->results->result->address->street,
+				'property-zipcode' => (string)$search_result->response->results->result->address->zipcode,
+				'property-type' => (string)$search_result->response->results->result->useCode,
+				'property-bathrooms' => (int)$search_result->response->results->result->bathrooms,
+				'property-bedrooms' => (int)$search_result->response->results->result->bedrooms,
+				'property-sqf' => (int)$search_result->response->results->result->finishedSqFt,
+				'property-price' => (int)$search_result->response->results->result->lastSoldPrice,
+				'property-tax' => (float)$search_result->response->results->result->taxAssessment,
+				'property-mls' => '',
+				'property-discription' => ''
+			);
+			return $result;
+		else:
+			return FALSE;
+		endif;
+	}
 }
