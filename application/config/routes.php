@@ -25,6 +25,7 @@ $route['add-to-favorite'] = "ajax_interface/addToFavorite";
 $route['remove-to-favorite'] = "ajax_interface/removeToFavorite";
 $route['add-to-potential-by'] = "ajax_interface/addToPotentialBy";
 $route['remove-to-potential-by'] = "ajax_interface/removeToPotentialBy";
+$route['get-property-zillow-api'] = "ajax_interface/getPropertyZillowAPI";
 /*************************************************** USERS INTRERFACE ***********************************************/
 
 $route['login']				= "users_interface/login";

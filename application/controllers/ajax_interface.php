@@ -12,25 +12,62 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Access denied');
 		endif;
-		$statusval = array('status'=>FALSE);
+		$json_request = array('status'=>FALSE);
 		$parametr = trim($this->input->post('parametr'));
 		if($parametr):
 			if(!$this->users->record_exist('users','email',$parametr)):
-				$statusval['status'] = TRUE;
+				$json_request['status'] = TRUE;
 			endif;
 		else:
-			$statusval['status'] = TRUE;
+			$json_request['status'] = TRUE;
 		endif;
-		echo json_encode($statusval);
+		echo json_encode($json_request);
 	}
-
+	
+	function getPropertyZillowAPI(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$json_request = array('status'=>FALSE,'result'=>array());
+		$address = trim($this->input->post('address'));
+		$zip = trim($this->input->post('zip'));
+		if($address && $zip):
+			$this->load->library('zillow_api');
+			$zws_id = 'X1-ZWz1dj3m0o5c7f_6bk45';
+			$zillow_api = new Zillow_Api($zws_id);
+			$search_result = $zillow_api->GetDeepSearchResults(array('address'=>$address,'citystatezip'=>$zip));
+			$json_request['result'] = array(
+				'property-fname' => '',
+				'property-lname' => '',
+				'login-email' => '',
+				'property-city' => (string)$search_result->response->results->result->address->city,
+				'property-state' => (string)$search_result->response->results->result->address->state,
+				'property-address1' => (string)$search_result->response->results->result->address->street,
+				'property-zipcode' => (string)$search_result->response->results->result->address->zipcode,
+				'property-type' => (string)$search_result->response->results->result->useCode,
+				'property-bathrooms' => (int)$search_result->response->results->result->bathrooms,
+				'property-bedrooms' => (int)$search_result->response->results->result->bedrooms,
+				'property-sqf' => (int)$search_result->response->results->result->finishedSqFt,
+				'property-price' => (int)$search_result->response->results->result->lastSoldPrice,
+				'property-tax' => (float)$search_result->response->results->result->taxAssessment,
+				'property-mls' => '',
+				'property-discription' => ''
+			);
+			$json_request['status'] = TRUE;
+		else:
+			$json_request['status'] = FALSE;
+		endif;
+		echo json_encode($json_request);
+	}
+	
 	/******************************************** accounts *******************************************************/
 	function login(){
 		
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE,'message'=>'Login is impossible','redirect'=>base_url());
+		$json_request = array('status'=>FALSE,'message'=>'Login is impossible','redirect'=>base_url());
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -41,21 +78,21 @@ class Ajax_interface extends MY_Controller{
 			if($dataval):
 				$user = $this->users->auth_user($dataval[0],$dataval[1]);
 				if($user):
-					$statusval['status'] = TRUE;
-					$statusval['message'] = '';
+					$json_request['status'] = TRUE;
+					$json_request['message'] = '';
 					$this->session->set_userdata(array('logon'=>md5($dataval[0]),'userid'=>$user['id']));
 					switch($user['class']):
-						case 1: $statusval['redirect'] .= ADM_START_PAGE;
+						case 1: $json_request['redirect'] .= ADM_START_PAGE;
 							break;
-						case 2: $statusval['redirect'] .= BROKER_START_PAGE;
+						case 2: $json_request['redirect'] .= BROKER_START_PAGE;
 							break;
-						case 3: $statusval['redirect'] .= OWNER_START_PAGE;
+						case 3: $json_request['redirect'] .= OWNER_START_PAGE;
 							break;
 					endswitch;
 				endif;
 			endif;
 		endif;
-		echo json_encode($statusval);
+		echo json_encode($json_request);
 	}
 
 	function signup_account(){
@@ -63,7 +100,7 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE,'error'=>FALSE,'email'=>FALSE,'message'=>'');
+		$json_request = array('status'=>FALSE,'error'=>FALSE,'email'=>FALSE,'message'=>'');
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -105,15 +142,15 @@ class Ajax_interface extends MY_Controller{
 						);
 						$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
 						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
-						$statusval['status'] = TRUE;
-						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to your email';
+						$json_request['status'] = TRUE;
+						$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to your email';
 					endif;
 				else:
-					$statusval['email'] = TRUE;
+					$json_request['email'] = TRUE;
 				endif;
 			endif;
 		endif;
-		echo json_encode($statusval);
+		echo json_encode($json_request);
 	}
 
 	function signup_properties(){
@@ -121,7 +158,7 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE,'message'=>'Signup is impossible');
+		$json_request = array('status'=>FALSE,'message'=>'Signup is impossible');
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -155,37 +192,37 @@ class Ajax_interface extends MY_Controller{
 						);
 						$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
 						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
-						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
+						$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
 						$this->session->set_userdata('current_owner',$dataval['user_id']);
-						$statusval['status'] = TRUE;
+						$json_request['status'] = TRUE;
 						$this->session->set_userdata(array('owner_id'=>$dataval['user_id'],'property_id'=>$property_id));
 					endif;
 				else:
-					$statusval['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" />  Property already exist';
+					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" />  Property already exist';
 				endif;
 			endif;
 		endif;
-		echo json_encode($statusval);
+		echo json_encode($json_request);
 	}
 	
 	function change_user_status(){
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE);
+		$json_request = array('status'=>FALSE);
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$currentStatus = $this->users->read_field($data,'users','status');
 			if(!$currentStatus):
 				$this->users->update_field($data,'status',1,'users');
 				$this->users->update_field($data,'temporary_code','','users');
-				$statusval['status'] = TRUE;
+				$json_request['status'] = TRUE;
 			else:
 				$this->users->update_field($data,'status',0,'users');
-				$statusval['status'] = FALSE;
+				$json_request['status'] = FALSE;
 			endif;
 		endif;
-		echo json_encode($statusval);
+		echo json_encode($json_request);
 	}
 	
 	function save_property_info(){
@@ -193,7 +230,7 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE,'message'=>'Property saved','redirect'=>'');
+		$json_request = array('status'=>FALSE,'message'=>'Property saved','redirect'=>'');
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -212,9 +249,9 @@ class Ajax_interface extends MY_Controller{
 					endif;
 				endif;
 				if($dataval['password'] != $dataval['confirm']):
-					$statusval['message'] = 'Passwords do not match';
+					$json_request['message'] = 'Passwords do not match';
 				else:
-					$statusval['status'] = TRUE;
+					$json_request['status'] = TRUE;
 					if(!isset($dataval['setpswd'])):
 						if($this->user['class'] == 2):
 							$this->owners->update_record($this->session->userdata('owner_id'),$dataval);
@@ -222,9 +259,9 @@ class Ajax_interface extends MY_Controller{
 						$this->properties->update_record($this->session->userdata('property_id'),$dataval);
 					endif;
 					switch($this->user['class']):
-						case 2:	$statusval['redirect'] = site_url(BROKER_START_PAGE);
+						case 2:	$json_request['redirect'] = site_url(BROKER_START_PAGE);
 								break;
-						case 3:	$statusval['redirect'] = site_url(OWNER_START_PAGE);
+						case 3:	$json_request['redirect'] = site_url(OWNER_START_PAGE);
 								break;
 					endswitch;
 					if(($this->user['class'] != 2) && !empty($dataval['password'])):
@@ -233,7 +270,7 @@ class Ajax_interface extends MY_Controller{
 				endif;
 			endif;
 		endif;
-		echo json_encode($statusval);
+		echo json_encode($json_request);
 	}
 	
 	function saveProfile(){
@@ -241,7 +278,7 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE,'message'=>'Profile saved','new_data'=>array());
+		$json_request = array('status'=>FALSE,'message'=>'Profile saved','new_data'=>array());
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -251,9 +288,9 @@ class Ajax_interface extends MY_Controller{
 			endfor;
 			if($dataval):
 				if($dataval['password'] != $dataval['confirm']):
-					$statusval['message'] = 'Passwords do not match';
+					$json_request['message'] = 'Passwords do not match';
 				else:
-					$statusval['status'] = TRUE;
+					$json_request['status'] = TRUE;
 					if(!isset($dataval['setpswd'])):
 						switch($this->user['class']):
 							case 2:	$this->load->model('brokers');
@@ -267,14 +304,14 @@ class Ajax_interface extends MY_Controller{
 						endswitch;
 					endif;
 					unset($dataval['password']);unset($dataval['confirm']);unset($dataval['subcribe']);unset($dataval['id']);
-					$statusval['new_data'] = $dataval;
+					$json_request['new_data'] = $dataval;
 					if(!empty($dataval['password'])):
 						$this->users->update_field($this->user['uid'],'password',md5($dataval['password']),'users');
 					endif;
 				endif;
 			endif;
 		endif;
-		echo json_encode($statusval);
+		echo json_encode($json_request);
 	}
 	
 	function deleteProperty(){
@@ -311,7 +348,7 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE,'message'=>'Images deleted');
+		$json_request = array('status'=>FALSE,'message'=>'Images deleted');
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -343,10 +380,10 @@ class Ajax_interface extends MY_Controller{
 						$this->images->update_field($images[0]['id'],'main',1,'images');
 					endif;
 				endif;
-				$statusval['status'] = TRUE;
+				$json_request['status'] = TRUE;
 			endif;
 		endif;
-		echo json_encode($statusval);
+		echo json_encode($json_request);
 	}
 	
 	function send_forgot_password(){
@@ -354,7 +391,7 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE,'error'=>FALSE,'email'=>FALSE,'message'=>'');
+		$json_request = array('status'=>FALSE,'error'=>FALSE,'email'=>FALSE,'message'=>'');
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -393,15 +430,15 @@ class Ajax_interface extends MY_Controller{
 						);
 						$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
 						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
-						$statusval['status'] = TRUE;
-						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> Letter from further action was sent to your email';
+						$json_request['status'] = TRUE;
+						$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> Letter from further action was sent to your email';
 					endif;
 				else:
-					$statusval['email'] = TRUE;
+					$json_request['email'] = TRUE;
 				endif;
 			endif;
 		endif;
-		echo json_encode($statusval);
+		echo json_encode($json_request);
 	}
 	
 	function multiUpload(){

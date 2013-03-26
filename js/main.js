@@ -15,7 +15,7 @@ mt.isValidPhone = function(phoneNumber){
 	return pattern.test(phoneNumber);
 };
 mt.textLineFilter = function(string){return string.replace(/[&,=]/,' ');}
-mt.setJsonRequest = function(request){$.each(request,function(index,value){$("#"+index).html(value);});}
+mt.setJsonRequest = function(request,functionName){$.each(request,function(index,value){$("#"+index)[functionName](value);});}
 mt.formSerialize = function(objects){
 	var data = '';
 	$(objects).each(function(i,element){
@@ -48,8 +48,8 @@ mt.redirect = function(path){window.location=path;}
 mt.minLength = function(string,Len){if(string != ''){if(string.length < Len){return false}}return true}
 mt.FieldsIsNotNumeric = function(formObject){
 	var result = {};var num = 0;
-	$(formObject).nextAll("input.digital").each(function(i,element){if(!$.isNumeric($(element).val())){result[num] = $(element).attr('id');num++;}});
-	$(formObject).nextAll("input.numeric-float").each(function(i,element){if(!$.isNumeric($(element).val())){result[num] = $(element).attr('id');num++;}});
+	$(formObject).find("input.digital").each(function(i,element){if(($(element).val() != '') && (!$.isNumeric($(element).val()))){result[num] = $(element).attr('id');num++;}});
+	$(formObject).find("input.numeric-float").each(function(i,element){if(($(element).val() != '') && (!$.isNumeric($(element).val()))){result[num] = $(element).attr('id');num++;}});
 	if($.isEmptyObject(result)){return false;}else{return result;}
 }
 $(function(){
@@ -72,10 +72,8 @@ $(function(){
 		if(!error){
 			var postdata = mt.formSerialize($("#search-properties :input"));
 			$.post(mt.baseURL+"search-properties",{'postdata':postdata},function(data){if(data.status){mt.redirect(data.redirect);}else{$("#form-request").html(data.message)}},"json");
-		}else{
-			$("#form-request").html('Not specified your search terms!');
-			return false;
-		}
+		}else{$("#form-request").html('Not specified your search terms!');}
+		return false;
 	});
 	$("#a-search-property").click(function(){
 		$(this).remove();

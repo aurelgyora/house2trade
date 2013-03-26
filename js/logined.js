@@ -99,18 +99,33 @@
 					},"json");
 			}
 	});
+	$("#set-properties-manual-data").click(function(){
+		$(".valid-required").tooltip('destroy');
+		$("#div-choise-metod").addClass('hidden');
+		$("#div-account-properties").hide().removeClass('hidden').fadeIn('slow');
+	});
 	$("#set-properties-data").click(function(event){
 		event.preventDefault();
 		var err = false;
-		var mls = $("#mls-parameter").val();
-		var zap = $("#zipcode-parameter").val();
+		var _this = this;
 		$("input.valid-required").tooltip("destroy");$("#block-message").html('');
 		$("#form-metod-property-register .valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
-		var notNumerics = mt.FieldsIsNotNumeric($("#form-metod-property-register"));
-		if(notNumerics){
-			for(var element in notNumerics){
-				$("#"+notNumerics[element]).attr('data-original-title','Incorrect numeric value').tooltip('show');err = true;
-			}
+		if(!err){
+			var address = $("#address-parameter").val();
+			var zip = $("#zipcode-parameter").val();
+			$(_this).addClass('disabled').attr('disabled','disabled');
+			$("span.wait-request").removeClass('hidden');
+			$.post(mt.baseURL+"get-property-zillow-api",{'address':address,'zip':zip},
+				function(data){
+					$("span.wait-request").addClass('hidden');
+					$(_this).removeClass('disabled').removeAttr('disabled');
+					if(data.status){
+						mt.setJsonRequest(data.result,'val');
+						$("#property-type :contains('"+data.result['property-type']+"')").attr("selected","selected");
+						$("#set-properties-manual-data").click()
+					}
+				}
+			,"json");
 		}
 	});
 	$("#save-profile").click(function(event){
@@ -129,7 +144,7 @@
 					function(data){
 						$("#block-message").html(data.message);
 						if(data.status){
-							mt.setJsonRequest(data.new_data);
+							mt.setJsonRequest(data.new_data,'html');
 							$("#login-password").val('');
 							$("#confirm-password").val('');
 							$("#div-view-account-broker").removeClass('hidden');
@@ -157,11 +172,7 @@
 				}
 			},"json");
 	});
-	$("#set-properties-manual-data").click(function(){
-		$(".valid-required").tooltip('destroy');
-		$("#div-choise-metod").addClass('hidden');
-		$("#div-account-properties").hide().removeClass('hidden').fadeIn('slow');
-	});
+	
 	$("#set-properties-auto-data").click(function(){
 		$(".valid-required").tooltip('destroy');
 		$("#div-account-properties").hide().addClass('hidden');
