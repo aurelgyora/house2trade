@@ -95,12 +95,16 @@ class Ajax_interface extends MY_Controller{
 								$user_class = 'homeowner';
 								break;
 						endswitch;
-						ob_start();?>
-<p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
-<p>Thank you for registering at House2Trade.<br/>Please click the link below to activate your account:<br/>
-<?=anchor('confirm-registering/'.$user_class.'/activation-code/'.$activate_code,base_url().'confirm-registering/'.$user_class.'/activation-code/'.$activate_code,array('target'=>'_blank'));?></p><?
-$mailtext = ob_get_clean();
-						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade','Register to House2Trade',$mailtext);
+						$this->load->library('parser');
+						$this->load->model('mails');
+						$mail_content = $this->mails->read_record(1,'mails');
+						$parser_data = array(
+							'user_first_name' => $dataval['fname'],
+							'user_last_name' => $dataval['lname'],
+							'confirm_link' => 'confirm-registering/'.$user_class.'/activation-code/'.$activate_code
+						);
+						$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
+						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
 						$statusval['status'] = TRUE;
 						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to your email';
 					endif;
@@ -139,17 +143,18 @@ $mailtext = ob_get_clean();
 						$this->users->update_field($dataval['user_id'],'class',3,'users');
 						$status = $this->users->read_field($this->user['uid'],'users','status');
 						$this->properties->update_field($property_id,'status',$status,'properties');
-						ob_start();?>
-<p>Hello <em><?=$dataval['fname'].' '.$dataval['lname'];?></em>,</p>
-<p>Your account has been created at Hause2Trade !<br/>
-To log in to your personal account, use the username and password specified during registration.<br/>
-Your login: <?=$dataval['email'];?><br/>
-Your password: <?=$dataval['password'];?><br/>
-<strong>Attention! </strong>Do not forget to change your password!<br/>
-<br/>Please click on the link below to go to your profile:<br/>
-<?=anchor('homeowner/profile',base_url().'homeowner/profile',array('target'=>'_blank'));?></p><?
-$mailtext = ob_get_clean();
-						$this->send_mail($dataval['email'],'robot@house2trade.com','Hause2Trade','Register to Hause2Trade',$mailtext);
+						$this->load->library('parser');
+						$this->load->model('mails');
+						$mail_content = $this->mails->read_record(2,'mails');
+						$parser_data = array(
+							'user_first_name' => $dataval['fname'],
+							'user_last_name' => $dataval['lname'],
+							'user_login' => $dataval['email'],
+							'user_password' => $dataval['password'],
+							'cabinet_link' => 'homeowner/profile'
+						);
+						$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
+						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
 						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
 						$this->session->set_userdata('current_owner',$dataval['user_id']);
 						$statusval['status'] = TRUE;
@@ -379,12 +384,15 @@ $mailtext = ob_get_clean();
 								$user_class = 'homeowner';
 								break;
 						endswitch;
-						ob_start();?>
-<p>Hello <em><?=$user_name;?></em>,</p>
-<p>You have requested a new password to access personal account. To do this, follow the links below:<br/>
-<?=anchor('password-recovery/'.$user_class.'/temporary-code/'.$activate_code,base_url().'password-recovery/'.$user_class.'/temporary-code/'.$activate_code,array('target'=>'_blank'));?></p><?
-$mailtext = ob_get_clean();
-						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade','Restore account password to House2Trade',$mailtext);
+						$this->load->library('parser');
+						$this->load->model('mails');
+						$mail_content = $this->mails->read_record(4,'mails');
+						$parser_data = array(
+							'user_name' => $user_name,
+							'recovery_link' => 'password-recovery/'.$user_class.'/temporary-code/'.$activate_code
+						);
+						$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
+						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
 						$statusval['status'] = TRUE;
 						$statusval['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> Letter from further action was sent to your email';
 					endif;

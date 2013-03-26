@@ -30,6 +30,37 @@ class Admin_interface extends MY_Controller{
 		endif;
 	}
 	
+	public function mailsText(){
+		
+		$this->load->model('mails');
+		$pagevar = array(
+			'mails'=>$this->mails->read_records('mails'),
+			'msgs' => $this->session->userdata('msgs'),
+			'msgr' => $this->session->userdata('msgr')
+		);
+		$this->session->unset_userdata(array('msgr'=>'','msgs'=>''));
+		$this->session->set_userdata('backpath',site_url(uri_string()));
+		$this->load->view('admin_interface/pages/mails',$pagevar);
+	}
+	
+	public function mailsTextEdit(){
+		
+		$this->load->model('mails');
+		$this->load->helper('file');
+		if($this->input->post('submit')):
+			$update = $this->input->post();
+			$update['id'] = $this->uri->segment(5);
+			$this->mails->update_record($update);
+			$content = 'application/views/'.$this->mails->read_field($update['id'],'mails','file_path').'.php';
+			write_file($content,$update['content']);
+			$this->session->set_userdata('msgs','Text mail saved');
+			redirect(ADM_START_PAGE.'/mails');
+		endif;
+		$pagevar = array('mail'=>$this->mails->read_record($this->uri->segment(5),'mails'));
+		$pagevar['mail']['content'] = read_file('application/views/'.$pagevar['mail']['file_path'].'.php');
+		$this->load->view('admin_interface/pages/edit-mail',$pagevar);
+	}
+	
 	/******************************************** cabinet *******************************************************/
 	
 	public function control_panel(){
@@ -58,7 +89,7 @@ class Admin_interface extends MY_Controller{
 		);
 		$this->session->unset_userdata(array('msgr'=>'','msgs'=>''));
 		$pagevar['users'] = $this->setActiveUsers($pagevar['users']); //добавляет поле online
-		$this->session->set_userdata('backpath',base_url().$this->uri->uri_string());
+		$this->session->set_userdata('backpath',site_url(uri_string()));
 		$this->load->view("admin_interface/pages/accounts-list",$pagevar);
 	}
 	

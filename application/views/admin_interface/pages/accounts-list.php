@@ -21,6 +21,7 @@
 					</div>
 				</div>
 				<div class="clear"></div>
+				<?=$msgs;?>
 		<?php if($users):?>
 				<table class="table table-hover">
 					<thead>

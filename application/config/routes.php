@@ -88,5 +88,7 @@ $route['administrator/:any/accounts'] = "admin_interface/control_accounts";
 $route['administrator/:any/accounts/from'] = "admin_interface/control_accounts";
 $route['administrator/:any/accounts/from/:num'] = "admin_interface/control_accounts";
 
+$route['administrator/control-panel/mails'] = "admin_interface/mailsText";
+$route['administrator/control-panel/mails/edit/:num'] = "admin_interface/mailsTextEdit";
 $route['administrator/account/:num'] = "admin_interface/account_profile";
 $route['administrator/profile'] = "admin_interface/profile";
