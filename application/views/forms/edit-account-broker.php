@@ -88,7 +88,6 @@
 	<div class="clear"></div>
 	<div class="form-actions">
 		<button class="btn btn-success pull-right" id="save-profile" type="submit" name="submit" value="send">Save information</button>
-		<span id="block-message"></span>
 	</div>
 <?php endif;?>
 <?= form_close(); ?>

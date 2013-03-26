@@ -128,9 +128,19 @@
 				$.post(mt.baseURL+"save-profile",{'postdata':postdata},
 					function(data){
 						$("#block-message").html(data.message);
-						if(data.status){$("#login-password").val('');$("#confirm-password").val('');}
+						if(data.status){
+							mt.setJsonRequest(data.new_data);
+							$("#login-password").val('');
+							$("#confirm-password").val('');
+							$("#div-view-account-broker").removeClass('hidden');
+							$("#div-edit-account-broker").addClass('hidden');
+						}
 					},"json");
 			}
+	});
+	$("#edit-profile").click(function(){
+		$("#div-view-account-broker").addClass('hidden');
+		$("#div-edit-account-broker").removeClass('hidden');
 	});
 	$("#delete-property-images").click(function(event){
 		event.preventDefault();

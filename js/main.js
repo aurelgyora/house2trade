@@ -3,7 +3,7 @@
  */
  
 var mt = mt || {};
-mt.baseURL = 'http://house2trade/';
+mt.baseURL = 'http://'+window.location.hostname+'/';
 mt.currentURL = window.location.href;
 mt.currentElement = 0;
 mt.isValidEmailAddress = function(emailAddress){
@@ -14,11 +14,16 @@ mt.isValidPhone = function(phoneNumber){
 	var pattern = new RegExp(/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/i);
 	return pattern.test(phoneNumber);
 };
+mt.textLineFilter = function(string){return string.replace(/[&,=]/,' ');}
+mt.setJsonRequest = function(request){$.each(request,function(index,value){$("#"+index).html(value);});}
 mt.formSerialize = function(objects){
 	var data = '';
 	$(objects).each(function(i,element){
-		if(data === ''){data = $(element).attr('name')+"="+$(element).val();
-		}else{data = data+"&"+$(element).attr('name')+"="+$(element).val();}
+		var value = mt.textLineFilter($(element).val());
+		$(element).val(value);
+		var name = $(element).attr('name');
+		if(data === ''){data = name+"="+value;
+		}else{data = data+"&"+name+"="+value;}
 	});
 	return data;
 };
@@ -71,7 +76,6 @@ $(function(){
 			$("#form-request").html('Not specified your search terms!');
 			return false;
 		}
-		return false;
 	});
 	$("#a-search-property").click(function(){
 		$(this).remove();

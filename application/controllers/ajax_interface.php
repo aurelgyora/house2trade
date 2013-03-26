@@ -236,7 +236,7 @@ $mailtext = ob_get_clean();
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$statusval = array('status'=>FALSE,'message'=>'Profile saved','redirect'=>'');
+		$statusval = array('status'=>FALSE,'message'=>'Profile saved','new_data'=>array());
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -261,12 +261,8 @@ $mailtext = ob_get_clean();
 									break;
 						endswitch;
 					endif;
-					switch($this->user['class']):
-						case 2:	$statusval['redirect'] = site_url(BROKER_START_PAGE);
-								break;
-						case 3:	$statusval['redirect'] = site_url(OWNER_START_PAGE);
-								break;
-					endswitch;
+					unset($dataval['password']);unset($dataval['confirm']);unset($dataval['subcribe']);unset($dataval['id']);
+					$statusval['new_data'] = $dataval;
 					if(!empty($dataval['password'])):
 						$this->users->update_field($this->user['uid'],'password',md5($dataval['password']),'users');
 					endif;

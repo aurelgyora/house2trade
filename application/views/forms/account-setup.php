@@ -61,7 +61,7 @@
 			<input class="btn-submit pull-left" id="register-button" disabled="disabled" name="commit" type="submit" value="Submit Form">
 			<span id="register-cancel">
 				<span class="decision">or</span>
-				<a href="#" class="link-more" hidefocus="true">Cancel registration</a>
+				<a href="" class="none link-more" hidefocus="true">Cancel registration</a>
 			</span>
 			<span id="block-message"></span>
 		</p>

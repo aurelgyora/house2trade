@@ -2,7 +2,7 @@
  *  http://grapheme.ru/
  */
 
-(function($) {
+(function($){
 	$("#login-button").click(function(event) {
 		var err = false;
 		event.preventDefault();
@@ -146,8 +146,5 @@
 	$(".change-signup-class").click(function() {
 		$("#signup-class").val($(this).attr('data-class'))
 	});
-	$("#register-cancel").click(function() {
-		mt.redirect('/house2trade/');
-	});
-
-})(window.jQuery); 
+	$("#register-cancel").click(function(){mt.redirect('/');});
+})(window.jQuery);
