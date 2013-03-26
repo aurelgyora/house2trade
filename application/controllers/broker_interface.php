@@ -164,6 +164,9 @@ class Broker_interface extends MY_Controller{
 	
 	public function favoriteProperty(){
 		
+		if(!$this->session->userdata('current_owner')):
+			redirect(BROKER_START_PAGE);
+		endif;
 		$this->load->model('property_favorite');
 		$this->load->model('union');
 		$this->load->model('images');
@@ -208,6 +211,9 @@ class Broker_interface extends MY_Controller{
 	
 	public function potentialByProperty(){
 		
+		if(!$this->session->userdata('current_owner')):
+			redirect(BROKER_START_PAGE);
+		endif;
 		$this->load->model('property_potentialby');
 		$this->load->model('union');
 		$this->load->model('images');

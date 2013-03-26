@@ -53,6 +53,7 @@
 				</div>
 				<?php else:?>
 				<div>
+			<?php if($this->session->userdata('current_owner')):?>
 				<?php if(!$property['favorite']):?>
 					<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$property['id'];?>">Add to favorite</button>
 					<button class="btn btn-mini btn-link btn-property-add-potential-by" style="display: none;" data-src="<?=$property['id'];?>">Add to potential by</button>
@@ -67,6 +68,7 @@
 					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-src="<?=$property['id'];?>">Remove from potential by</button>
 					<?php endif;?>
 				<?php endif;?>
+			<?php endif;?>
 				</div>
 				<?php endif;?>
 			<?php else:?>

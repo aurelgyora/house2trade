@@ -14,11 +14,9 @@
 					<?php $this->load->view("forms/select-active-owner");?>
 				</div>
 				<div class="clear"></div>
-			<?php if($this->session->userdata('current_owner')):?>
 				<div id="div-search-property" <?=($this->session->userdata('search_sql'))?'class="hidden"':'';?>>
 					<?php $this->load->view('forms/search-properties');?>
 				</div>
-			<?php endif;?>
 			<?php if($this->session->userdata('search_sql')):?>
 				<a class="none btn btn-link" id="a-search-property" href="">Search Form</a>
 				<div class="clear"></div>
@@ -66,6 +64,7 @@
 								Tax: <?=$properties[$i]['tax'];?>, Price: <?=$properties[$i]['price'];?>.
 							</p>
 						</div>
+				<?php if($this->session->userdata('current_owner')):?>
 					<?php if(!$properties[$i]['favorite']):?>
 						<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
 						<button class="btn btn-mini btn-link btn-property-add-potential-by" style="display: none;" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
@@ -80,6 +79,7 @@
 						<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
 						<?php endif;?>
 					<?php endif;?>
+				<?php endif;?>
 					</div>
 				<?php endfor;?>
 				</div>

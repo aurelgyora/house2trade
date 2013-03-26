@@ -118,7 +118,7 @@ class Ajax_interface extends MY_Controller{
 						$parser_data = array(
 							'user_first_name' => $dataval['fname'],
 							'user_last_name' => $dataval['lname'],
-							'confirm_link' => 'confirm-registering/'.$user_class.'/activation-code/'.$activate_code
+							'confirm_link' => site_url('confirm-registering/'.$user_class.'/activation-code/'.$activate_code)
 						);
 						$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
 						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
@@ -168,7 +168,7 @@ class Ajax_interface extends MY_Controller{
 							'user_last_name' => $dataval['lname'],
 							'user_login' => $dataval['email'],
 							'user_password' => $dataval['password'],
-							'cabinet_link' => 'homeowner/profile'
+							'cabinet_link' => site_url('homeowner/profile')
 						);
 						$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
 						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
@@ -406,7 +406,7 @@ class Ajax_interface extends MY_Controller{
 						$mail_content = $this->mails->read_record(4,'mails');
 						$parser_data = array(
 							'user_name' => $user_name,
-							'recovery_link' => 'password-recovery/'.$user_class.'/temporary-code/'.$activate_code
+							'recovery_link' => site_url('password-recovery/'.$user_class.'/temporary-code/'.$activate_code)
 						);
 						$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
 						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);

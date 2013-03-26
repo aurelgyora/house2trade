@@ -141,7 +141,7 @@ class Users_interface extends MY_Controller{
 			$mail_content = $this->mails->read_record(3,'mails');
 			$parser_data = array(
 				'user_name' => $user['name'],
-				'cabinet_link' => $cabinetLink
+				'cabinet_link' => site_url($cabinetLink)
 			);
 			$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
 			$this->send_mail($user['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
