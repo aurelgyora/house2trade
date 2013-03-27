@@ -26,21 +26,25 @@
 					<?php if(isset($zillow) && $zillow):?>
 						<div class="media">
 							<a class="none pull-left" href="#">
-								<img class="span2 img-polaroid media-object" src="<?=site_url($zillow['photo']);?>" alt="">
+								<img class="img-polaroid media-object" src="<?=site_url($zillow['photo']);?>" alt="">
 							</a>
 							<div class="media-body">
 								<h4 class="media-heading">
 								<?php if($zillow_exist_id):?>
-									<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$zillow['id']);?>"><?=$zillow['address1'];?></a>
+									<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$zillow['id']);?>"><?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?></a>
 								<?php else:?>
-									[Property is not in our list] <?=$zillow['address1'];?>
+									<?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?> <br/>
+									<small>Property is not in our listing</small>
 								<?php endif;?>
 								</h4>
 								<p><em><?=word_limiter($zillow['description'],100);?></em></p>
 								<p>
-									<?=$zillow['city'].', '.$zillow['state'].', '.$zillow['type'];?><br/>
-									Bathrooms: <?=$zillow['bathrooms'];?>, Bedrooms: <?=$zillow['bedrooms'];?>, Square: <?=$zillow['sqf'];?>,
-									Tax: <?=$zillow['tax'];?>, Price: <?=$zillow['price'];?>.
+									For Sale: $<?=$zillow['price'];?> <br/>
+									Bedrooms: <?=$zillow['bedrooms'];?> beds <br/>
+									Bathrooms: <?=$zillow['bathrooms'];?> baths <br/>
+									<?= ucfirst($zillow['type']); ?>: <?=$zillow['sqf'];?> sq ft<br/>
+									Lot: <?= $zillow['sqf'];?> sq ft <br/>
+									Tax: $<?= substr($zillow['tax'], 0, strlen($zillow['tax'])-2); ?>
 								</p>
 							</div>
 						</div>
@@ -51,17 +55,20 @@
 					<?php endif;?>
 					<div class="media">
 						<a class="none pull-left" href="#">
-							<img class="span2 img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">
+							<img class="img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">
 						</a>
 						<div class="media-body">
 							<h4 class="media-heading">
-								<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$properties[$i]['id']);?>"><?=$properties[$i]['address1'];?></a>
+								<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'].', '.$properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code'];?></a>
 							</h4>
 							<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 							<p>
-								<?=$properties[$i]['city'].', '.$properties[$i]['state'].', '.$properties[$i]['type'];?><br/>
-								Bathrooms: <?=$properties[$i]['bathrooms'];?>, Bedrooms: <?=$properties[$i]['bedrooms'];?>, Square: <?=$properties[$i]['sqf'];?>,
-								Tax: <?=$properties[$i]['tax'];?>, Price: <?=$properties[$i]['price'];?>.
+								For Sale: $<?=$properties[$i]['price'];?> <br/>
+								Bedrooms: <?=$properties[$i]['bedrooms'];?> beds <br/>
+								Bathrooms: <?=$properties[$i]['bathrooms'];?> baths <br/>
+								<?= ucfirst($properties[$i]['type']); ?>: <?=$properties[$i]['sqf'];?> sq ft<br/>
+								Lot: <?= $properties[$i]['sqf'];?> sq ft <br/>
+								Tax: $<?= $properties[$i]['tax']; ?>
 							</p>
 						</div>
 				<?php if($this->session->userdata('current_owner')):?>

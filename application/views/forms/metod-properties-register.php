@@ -14,10 +14,10 @@
 	</div>
 	<div class="clear"></div>
 	<div class="form-actions">
+		<span id="metod-block-message"></span>
 		<span class="wait-request hidden"><img src="<?=site_url('img/loading.gif');?>" alt="" /></span>
 		<button class="btn btn-success" type="submit" id="set-properties-data" name="submit" value="send">Get property info</button>
 		<span class="decision">or</span>
 		<a class="none link-more" id="set-properties-manual-data" href="#">Add property manually</a>
-		<span id="metod-block-message"></span>
 	</div>
 <?= form_close(); ?>

@@ -10,13 +10,8 @@
 			<hr/>
 			<?php $this->load->view("broker_interface/includes/rightbar");?>
 			<div class="span9">
-				<div class="navbar">
-					<div class="navbar-inner">
-						<a class="brand" href="<?=site_url(uri_string());?>">Edit profile</a>
-					</div>
-				</div>
 				<div id="div-view-account-broker">
-					<legend>Account data</legend>
+					<legend>Account</legend>
 					<div class="span4">
 						<fieldset>
 							<div class="control-group">
@@ -38,7 +33,7 @@
 						</fieldset>
 					</div>
 					<div class="clear"></div>
-					<legend>Company data</legend>
+					<legend>Company</legend>
 					<div class="span4">
 						<fieldset>
 							<div class="control-group">
@@ -67,7 +62,7 @@
 					</div>
 					<div class="clear"></div>
 					<div class="form-actions">
-						<button class="btn btn-success pull-right" id="edit-profile">Edit information</button>
+						<button class="btn btn-success" id="edit-profile">Edit information</button>
 						<span id="block-message"></span>
 					</div>
 				</div>
