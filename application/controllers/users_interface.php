@@ -48,6 +48,11 @@ class Users_interface extends MY_Controller{
 		$this->load->view("users_interface/pages/contacts",$pagevar);
 	}
 	
+	public function clearSession(){
+		
+		$this->session->unset_userdata(array('current_owner'=>'','search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
+	}
+	
 	//***************************************************************************************************** footer pages
 	
 	public function searchForOne(){

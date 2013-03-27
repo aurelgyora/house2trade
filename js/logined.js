@@ -123,6 +123,8 @@
 						mt.setJsonRequest(data.result,'val');
 						$("#property-type :contains('"+data.result['property-type']+"')").attr("selected","selected");
 						$("#set-properties-manual-data").click()
+					}else{
+						$("#metod-block-message").html(data.messages);
 					}
 				}
 			,"json");

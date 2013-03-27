@@ -34,7 +34,6 @@ class Broker_interface extends MY_Controller{
 	
 	public function profile(){
 		
-		$this->session->unset_userdata(array('current_owner'=>'','search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
 		$this->load->model('brokers');
 		$pagevar = array('profile' => $this->users->read_record($this->user['uid'],'users'));
 		$pagevar['profile']['info'] = $this->brokers->read_record($pagevar['profile']['user_id'],'brokers');
@@ -164,9 +163,6 @@ class Broker_interface extends MY_Controller{
 	
 	public function favoriteProperty(){
 		
-		if(!$this->session->userdata('current_owner')):
-			redirect(BROKER_START_PAGE);
-		endif;
 		$this->load->model('property_favorite');
 		$this->load->model('union');
 		$this->load->model('images');
@@ -211,9 +207,6 @@ class Broker_interface extends MY_Controller{
 	
 	public function potentialByProperty(){
 		
-		if(!$this->session->userdata('current_owner')):
-			redirect(BROKER_START_PAGE);
-		endif;
 		$this->load->model('property_potentialby');
 		$this->load->model('union');
 		$this->load->model('images');

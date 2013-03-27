@@ -29,14 +29,15 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Access denied');
 		endif;
-		$json_request = array('status'=>FALSE,'result'=>array());
+		$json_request = array('status'=>FALSE,'result'=>array(),'messages'=>'');
+		$json_request['messages'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> nothing found';
 		$address = trim($this->input->post('address'));
 		$zip = trim($this->input->post('zip'));
 		if($address && $zip):
 			$json_request['result'] = $this->zillowApi($address,$zip);
-			$json_request['status'] = TRUE;
-		else:
-			$json_request['status'] = FALSE;
+			if($json_request['result']):
+				$json_request['status'] = TRUE;
+			endif;
 		endif;
 		echo json_encode($json_request);
 	}
@@ -258,7 +259,7 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$json_request = array('status'=>FALSE,'message'=>'Profile saved','new_data'=>array());
+		$json_request = array('status'=>FALSE,'message'=>'Profile saved','new_data'=>array(),'redirect'=>'');
 		$data = trim($this->input->post('postdata'));
 		if($data):
 			$data = preg_split("/&/",$data);
@@ -283,11 +284,17 @@ class Ajax_interface extends MY_Controller{
 									break;
 						endswitch;
 					endif;
-					unset($dataval['password']);unset($dataval['confirm']);unset($dataval['subcribe']);unset($dataval['id']);
-					$json_request['new_data'] = $dataval;
+					switch($this->user['class']):
+						case 2: $json_request['redirect'] = site_url(BROKER_START_PAGE);
+								break;
+						case 3: $json_request['redirect'] = site_url(OWNER_START_PAGE);
+								break;
+					endswitch;
 					if(!empty($dataval['password'])):
 						$this->users->update_field($this->user['uid'],'password',md5($dataval['password']),'users');
 					endif;
+					unset($dataval['password']);unset($dataval['confirm']);unset($dataval['subcribe']);unset($dataval['id']);
+					$json_request['new_data'] = $dataval;
 				endif;
 			endif;
 		endif;

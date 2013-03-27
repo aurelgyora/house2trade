@@ -4,6 +4,7 @@ $route['default_controller'] = "users_interface";
 $route['404_override'] = '';
 
 $route['set-db-data'] = 'users_interface/setDbData';
+$route['clear-session'] = 'users_interface/clearSession';
 $route['valid/exist-email'] = 'ajax_interface/existEmail';
 
 /*************************************************** AJAX INTRERFACE ***********************************************/
