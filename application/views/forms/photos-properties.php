@@ -11,9 +11,8 @@
 	<?php endfor;?>
 	</div>
 	<div class="form-actions">
-		<span class="pull-right" id="block-message"></span>
-		<div class="clear"></div>
-		<button class="btn btn-danger pull-right" id="delete-property-images" type="submit" name="submit" value="send">Delete property images</button>
+		<span class="pull-right" id="photo-delete-message"></span>
+		<button class="btn btn-danger" id="delete-property-images" type="submit" name="submit" value="send">Delete property images</button>
 		<div class="span4">
 			<a class="none btn add-property-images"><i class="icon-plus"></i> Add images</a>
 		</div>

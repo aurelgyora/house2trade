@@ -170,7 +170,8 @@
 			function(data){
 				$("#block-message").html(data.message);
 				if(data.status){
-					$("#form-remove-property-images input:checkbox:checked").parents('div.property-image-item').html('<p class="text-info">Deleted</p>');
+					$("#form-remove-property-images input:checkbox:checked").parents('div.property-image-item').remove();
+					$("#photo-delete-message").html('Images deleted');
 				}
 			},"json");
 	});

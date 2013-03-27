@@ -28,7 +28,7 @@ class Broker_interface extends MY_Controller{
 		
 		$this->load->model('property_type');
 		$pagevar = array('property_type'=>$this->property_type->read_records('property_type'));
-		$this->session->unset_userdata(array('owner_id'=>'','property_id'=>''));
+		$this->session->unset_userdata(array('property_id'=>''));
 		$this->load->view("broker_interface/pages/properties",$pagevar);
 	}
 	
@@ -44,7 +44,7 @@ class Broker_interface extends MY_Controller{
 	public function searchProperty(){
 		
 		if($this->uri->total_segments() < 3):
-			$this->session->unset_userdata(array('search_sql'=>'','search_json_data'=>''));
+			$this->session->unset_userdata(array('search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
 		endif;
 		$this->load->model('union');
 		$this->load->model('property_type');
@@ -82,10 +82,12 @@ class Broker_interface extends MY_Controller{
 					if($favorite && array_key_exists($pagevar['properties'][$i]['id'],$favorite)):
 						$pagevar['properties'][$i]['favorite'] = TRUE;
 					endif;
-					$pagevar['properties'][$i]['potentialby'] = FALSE;
-					if($potentialby && array_key_exists($pagevar['properties'][$i]['id'],$potentialby)):
-						$pagevar['properties'][$i]['potentialby'] = TRUE;
-					endif;
+					for($j=0;$j<count($pagevar['property_type']);$j++):
+						if($pagevar['properties'][$i]['type'] == $pagevar['property_type'][$j]['id']):
+							$pagevar['properties'][$i]['type'] = $pagevar['property_type'][$j]['title'];
+							break;
+						endif;
+					endfor;
 				endfor;
 				$count = 0;
 				if($pagevar['properties']):
@@ -128,6 +130,12 @@ class Broker_interface extends MY_Controller{
 						$pagevar['zillow'] = $this->properties->query_execute($sql);
 						$pagevar['zillow'] = $pagevar['zillow'][0];
 						if($pagevar['zillow']):
+							for($j=0;$j<count($pagevar['property_type']);$j++):
+								if($pagevar['zillow']['type'] == $pagevar['property_type'][$j]['id']):
+									$pagevar['zillow']['type'] = $pagevar['property_type'][$j]['title'];
+									break;
+								endif;
+							endfor;
 							$pagevar['zillow']['photo'] = $this->images->mainPhoto($pagevar['zillow']['id']);
 						endif;
 						$pagevar['zillow_exist_id'] = $zillow_exist;
@@ -144,8 +152,9 @@ class Broker_interface extends MY_Controller{
 							'sqf'=> $zillow_result['property-sqf'],
 							'tax'=> $zillow_result['property-tax'],
 							'price'=> $zillow_result['property-price'],
-							'zillow' => TRUE,
-							'db_exist' => FALSE
+							'year'=> $zillow_result['property-year'],
+							'last-sold-date'=> $zillow_result['property-last-sold-date'],
+							'last-sold-price'=> $zillow_result['property-last-sold-price'],
 						);
 						$pagevar['zillow'] = $unshift;
 						if($pagevar['zillow']):
@@ -155,8 +164,6 @@ class Broker_interface extends MY_Controller{
 				endif;
 			endif;
 		endif;
-//		print_r($pagevar['zillow']);exit;
-		
 		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("broker_interface/pages/search-properties",$pagevar);
 	}
@@ -186,6 +193,8 @@ class Broker_interface extends MY_Controller{
 			$mainPhotos = $this->images->mainPhotos($ids);
 			$favorite = $this->property_favorite->record_exists($ids,$this->session->userdata('current_owner'));
 			$potentialby = $this->property_potentialby->record_exists($ids,$this->session->userdata('current_owner'));
+			$this->load->model('property_type');
+			$property_type = $this->property_type->read_records('property_type');
 			for($i=0;$i<count($pagevar['properties']);$i++):
 				$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
 				if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
@@ -199,6 +208,12 @@ class Broker_interface extends MY_Controller{
 				if($potentialby && array_key_exists($pagevar['properties'][$i]['id'],$potentialby)):
 					$pagevar['properties'][$i]['potentialby'] = TRUE;
 				endif;
+				for($j=0;$j<count($property_type);$j++):
+					if($pagevar['properties'][$i]['type'] == $property_type[$j]['id']):
+						$pagevar['properties'][$i]['type'] = $property_type[$j]['title'];
+						break;
+					endif;
+				endfor;
 			endfor;
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
@@ -225,24 +240,26 @@ class Broker_interface extends MY_Controller{
 		endfor;
 		if($ids):
 			$this->load->model('images');
-			$this->load->model('property_favorite');
 			$this->load->model('property_potentialby');
 			$mainPhotos = $this->images->mainPhotos($ids);
-			$favorite = $this->property_favorite->record_exists($ids,$this->session->userdata('current_owner'));
 			$potentialby = $this->property_potentialby->record_exists($ids,$this->session->userdata('current_owner'));
+			$this->load->model('property_type');
+			$property_type = $this->property_type->read_records('property_type');
 			for($i=0;$i<count($pagevar['properties']);$i++):
 				$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
 				if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
 					$pagevar['properties'][$i]['photo'] = $mainPhotos[$pagevar['properties'][$i]['id']];
 				endif;
-				$pagevar['properties'][$i]['favorite'] = FALSE;
-				if($favorite && array_key_exists($pagevar['properties'][$i]['id'],$favorite)):
-					$pagevar['properties'][$i]['favorite'] = TRUE;
-				endif;
 				$pagevar['properties'][$i]['potentialby'] = FALSE;
 				if($potentialby && array_key_exists($pagevar['properties'][$i]['id'],$potentialby)):
 					$pagevar['properties'][$i]['potentialby'] = TRUE;
 				endif;
+				for($j=0;$j<count($property_type);$j++):
+					if($pagevar['properties'][$i]['type'] == $property_type[$j]['id']):
+						$pagevar['properties'][$i]['type'] = $property_type[$j]['title'];
+						break;
+					endif;
+				endfor;
 			endfor;
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
@@ -269,65 +286,88 @@ class Broker_interface extends MY_Controller{
 				$ids[] = $pagevar['properties'][$i]['id'];
 			endfor;
 			$mainPhotos = $this->images->mainPhotos($ids);
+			$this->load->model('property_type');
+			$property_type = $this->property_type->read_records('property_type');
 			for($i=0;$i<count($pagevar['properties']);$i++):
 				$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
 				$pagevar['properties'][$i]['favorite'] = $pagevar['properties'][$i]['potentialby'] = FALSE;
 				if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
 					$pagevar['properties'][$i]['photo'] = $mainPhotos[$pagevar['properties'][$i]['id']];
 				endif;
+				for($j=0;$j<count($property_type);$j++):
+					if($pagevar['properties'][$i]['type'] == $property_type[$j]['id']):
+						$pagevar['properties'][$i]['type'] = $property_type[$j]['title'];
+						break;
+					endif;
+				endfor;
 			endfor;
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
+		$this->session->unset_userdata('property_id');
 		$this->load->view("broker_interface/pages/list-properties",$pagevar);
 	}
 	
 	public function property(){
 		
+		$current_property = $this->session->userdata('property_id');
+		if($this->uri->total_segments() == 4):
+			$this->session->set_userdata('property_id',$this->uri->segment(4));
+			redirect(BROKER_START_PAGE.'/information');
+		elseif(!$current_property && $this->uri->total_segments() == 3):
+			redirect(BROKER_START_PAGE);
+		endif;
 		$this->load->model('union');
-		$property = (int)$this->uri->segment(4);
+		$this->load->model('images');
 		$pagevar = array(
-			'property' => $this->union->propertyInformation($property),
-			'images' => array()
+			'property' => $this->union->propertyInformation($current_property),
+			'images' => $this->images->read_records($current_property,$this->session->userdata('current_owner'))
 		);
 		if(!$pagevar['property']):
 			show_error('Property missing');
 		endif;
-		$this->load->model('images');
-		$pagevar['property']['photo'] = $this->images->mainPhoto($pagevar['property']['id']);
 		$this->load->model('property_favorite');
 		$pagevar['property']['favorite'] = FALSE;
 		if($pagevar['property']['broker_id'] != $this->user['uid']):
-			$pagevar['property']['favorite'] = $this->property_favorite->record_exist($pagevar['property']['id'],$this->session->userdata('current_owner'));
+			$pagevar['property']['favorite'] = $this->property_favorite->record_exist($current_property,$this->session->userdata('current_owner'));
 		endif;
 		$this->load->model('property_potentialby');
 		$pagevar['property']['potentialby'] = FALSE;
 		if($pagevar['property']['broker_id'] != $this->user['uid']):
-			$pagevar['property']['potentialby'] = $this->property_potentialby->record_exist($pagevar['property']['id'],$this->session->userdata('current_owner'));
+			$pagevar['property']['potentialby'] = $this->property_potentialby->record_exist($current_property,$this->session->userdata('current_owner'));
 		endif;
-		if(!$pagevar['property']['photo']):
-			$pagevar['property']['photo'] = 'img/thumb.png';
-		endif;
-		$pagevar['images'] = $this->images->read_records($pagevar['property']['id'],$this->session->userdata('current_owner'));
+		$this->load->model('property_type');
+		$property_type = $this->property_type->read_records('property_type');
+		for($j=0;$j<count($property_type);$j++):
+			if($pagevar['property']['type'] == $property_type[$j]['id']):
+				$pagevar['property']['type'] = $property_type[$j]['title'];
+				break;
+			endif;
+		endfor;
 		$this->load->view("broker_interface/pages/property-information",$pagevar);
 	}
 	
 	public function edit_property(){
-		
+
+		$current_property = $this->session->userdata('property_id');
+		if($this->uri->total_segments() == 4):
+			$this->session->set_userdata('property_id',$this->uri->segment(4));
+			redirect(BROKER_START_PAGE.'/edit');
+		elseif(!$current_property && $this->uri->total_segments() == 3):
+			redirect(BROKER_START_PAGE);
+		endif;
 		$this->load->model('properties');
-		$this->load->model('owners');
 		$this->load->model('images');
 		$this->load->model('property_type');
 		$pagevar = array(
-			'property' => $this->properties->read_record($this->uri->segment(4),'properties'),
-			'images' => $this->images->read_records($this->uri->segment(4),'images'),
+			'property' => $this->properties->read_record($current_property,'properties'),
+			'images' => $this->images->read_records($current_property,$this->session->userdata('current_owner')),
 			'property_type'=>$this->property_type->read_records('property_type')
 		);
 		if($pagevar['property']['broker_id'] != $this->user['uid']):
 			show_error('Access Denied!');
 		endif;
-		$pagevar['property']['user'] = $this->users->read_record($pagevar['property']['owner_id'],'users');
-		$pagevar['property']['owner'] = $this->owners->read_record($pagevar['property']['user']['user_id'],'owners');
-		$this->session->set_userdata(array('owner_id'=>$pagevar['property']['owner']['id'],'property_id'=>$pagevar['property']['id']));
+		$this->load->model('owners');
+		$pagevar['property']['owner'] = $this->owners->read_record($this->session->userdata('current_owner'),'owners');
 		$this->load->view("broker_interface/pages/property-card",$pagevar);
 	}
 }

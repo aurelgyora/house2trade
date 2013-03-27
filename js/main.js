@@ -84,8 +84,8 @@ $(function(){
 		var parameter = $(this).attr('data-src');
 		var _this = this;
 		$.post(mt.baseURL+"add-to-favorite",{'parameter':parameter},function(data){
-			$(_this).off('click').html(data.message);
-			$(_this).siblings("button.btn-property-add-potential-by").show();
+			$(_this).siblings("button.btn-property-remove-favorite").removeClass('hidden').show();
+			$(_this).hide();
 		},"json");
 	});
 	$("button.btn-property-remove-favorite").click(function(){
@@ -93,8 +93,13 @@ $(function(){
 		var _this = this;
 		$.post(mt.baseURL+"remove-to-favorite",{'parameter':parameter},
 			function(data){
-				$(_this).off('click').html(data.message);
-				$(_this).siblings("button.btn-property-add-potential-by").remove();
+				var target = $(_this).attr('data-target');
+				if(target === 'remove'){
+					$(_this).parents('div.media').remove();
+				}else{
+					$(_this).hide();
+					$(_this).siblings("button.btn-property-add-favorite").show();
+				}
 			}
 		,"json");
 	});
@@ -103,7 +108,8 @@ $(function(){
 		var _this = this;
 		$.post(mt.baseURL+"add-to-potential-by",{'parameter':parameter},
 			function(data){
-				$(_this).off('click').html(data.message);
+				$(_this).siblings("button.btn-property-remove-potential-by").removeClass('hidden').show();
+				$(_this).hide();
 			}
 		,"json");
 	});
@@ -112,7 +118,13 @@ $(function(){
 		var _this = this;
 		$.post(mt.baseURL+"remove-to-potential-by",{'parameter':parameter},
 			function(data){
-				$(_this).off('click').html(data.message);
+				var target = $(_this).attr('data-target');
+				if(target === 'remove'){
+					$(_this).parents('div.media').remove();
+				}else{
+					$(_this).hide();
+					$(_this).siblings("button.btn-property-add-potential-by").show();
+				}
 			}
 		,"json");
 	});

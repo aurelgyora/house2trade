@@ -31,6 +31,7 @@
 			</div>
 		</div>
 	</div>
+	<?php $this->load->view("broker_interface/includes/footer");?>
 	<?php $this->load->view("broker_interface/includes/scripts");?>
 	<script type="text/javascript" src="<?=site_url('js/upload.js');?>"></script>
 </body>

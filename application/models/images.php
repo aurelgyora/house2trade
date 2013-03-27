@@ -19,24 +19,20 @@ class Images extends MY_Model{
 		$this->photo = $data['photo'];
 		$this->property_id = $data['property_id'];
 		$this->owner_id = $data['owner_id'];
-		if($this->user['class'] == 2):
-			$this->broker_id = $this->user['uid'];
-		else:
+		if(isset($data['broker_id'])):
 			$this->broker_id = $data['broker_id'];
 		endif;
 		$this->db->insert('images',$this);
 		return $this->db->insert_id();
 	}
 	
-	function read_records($property,$broker = FALSE){
+	function read_records($property,$owner){
 		
 		$this->db->select('id,main,photo');
 		$this->db->order_by('main','DESC');
 		$this->db->order_by('id');
 		$this->db->where('property_id',$property);
-		if($broker):
-			$this->db->where('broker_id',$broker);
-		endif;
+		$this->db->where('owner_id',$owner);
 		$query = $this->db->get('images');
 		$data = $query->result_array();
 		if(count($data)) return $data;

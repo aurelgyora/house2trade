@@ -73,6 +73,7 @@
 			</div>
 		</div>
 	</div>
+	<?php $this->load->view("broker_interface/includes/footer");?>
 	<?php $this->load->view("broker_interface/includes/scripts");?>
 </body>
 </html>

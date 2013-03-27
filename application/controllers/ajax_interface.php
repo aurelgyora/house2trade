@@ -176,7 +176,7 @@ class Ajax_interface extends MY_Controller{
 						$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
 						$this->session->set_userdata('current_owner',$dataval['user_id']);
 						$json_request['status'] = TRUE;
-						$this->session->set_userdata(array('owner_id'=>$dataval['user_id'],'property_id'=>$property_id));
+						$this->session->set_userdata(array('current_owner'=>$dataval['user_id'],'property_id'=>$property_id));
 					endif;
 				else:
 					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" />  Property already exist';
@@ -235,7 +235,7 @@ class Ajax_interface extends MY_Controller{
 					$json_request['status'] = TRUE;
 					if(!isset($dataval['setpswd'])):
 						if($this->user['class'] == 2):
-							$this->owners->update_record($this->session->userdata('owner_id'),$dataval);
+							$this->owners->update_record($this->session->userdata('current_owner'),$dataval);
 						endif;
 						$this->properties->update_record($this->session->userdata('property_id'),$dataval);
 					endif;
@@ -312,7 +312,7 @@ class Ajax_interface extends MY_Controller{
 			$this->load->model('images');
 			$this->load->model('properties');
 			$this->load->model('owners');
-			$images = $this->images->read_records($property,$this->user['uid']);
+			$images = $this->images->read_records($property,$this->session->userdata('current_owner'));
 			for($i=0;$i<count($images);$i++):
 				$this->filedelete($images[$i]['photo']);
 			endfor;
@@ -323,6 +323,7 @@ class Ajax_interface extends MY_Controller{
 			$this->users->delete_record($owner,'users');
 			$this->owners->delete_record($ownerID,'owners');
 			$json_request['status'] = TRUE;
+			$this->session->unset_userdata(array('current_owner'=>'','property_id'=>''));
 			$this->session->set_userdata('msgs','<img src="'.site_url('img/check.png').'" alt="" /> Property deleted');
 		else:
 			$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error deleting<hr/>';
@@ -362,7 +363,7 @@ class Ajax_interface extends MY_Controller{
 					$this->images->delete_record($image['id'],'images');
 				endfor;
 				if($mainPhotoDeleted):
-					$images = $this->images->read_records($this->session->userdata('property_id'));
+					$images = $this->images->read_records($this->session->userdata('property_id'),$this->session->userdata('current_owner'));
 					if(isset($images[0]['id'])):
 						$this->images->update_field($images[0]['id'],'main',1,'images');
 					endif;
@@ -434,11 +435,15 @@ class Ajax_interface extends MY_Controller{
 		$randomNumber = mt_rand(1,1000);
 		$nextPropertyID = $this->images->nextID('images');
 		$insert = array('main'=>0,'property_id'=>0,'photo'=>'','owner_id'=>0);
-		$insert['owner_id'] = $this->session->userdata('owner_id');
+		if($this->session->userdata('current_owner')):
+			$insert['owner_id'] = $this->session->userdata('current_owner');
+		endif;
 		$insert['property_id'] = $this->session->userdata('property_id');
 		if($this->user['class'] == 3):
 			$this->load->model('owners');
 			$insert['broker_id'] = $this->owners->read_field($insert['owner_id'],'owners','broker_id');
+		elseif($this->user['class'] == 2):
+			$insert['broker_id'] = $this->user['uid'];
 		endif;
 		if(!$insert['owner_id'] || !$insert['property_id']):
 			show_error('Missing data');
@@ -528,6 +533,8 @@ class Ajax_interface extends MY_Controller{
 				if(!empty($dataval['property_address']) && !empty($dataval['property_zip'])):
 					$this->session->set_userdata(array('zillow_address'=>$dataval['property_address'],'zillow_zip'=>$dataval['property_zip']));
 					$zillow_result = $this->zillowApi($dataval['property_address'],$dataval['property_zip']);
+				else:
+					$this->session->unset_userdata(array('zillow_address'=>'','zillow_zip'=>''));
 				endif;
 				if($properties || $zillow_result):
 					$this->session->set_userdata('search_sql',$sql);

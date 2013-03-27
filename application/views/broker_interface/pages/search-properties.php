@@ -39,14 +39,32 @@
 								</h4>
 								<p><em><?=word_limiter($zillow['description'],100);?></em></p>
 								<p>
-									For Sale: $<?=$zillow['price'];?> <br/>
-									Bedrooms: <?=$zillow['bedrooms'];?> beds <br/>
-									Bathrooms: <?=$zillow['bathrooms'];?> baths <br/>
+									For Sale: $<?=($zillow['price'])?$zillow['price']:' &mdash;';?><br/>
+									Bedrooms: <?=($zillow['bedrooms'])?$zillow['bedrooms'].' beds':'&mdash;';?><br/>
+									Bathrooms: <?=($zillow['bathrooms'])?$zillow['bathrooms'].' beds':'&mdash;';?><br/>
 									<?= ucfirst($zillow['type']); ?>: <?=$zillow['sqf'];?> sq ft<br/>
 									Lot: <?= $zillow['sqf'];?> sq ft <br/>
-									Tax: $<?= substr($zillow['tax'], 0, strlen($zillow['tax'])-2); ?>
+									Tax: $<?=$zillow['tax'];?>
+								<?php if(isset($zillow['year']) && $zillow['year']):?>
+									<br/>Year Built: <?= $zillow['year'];?><br/>
+								<?php endif;?>
+								<?php if(isset($zillow['last-sold-date']) && $zillow['last-sold-date']):?>
+									Last Sold: <?= date("M Y",strtotime($zillow['last-sold-date']));?>
+								<?php endif;?>
+								<?php if(isset($zillow['last-sold-price']) && $zillow['last-sold-price']):?>
+									 for $<?= $zillow['last-sold-price'];?>
+								<?php endif;?>
 								</p>
 							</div>
+						<?php if($zillow_exist_id):?>
+							<?php if($properties[$i]['favorite']):?>
+								<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$zillow['id'];?>">Add to favorite</button>
+								<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
+							<?php else:?>
+								<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$zillow['id'];?>">Add to favorite</button>
+								<button class="btn btn-mini btn-link btn-property-remove-favorite" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
+							<?php endif;?>
+						<?php endif;?>
 						</div>
 					<?php endif;?>
 				<?php for($i=0;$i<count($properties);$i++):?>
@@ -64,8 +82,8 @@
 							<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 							<p>
 								For Sale: $<?=$properties[$i]['price'];?> <br/>
-								Bedrooms: <?=$properties[$i]['bedrooms'];?> beds <br/>
-								Bathrooms: <?=$properties[$i]['bathrooms'];?> baths <br/>
+								Bedrooms: <?=($properties[$i]['bedrooms'])?$properties[$i]['bedrooms'].' beds':'&mdash;';?><br/>
+								Bathrooms: <?=($properties[$i]['bathrooms'])?$properties[$i]['bathrooms'].' baths':'&mdash;';?><br/>
 								<?= ucfirst($properties[$i]['type']); ?>: <?=$properties[$i]['sqf'];?> sq ft<br/>
 								Lot: <?= $properties[$i]['sqf'];?> sq ft <br/>
 								Tax: $<?= $properties[$i]['tax']; ?>
@@ -74,17 +92,9 @@
 				<?php if($this->session->userdata('current_owner')):?>
 					<?php if(!$properties[$i]['favorite']):?>
 						<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
-						<button class="btn btn-mini btn-link btn-property-add-potential-by" style="display: none;" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
-						<?php if($properties[$i]['potentialby']):?>
-						<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
-						<?php endif;?>
-					<?php elseif($properties[$i]['favorite']):?>
-						<button class="btn btn-mini btn-link btn-property-remove-favorite" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
-						<?php if(!$properties[$i]['potentialby']):?>
-						<button class="btn btn-mini btn-link btn-property-add-potential-by" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
-						<?php elseif($properties[$i]['potentialby']):?>
-						<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
-						<?php endif;?>
+						<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
+					<?php else:?>
+						<button class="btn btn-mini btn-link">Already added to favorites</button>
 					<?php endif;?>
 				<?php endif;?>
 					</div>
@@ -95,6 +105,7 @@
 			</div>
 		</div>
 	</div>
+	<?php $this->load->view("broker_interface/includes/footer");?>
 	<?php $this->load->view("broker_interface/includes/scripts");?>
 </body>
 </html>

@@ -37,22 +37,24 @@
 							Tax: $<?= $properties[$i]['tax']; ?>
 						</p>
 					</div>
-			<?php if($properties[$i]['owner_id'] != $this->session->userdata('current_owner')):?>
-				<?php if(!$properties[$i]['favorite']):?>
-					<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
-					<button class="btn btn-mini btn-link btn-property-add-potential-by" style="display: none;" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
-					<?php if($properties[$i]['potentialby']):?>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
-					<?php endif;?>
-				<?php elseif($properties[$i]['favorite']):?>
-					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
-					<?php if(!$properties[$i]['potentialby']):?>
+		<?php if($properties[$i]['owner_id'] != $this->session->userdata('current_owner')):?>
+			<?php if(($this->uri->segment(2) == 'favorite')):?>
+				<?php if($properties[$i]['favorite']):?>
+					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
+				<?php endif;?>
+				<?php if(!$properties[$i]['potentialby']):?>
 					<button class="btn btn-mini btn-link btn-property-add-potential-by" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
-					<?php elseif($properties[$i]['potentialby']):?>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
-					<?php endif;?>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+				<?php elseif($properties[$i]['potentialby']):?>
+					<button class="btn btn-mini btn-link">Already added to potential by</button>
 				<?php endif;?>
 			<?php endif;?>
+			<?php if(($this->uri->segment(2) == 'potential-by')):?>
+				<?php if($properties[$i]['potentialby']):?>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+				<?php endif;?>
+			<?php endif;?>
+		<?php endif;?>
 				</div>
 			<?php endfor;?>
 			<?php if(!$properties):?>
@@ -61,6 +63,7 @@
 			</div>
 		</div>
 	</div>
+	<?php $this->load->view("broker_interface/includes/footer");?>
 	<?php $this->load->view("broker_interface/includes/scripts");?>
 </body>
 </html>

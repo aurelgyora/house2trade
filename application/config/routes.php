@@ -54,8 +54,10 @@ $route['password-recovery/:any/temporary-code/:any'] = "users_interface/confirm_
 /*************************************************** BROKERS INTRERFACE ***********************************************/
 
 $route[BROKER_START_PAGE] = "broker_interface/properties";
+$route['broker/:any/information'] = "broker_interface/property";
 $route['broker/:any/information/:num'] = "broker_interface/property";
 $route['broker/register-properties'] = "broker_interface/register_properties";
+$route[BROKER_START_PAGE.'/edit'] = "broker_interface/edit_property";
 $route[BROKER_START_PAGE.'/edit/:num'] = "broker_interface/edit_property";
 $route['broker/search'] = "broker_interface/searchProperty";
 $route['broker/search/result'] = "broker_interface/searchProperty";
