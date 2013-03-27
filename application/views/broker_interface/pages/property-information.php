@@ -54,10 +54,11 @@
 					<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$property['id'];?>">Add to favorite</button>
 					<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$property['id'];?>">Remove from favorite</button>
 				<?php else:?>
-					<button class="btn btn-mini btn-link">Already added to favorites</button>
+					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="null" data-src="<?=$property['id'];?>">Remove from favorite</button>
+					<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$property['id'];?>">Add to favorite</button>
 				<?php endif;?>
 				<?php if($property['potentialby']):?>
-					<button class="btn btn-mini btn-link">Already added to potential by</button>
+					<h3>Already added to potential by</h3>
 				<?php endif;?>
 			<?php endif;?>
 		<?php else:?>

@@ -14,6 +14,7 @@
 			<li num="match"><?=anchor('homeowner/match','Match');?></li>
 			-->
 			<li class="nav-header">Actions</li>
+			<li><?=anchor('/','Home Page');?></li>
 			<li><?=anchor('logout','Logout');?></li>
 		</ul>
 	</div>

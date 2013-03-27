@@ -8,6 +8,7 @@
 			<li class="nav-header">Tools</li>
 			<li num="control-panel"><?=anchor(ADM_START_PAGE,'Control Panel');?></li>
 			<li num="profile"><?=anchor('administrator/profile','Profile');?></li>
+			<li><?=anchor('/','Home Page');?></li>
 			<li><?=anchor('logout','Logout');?></li>
 		</ul>
 	</div>

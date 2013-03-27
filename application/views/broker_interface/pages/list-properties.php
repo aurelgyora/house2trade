@@ -43,10 +43,10 @@
 					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
 				<?php endif;?>
 				<?php if(!$properties[$i]['potentialby']):?>
-					<button class="btn btn-mini btn-link btn-property-add-potential-by" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+					<button class="btn btn-mini btn-link btn-property-add-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
 				<?php elseif($properties[$i]['potentialby']):?>
-					<button class="btn btn-mini btn-link">Already added to potential by</button>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
 				<?php endif;?>
 			<?php endif;?>
 			<?php if(($this->uri->segment(2) == 'potential-by')):?>

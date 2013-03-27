@@ -394,7 +394,6 @@ class Ajax_interface extends MY_Controller{
 					$user_class = $this->users->read_field($uid,'users','class');
 					$this->load->helper('string');
 					$activate_code = random_string('alpha',25);
-					$this->users->update_field($uid,'password','','users');
 					$this->users->update_field($uid,'temporary_code',$activate_code,'users');
 					if($user_id):
 						switch($user_class):
@@ -404,8 +403,8 @@ class Ajax_interface extends MY_Controller{
 								$user_class = 'broker';
 								break;
 							case 3:
-								$this->load->model('properties');
-								$user_name = $this->properties->read_name($user_id,'properties');
+								$this->load->model('owners');
+								$user_name = $this->owners->read_name($user_id,'owners');
 								$user_class = 'homeowner';
 								break;
 						endswitch;
@@ -600,7 +599,14 @@ class Ajax_interface extends MY_Controller{
 			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($property,$this->session->userdata('current_owner'))):
 				$insert['property'] = $property;
 				$insert['owner'] = $this->session->userdata('current_owner');
-				$this->property_potentialby->insert_record($insert);
+				$result = $this->property_potentialby->insert_record($insert);
+				if($result):
+					$this->load->model('property_favorite');
+					$favoriteID = $this->property_favorite->record_exist($property,$this->session->userdata('current_owner'));
+					if($favoriteID):
+						$this->property_favorite->delete_record($favoriteID,'property_favorite');
+					endif;
+				endif;
 				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
 			endif;
 		endif;

@@ -166,6 +166,7 @@ class Users_interface extends MY_Controller{
 		endswitch;
 		$user_id = $this->users->user_exist('temporary_code',$this->uri->segment(4));
 		if($user_id):
+			$this->users->update_field($user_id,'password','','users');
 			$this->users->update_field($user_id,'temporary_code','','users');
 			$user = $this->users->read_record($user_id,'users');
 			$this->session->set_userdata(array('logon'=>md5($this->users->read_field($user_id,'users','email')),'userid'=>$user_id));

@@ -98,7 +98,7 @@ $(function(){
 					$(_this).parents('div.media').remove();
 				}else{
 					$(_this).hide();
-					$(_this).siblings("button.btn-property-add-favorite").show();
+					$(_this).siblings("button.btn-property-add-favorite").removeClass('hidden').show();
 				}
 			}
 		,"json");
@@ -108,8 +108,13 @@ $(function(){
 		var _this = this;
 		$.post(mt.baseURL+"add-to-potential-by",{'parameter':parameter},
 			function(data){
-				$(_this).siblings("button.btn-property-remove-potential-by").removeClass('hidden').show();
-				$(_this).hide();
+				var target = $(_this).attr('data-target');
+				if(target === 'remove'){
+					$(_this).parents('div.media').remove();
+				}else{
+					$(_this).siblings("button.btn-property-remove-potential-by").removeClass('hidden').show();
+					$(_this).hide();
+				}
 			}
 		,"json");
 	});

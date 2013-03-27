@@ -6,7 +6,7 @@ class Owner_interface extends MY_Controller{
 		
 		parent::__construct();
 		if(!$this->loginstatus || ($this->user['class'] != 3)):
-			redirect('');
+			redirect('login');
 		endif;
 		$password = $this->users->read_field($this->user['uid'],'users','password');
 		if(empty($password) && ($this->uri->segment(2) != 'set-password')):

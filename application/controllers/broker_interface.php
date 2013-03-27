@@ -6,7 +6,7 @@ class Broker_interface extends MY_Controller{
 		
 		parent::__construct();
 		if(!$this->loginstatus || ($this->user['class'] != 2)):
-			redirect('');
+			redirect('login');
 		endif;
 		$password = $this->users->read_field($this->user['uid'],'users','password');
 		if(empty($password) && ($this->uri->segment(2) != 'set-password')):
@@ -81,6 +81,10 @@ class Broker_interface extends MY_Controller{
 					$pagevar['properties'][$i]['favorite'] = FALSE;
 					if($favorite && array_key_exists($pagevar['properties'][$i]['id'],$favorite)):
 						$pagevar['properties'][$i]['favorite'] = TRUE;
+					endif;
+					$pagevar['properties'][$i]['potentialby'] = FALSE;
+					if($potentialby && array_key_exists($pagevar['properties'][$i]['id'],$potentialby)):
+						$pagevar['properties'][$i]['potentialby'] = TRUE;
 					endif;
 					for($j=0;$j<count($pagevar['property_type']);$j++):
 						if($pagevar['properties'][$i]['type'] == $pagevar['property_type'][$j]['id']):
@@ -325,15 +329,17 @@ class Broker_interface extends MY_Controller{
 		if(!$pagevar['property']):
 			show_error('Property missing');
 		endif;
-		$this->load->model('property_favorite');
-		$pagevar['property']['favorite'] = FALSE;
-		if($pagevar['property']['broker_id'] != $this->user['uid']):
-			$pagevar['property']['favorite'] = $this->property_favorite->record_exist($current_property,$this->session->userdata('current_owner'));
-		endif;
 		$this->load->model('property_potentialby');
+		$pagevar['property']['favorite'] = FALSE;
 		$pagevar['property']['potentialby'] = FALSE;
-		if($pagevar['property']['broker_id'] != $this->user['uid']):
+		if($pagevar['property']['owner_id'] != $this->session->userdata('current_owner')):
 			$pagevar['property']['potentialby'] = $this->property_potentialby->record_exist($current_property,$this->session->userdata('current_owner'));
+		endif;
+		if(!$pagevar['property']['potentialby']):
+			$this->load->model('property_favorite');
+			if($pagevar['property']['owner_id'] != $this->session->userdata('current_owner')):
+				$pagevar['property']['favorite'] = $this->property_favorite->record_exist($current_property,$this->session->userdata('current_owner'));
+			endif;
 		endif;
 		$this->load->model('property_type');
 		$property_type = $this->property_type->read_records('property_type');
