@@ -6,7 +6,7 @@
 				<input class="span8 valid-required" name="subject" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$mail['subject'];?>">
 			</div>
 			<div class="control-group">
-				<label for="cmail">Mail content: </label>
+				<label for="cmail">Body*: </label>
 				<textarea class="span8" rows="8" name="content" <?=TOOLTIP_FIELD_BLANK;?>><?=$mail['content'];?></textarea>
 			</div>
 		</fieldset>

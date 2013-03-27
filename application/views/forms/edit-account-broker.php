@@ -1,5 +1,5 @@
 <?=form_open($this->uri->uri_string(),array('class'=>'form-horizontal')); ?>
-	<legend>Account data</legend>
+	<legend>Account</legend>
 	<div class="span4">
 		<fieldset>
 			<div class="control-group">
@@ -25,7 +25,7 @@
 		</fieldset>
 	</div>
 	<div class="clear"></div>
-	<legend>Company data</legend>
+	<legend>Company</legend>
 	<div class="span4">
 		<fieldset>
 			<div class="control-group">
@@ -87,7 +87,7 @@
 	</div>
 	<div class="clear"></div>
 	<div class="form-actions">
-		<button class="btn btn-success pull-right" id="save-profile" type="submit" name="submit" value="send">Save information</button>
+		<button class="btn btn-success" id="save-profile" type="submit" name="submit" value="send">Save information</button>
 	</div>
 <?php endif;?>
 <?= form_close(); ?>

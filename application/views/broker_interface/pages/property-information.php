@@ -16,36 +16,28 @@
 					</div>
 				</div>
 			<?php if($property):?>
-				<div class="span4">
-					<a class="none pull-left" href="#">
-						<img class="span3 img-polaroid media-object" src="<?=site_url($property['photo']);?>" alt="">
-					</a>
-					<div class="clear"></div>
-					<div class="span2">
-						Price: <br/>Bedrooms: <br/>Bathrooms: <br/>Square:
-					</div>
-					<div class="span1">
-						$<?=$property['price'];?><br/><?=$property['bedrooms'];?><br/><?=$property['bathrooms'];?><br/><?=$property['sqf'];?>
-					</div>
-				</div>
-				<div class="span4">
-					<h3>Property Description</h3>
-					<div>
-						<?=$property['description'];?>
-					</div>
-					<div class="clear"></div>
-					<h3>Contact Information</h3>
-					<div>
-						<div class="span1">
-							Phone: <br/>cell: <br/>Email:
-						</div>
-						<div class="span1">
-							<?=$property['phone'];?><br/><?=$property['cell'];?><br/><?=$property['email'];?>
-						</div>
-					</div>
-				</div>
-				<div class="clear"></div>
-				<hr/>
+				<p>
+					<img class="img-polaroid" src="<?=site_url($property['photo']);?>" alt="">
+				</p>
+				<h2 class="pp">Property Details</h2>
+				<p>
+					For Sale: $<?=$property['price'];?> <br/>
+					Bedrooms: <?=$property['bedrooms'];?> beds <br/>
+					Bathrooms: <?=$property['bathrooms'];?> baths <br/>
+					<?= ucfirst($property['type']); ?>: <?=$property['sqf'];?> sq ft<br/>
+					Lot: <?= $property['sqf'];?> sq ft <br/>
+					Tax: $<?= $property['tax']; ?>
+				</p>
+				<h2 class="pp">Description</h2>
+				<p>
+					<?=$property['description'];?>
+				</p>
+				<h2 class="pp">Contacts</h2>
+				<p>
+					Phone: <?=$property['phone'];?><br/>
+					Cell: <?=$property['cell'];?><br/>
+					Email: <a href="mailto:<?=$property['email'];?>"><?=$property['email'];?></a>
+				</p>
 				<?php if($property['broker_id'] == $this->user['uid']):?>
 				<div>
 					<a href="<?=site_url(BROKER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>
