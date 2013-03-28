@@ -17,6 +17,7 @@ class Broker_interface extends MY_Controller{
 	/******************************************** cabinet *******************************************************/
 	
 	public function setPassword(){
+	
 		$password = $this->users->read_field($this->user['uid'],'users','password');
 		if(!empty($password)):
 			redirect(BROKER_START_PAGE);
@@ -134,6 +135,16 @@ class Broker_interface extends MY_Controller{
 						$pagevar['zillow'] = $this->properties->query_execute($sql);
 						$pagevar['zillow'] = $pagevar['zillow'][0];
 						if($pagevar['zillow']):
+							$pagevar['zillow']['potentialby'] = FALSE;
+							if($potentialby && array_key_exists($pagevar['zillow']['id'],$potentialby)):
+								$pagevar['zillow']['potentialby'] = TRUE;
+							endif;
+							if(!$pagevar['zillow']['potentialby']):
+								$pagevar['zillow']['favorite'] = FALSE;
+								if($favorite && array_key_exists($pagevar['zillow']['id'],$favorite)):
+									$pagevar['zillow']['favorite'] = TRUE;
+								endif;
+							endif;
 							for($j=0;$j<count($pagevar['property_type']);$j++):
 								if($pagevar['zillow']['type'] == $pagevar['property_type'][$j]['id']):
 									$pagevar['zillow']['type'] = $pagevar['property_type'][$j]['title'];
@@ -162,6 +173,8 @@ class Broker_interface extends MY_Controller{
 						);
 						$pagevar['zillow'] = $unshift;
 						if($pagevar['zillow']):
+							$pagevar['zillow']['favorite'] = FALSE;
+							$pagevar['zillow']['potentialby'] = FALSE;
 							$pagevar['zillow']['photo'] = 'img/thumb.png';
 						endif;
 					endif;
@@ -373,7 +386,8 @@ class Broker_interface extends MY_Controller{
 			show_error('Access Denied!');
 		endif;
 		$this->load->model('owners');
-		$pagevar['property']['owner'] = $this->owners->read_record($this->session->userdata('current_owner'),'owners');
+		$user_id = $this->users->read_field($this->session->userdata('current_owner'),'users','user_id');
+		$pagevar['property']['owner'] = $this->owners->read_record($user_id,'owners');
 		$this->load->view("broker_interface/pages/property-card",$pagevar);
 	}
 }

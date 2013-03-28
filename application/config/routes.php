@@ -12,6 +12,7 @@ $route['valid/exist-email'] = 'ajax_interface/existEmail';
 $route['login-in']				= "ajax_interface/login";
 $route['signup-account']		= "ajax_interface/signup_account";
 $route['signup-properties']		= "ajax_interface/signup_properties";
+$route['seller-signup-properties'] = "ajax_interface/seller_signup_properties";
 $route['change-user-status']	= "ajax_interface/change_user_status";
 $route['save-property-info']	= "ajax_interface/save_property_info";
 $route['send-forgot-password']	= "ajax_interface/send_forgot_password";
@@ -20,7 +21,8 @@ $route['delete-property-images']= "ajax_interface/deletePropertyImages";
 $route['save-profile']			= "ajax_interface/saveProfile";
 $route['set-current-owner']			= "ajax_interface/setCurrentOwner";
 $route['text-load/:any/from/:num']	= "ajax_interface/text_load";
-$route['broker/properties/delete']	= "ajax_interface/deleteProperty";
+$route[BROKER_START_PAGE.'/delete']	= "ajax_interface/deleteProperty";
+$route[OWNER_START_PAGE.'/delete/seller']	= "ajax_interface/deletePropertySeller";
 $route['search-properties'] = "ajax_interface/searchProperty";
 $route['add-to-favorite'] = "ajax_interface/addToFavorite";
 $route['remove-to-favorite'] = "ajax_interface/removeToFavorite";
@@ -75,10 +77,26 @@ $route['broker/set-password'] = "broker_interface/setPassword";
 
 /*************************************************** OWNERS INTRERFACE ***********************************************/
 
+$route['homeowner/search'] = "owner_interface/searchProperty";
+$route['homeowner/search/result'] = "owner_interface/searchProperty";
+$route['homeowner/search/result/from'] = "owner_interface/searchProperty";
+$route['homeowner/search/result/from/:num'] = "owner_interface/searchProperty";
+
 $route[OWNER_START_PAGE] = "owner_interface/properties";
-$route[OWNER_START_PAGE.'/from'] = "owner_interface/properties";
-$route[OWNER_START_PAGE.'/from/:num'] = "owner_interface/properties";
+$route['homeowner/:any/information'] = "owner_interface/property";
+$route['homeowner/properties/information/:num'] = "owner_interface/property";
+$route[OWNER_START_PAGE.'/edit'] = "owner_interface/edit_property";
 $route[OWNER_START_PAGE.'/edit/:num'] = "owner_interface/edit_property";
+
+$route['homeowner/register-properties'] = "owner_interface/register_properties";
+
+$route['homeowner/favorite'] = "owner_interface/favoriteProperty";
+$route['homeowner/favorite/from'] = "owner_interface/favoriteProperty";
+$route['homeowner/favorite/from/:num'] = "owner_interface/favoriteProperty";
+$route['homeowner/potential-by'] = "owner_interface/potentialByProperty";
+$route['homeowner/potential-by/from'] = "owner_interface/potentialByProperty";
+$route['homeowner/potential-by/from/:num'] = "owner_interface/potentialByProperty";
+
 $route['homeowner/profile'] = "owner_interface/profile";
 $route['homeowner/set-password'] = "owner_interface/setPassword";
 

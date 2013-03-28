@@ -13,7 +13,7 @@
 			<div class="span9">
 				<div class="navbar">
 					<div class="navbar-inner">
-						<a class="brand" href="<?=site_url(uri_string());?>">Edit property information</a>
+						<?=anchor('homeowner/properties/information/'.$this->session->userdata('property_id'),'Back');?>
 					</div>
 				</div>
 				<div id="div-property-information">
@@ -29,6 +29,7 @@
 			</div>
 		</div>
 	</div>
+	<?php $this->load->view("owner_interface/includes/footer");?>
 	<?php $this->load->view("owner_interface/includes/scripts");?>
 	<script type="text/javascript" src="<?=site_url('js/upload.js');?>"></script>
 </body>

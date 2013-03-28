@@ -2,7 +2,7 @@
 
 class MY_Controller extends CI_Controller{
 	
-	var $user = array('uid'=>0,'name'=>'','email'=>'','class'=>0,'class_name'=>'','class_translit'=>'');
+	var $user = array('uid'=>0,'name'=>'','email'=>'','class'=>0,'class_name'=>'','user_id'=>0,'class_translit'=>'');
 	var $loginstatus = FALSE;
 	
 	function __construct(){
@@ -22,6 +22,7 @@ class MY_Controller extends CI_Controller{
 					$this->user['class_name'] = $this->usersclass->read_field($userinfo['class'],'users_class','title');
 					$this->user['email'] = $userinfo['email'];
 					$this->user['class'] = $userinfo['class'];
+					$this->user['user_id'] = $userinfo['user_id'];
 					$this->user['class_translit'] = $this->usersclass->read_field($this->user['class'],'users_class','translit');
 					switch($this->user['class']):
 						case 1: $this->user['name'] = 'Administrator'; break;

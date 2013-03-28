@@ -67,8 +67,8 @@
 				<input class="span2 digital valid-required FieldSend" name="tax" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['tax'];?>">
 			</div>
 			<div class="control-group">
-				<label for="mls">MLS*: </label>
-				<input class="span2 digital valid-required FieldSend" readonly="readonly" name="mls" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['mls'];?>">
+				<label for="mls">MLS: </label>
+				<input class="span2 digital FieldSend" name="mls" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['mls'];?>">
 			</div>
 			<div class="control-group">
 				<label for="description">Description*: </label>

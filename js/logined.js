@@ -40,6 +40,27 @@
 				},"json");
 		}
 	})
+	$("#seller-register-properties").click(function(event){
+		event.preventDefault();
+		var err = false;
+		var notNumerics = mt.FieldsIsNotNumeric($("#form-property-register"));
+		if(notNumerics){for(var element in notNumerics){$("#"+notNumerics[element]).attr('data-original-title','Incorrect numeric value').tooltip('show');err = true;}}
+		if(!err){
+			var postdata = mt.formSerialize($("#form-property-register .FieldSend"));
+			$.post(mt.baseURL+"seller-signup-properties",{'postdata':postdata},
+				function(data){
+					$("input.valid-required").tooltip("destroy");
+					if(data.status){
+						$("#div-choise-metod").remove();
+						$("#div-account-properties").remove();
+						$("#div-insert-photo-properties").hide().removeClass('hidden').fadeIn('slow');
+						$("#form-property-register .FieldSend").val('');
+						$("#photos-block-message").html(data.message);
+					}
+					$("#form-request").html(data.message);
+				},"json");
+		}
+	})
 	$("#save-property").click(function(event){
 		event.preventDefault();
 		var err = false;

@@ -12,6 +12,18 @@
 			</div>
 		</fieldset>
 	</div>
+	<div class="span4">
+		<fieldset>
+			<div class="control-group">
+				<label for="phone">Phone*: </label>
+				<input class="span4 valid-required FieldSend" name="phone" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$profile['info']['phone'];?>">
+			</div>
+			<div class="control-group">
+				<label for="cell">Cell: </label>
+				<input class="span4 FieldSend" name="cell" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$profile['info']['cell'];?>">
+			</div>
+		</fieldset>
+	</div>
 	<div class="clear"></div>
 <?php if($profile['id'] == $this->user['uid']):?>
 	<legend>Change password</legend>

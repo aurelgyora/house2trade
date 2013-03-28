@@ -10,16 +10,42 @@
 			<hr/>
 			<?php $this->load->view("owner_interface/includes/rightbar");?>
 			<div class="span9">
-				<div class="navbar">
-					<div class="navbar-inner">
-						<a class="brand" href="<?=site_url(uri_string());?>">My profile</a>
+				<div id="div-view-account-broker">
+					<legend>Account</legend>
+					<div class="span4">
+						<fieldset>
+							<div class="control-group">
+								First Name: <span id="fname"><?=$profile['info']['fname'];?></span>
+							</div>
+							<div class="control-group">
+								Last Name: <span id="lname"><?=$profile['info']['lname'];?></span>
+							</div>
+						</fieldset>
+					</div>
+					<div class="span4">
+						<fieldset>
+							<div class="control-group">
+								Phone: <span id="phone"><?=$profile['info']['phone'];?></span>
+							</div>
+							<div class="control-group">
+								Cell: <span id="cell"><?=$profile['info']['cell'];?></span>
+							</div>
+						</fieldset>
+					</div>
+					<div class="clear"></div>
+					<div class="form-actions">
+						<button class="btn btn-success" id="edit-profile">Edit information</button>
+						<span id="block-message"></span>
 					</div>
 				</div>
 				<div class="clear"></div>
-				<?php $this->load->view('forms/edit-account-owner');?>
+				<div id="div-edit-account-broker" class="hidden">
+					<?php $this->load->view('forms/edit-account-owner')?>
+				</div>
 			</div>
 		</div>
 	</div>
+	<?php $this->load->view("owner_interface/includes/footer");?>
 	<?php $this->load->view("owner_interface/includes/scripts");?>
 </body>
 </html>

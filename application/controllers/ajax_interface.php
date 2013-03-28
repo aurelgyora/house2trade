@@ -174,12 +174,42 @@ class Ajax_interface extends MY_Controller{
 						$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
 						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
 						$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
-						$this->session->set_userdata('current_owner',$dataval['user_id']);
 						$json_request['status'] = TRUE;
 						$this->session->set_userdata(array('current_owner'=>$dataval['user_id'],'property_id'=>$property_id));
 					endif;
 				else:
 					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" />  Property already exist';
+				endif;
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function seller_signup_properties(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$json_request = array('status'=>FALSE,'message'=>'Signup is impossible');
+		$data = trim($this->input->post('postdata'));
+		if($data):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$dataval[$dataid[0]] = trim($dataid[1]);
+			endfor;
+			$this->load->model('owners');
+			if($dataval && $this->owners->read_field($this->user['user_id'],'owners','seller')):
+				$this->load->model('properties');
+				if(!$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
+					$dataval['user_id'] = $this->user['uid'];
+					$property_id = $this->properties->insert_record($dataval);
+					$status = $this->users->read_field($this->user['uid'],'users','status');
+					$this->properties->update_field($property_id,'status',$status,'properties');
+					$json_request['status'] = TRUE;
+					$this->session->set_userdata('property_id',$property_id);
+				else:
+					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
 				endif;
 			endif;
 		endif;
@@ -274,11 +304,11 @@ class Ajax_interface extends MY_Controller{
 					$json_request['status'] = TRUE;
 					if(!isset($dataval['setpswd'])):
 						switch($this->user['class']):
-							case 2:	$this->load->model('brokers');
+							case 2: $this->load->model('brokers');
 									$dataval['id'] = $this->users->read_field($this->user['uid'],'users','user_id');
 									$this->brokers->update_record($dataval);
 									break;
-							case 3:	$this->load->model('owners');
+							case 3: $this->load->model('owners');
 									$owner = $this->users->read_field($this->user['uid'],'users','user_id');
 									$this->owners->update_record($owner,$dataval);
 									break;
@@ -307,12 +337,19 @@ class Ajax_interface extends MY_Controller{
 			show_error('Access denied');
 		endif;
 		$property = $this->input->post('parameter');
-		$json_request = array('status'=>FALSE,'redirect'=>site_url(BROKER_START_PAGE),'messages'=>'');
+		$json_request = array('status'=>FALSE,'redirect'=>'','messages'=>'');
 		if($property):
 			$this->load->model('images');
 			$this->load->model('properties');
 			$this->load->model('owners');
-			$images = $this->images->read_records($property,$this->session->userdata('current_owner'));
+			if($this->user['class'] == 2):
+				$json_request['redirect'] = site_url(BROKER_START_PAGE);
+				$current_owner = $this->session->userdata('current_owner');
+			else:
+				$json_request['redirect'] = site_url(OWNER_START_PAGE);
+				$current_owner = $this->user['uid'];
+			endif;
+			$images = $this->images->read_records($property,$current_owner);
 			for($i=0;$i<count($images);$i++):
 				$this->filedelete($images[$i]['photo']);
 			endfor;
@@ -324,6 +361,31 @@ class Ajax_interface extends MY_Controller{
 			$this->owners->delete_record($ownerID,'owners');
 			$json_request['status'] = TRUE;
 			$this->session->unset_userdata(array('current_owner'=>'','property_id'=>''));
+			$this->session->set_userdata('msgs','<img src="'.site_url('img/check.png').'" alt="" /> Property deleted');
+		else:
+			$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error deleting<hr/>';
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function deletePropertySeller(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		$json_request = array('status'=>FALSE,'redirect'=>site_url(OWNER_START_PAGE),'messages'=>'');
+		if($property):
+			$this->load->model('images');
+			$this->load->model('properties');
+			$images = $this->images->read_records($property,$this->user['uid']);
+			for($i=0;$i<count($images);$i++):
+				$this->filedelete($images[$i]['photo']);
+			endfor;
+			$this->images->delete_records($property,$this->user['uid']);
+			$this->properties->delete_record($property,'properties');
+			$json_request['status'] = TRUE;
+			$this->session->unset_userdata('property_id');
 			$this->session->set_userdata('msgs','<img src="'.site_url('img/check.png').'" alt="" /> Property deleted');
 		else:
 			$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error deleting<hr/>';
@@ -345,6 +407,10 @@ class Ajax_interface extends MY_Controller{
 				$dataval[$i] = trim($dataid[1]);
 			endfor;
 			if($dataval):
+				$current_owner = $this->session->userdata('current_owner');
+				if($this->user['class'] == 3):
+					$current_owner = $this->user['uid'];
+				endif;
 				if($this->user['class'] == 2):
 					$this->load->model('properties');
 					$broker = $this->properties->read_field($this->session->userdata('property_id'),'properties','broker_id');
@@ -363,7 +429,7 @@ class Ajax_interface extends MY_Controller{
 					$this->images->delete_record($image['id'],'images');
 				endfor;
 				if($mainPhotoDeleted):
-					$images = $this->images->read_records($this->session->userdata('property_id'),$this->session->userdata('current_owner'));
+					$images = $this->images->read_records($this->session->userdata('property_id'),$current_owner);
 					if(isset($images[0]['id'])):
 						$this->images->update_field($images[0]['id'],'main',1,'images');
 					endif;
@@ -440,6 +506,7 @@ class Ajax_interface extends MY_Controller{
 		$insert['property_id'] = $this->session->userdata('property_id');
 		if($this->user['class'] == 3):
 			$this->load->model('owners');
+			$insert['owner_id'] = $this->user['uid'];
 			$insert['broker_id'] = $this->owners->read_field($insert['owner_id'],'owners','broker_id');
 		elseif($this->user['class'] == 2):
 			$insert['broker_id'] = $this->user['uid'];
@@ -498,6 +565,9 @@ class Ajax_interface extends MY_Controller{
 				$dataval[$dataid[0]] = trim($dataid[1]);
 			endfor;
 			if($dataval):
+				if($this->user['class'] == 3):
+					$json_request['redirect'] = site_url('homeowner/search/result');
+				endif;
 				$sql = 'SELECT users.id AS uid,users.email,users.status,owners.id AS oid,owners.fname,owners.lname,properties.*';
 				$sql .= ' FROM users INNER JOIN owners ON users.user_id = owners.id INNER JOIN properties ON users.id = properties.owner_id';
 				$sql .= ' WHERE TRUE';
@@ -555,11 +625,15 @@ class Ajax_interface extends MY_Controller{
 		$property = $this->input->post('parameter');
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
 		if($property):
+			$current_owner = $this->session->userdata('current_owner');
+			if($this->user['class'] == 3):
+				$current_owner = $this->user['uid'];
+			endif;
 			$this->load->model('property_favorite');
 			$this->load->model('properties');
-			if($this->properties->record_exist('properties','id',$property) && !$this->property_favorite->record_exist($property,$this->session->userdata('current_owner'))):
+			if($this->properties->record_exist('properties','id',$property) && !$this->property_favorite->record_exist($property,$current_owner)):
 				$insert['property'] = $property;
-				$insert['owner'] = $this->session->userdata('current_owner');
+				$insert['owner'] = $current_owner;
 				$this->property_favorite->insert_record($insert);
 				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
 			endif;
@@ -575,9 +649,13 @@ class Ajax_interface extends MY_Controller{
 		$property = $this->input->post('parameter');
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
 		if($property):
+			$current_owner = $this->session->userdata('current_owner');
+			if($this->user['class'] == 3):
+				$current_owner = $this->user['uid'];
+			endif;
 			$this->load->model('property_favorite');
 			$this->load->model('properties');
-			$favoriteID = $this->property_favorite->record_exist($property,$this->session->userdata('current_owner'));
+			$favoriteID = $this->property_favorite->record_exist($property,$current_owner);
 			if($favoriteID):
 				$this->property_favorite->delete_record($favoriteID,'property_favorite');
 				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from favorite';
@@ -594,15 +672,19 @@ class Ajax_interface extends MY_Controller{
 		$property = $this->input->post('parameter');
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
 		if($property):
+			$current_owner = $this->session->userdata('current_owner');
+			if($this->user['class'] == 3):
+				$current_owner = $this->user['uid'];
+			endif;
 			$this->load->model('property_potentialby');
 			$this->load->model('properties');
-			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($property,$this->session->userdata('current_owner'))):
+			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($property,$current_owner)):
 				$insert['property'] = $property;
-				$insert['owner'] = $this->session->userdata('current_owner');
+				$insert['owner'] = $current_owner;
 				$result = $this->property_potentialby->insert_record($insert);
 				if($result):
 					$this->load->model('property_favorite');
-					$favoriteID = $this->property_favorite->record_exist($property,$this->session->userdata('current_owner'));
+					$favoriteID = $this->property_favorite->record_exist($property,$current_owner);
 					if($favoriteID):
 						$this->property_favorite->delete_record($favoriteID,'property_favorite');
 					endif;
@@ -621,9 +703,13 @@ class Ajax_interface extends MY_Controller{
 		$property = $this->input->post('parameter');
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
 		if($property):
+			$current_owner = $this->session->userdata('current_owner');
+			if($this->user['class'] == 3):
+				$current_owner = $this->user['uid'];
+			endif;
 			$this->load->model('property_potentialby');
 			$this->load->model('properties');
-			$favoriteID = $this->property_potentialby->record_exist($property,$this->session->userdata('current_owner'));
+			$favoriteID = $this->property_potentialby->record_exist($property,$current_owner);
 			if($favoriteID):
 				$this->property_potentialby->delete_record($favoriteID,'property_potentialby');
 				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from potential by';

@@ -11,35 +11,58 @@
 			<?php $this->load->view("owner_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-					<div class="navbar-inner">
-						<a class="brand" href="<?=site_url(uri_string());?>">My properties</a>
-					</div>
+				<?php if(($this->uri->segment(2) == 'properties') && ($this->owner['seller'])):?>
+					<a href="<?=site_url('homeowner/register-properties');?>" class="btn btn-small btn-link" type="button">Add new Property</a>
+				<?php endif;?>
 				</div>
-			<?php if(!$my_broker):?>
-				<a href="<?=site_url('homeowner/register-properties');?>" class="none disabled btn btn-link btn-small pull-right" type="button">Add new Property</a>
-			<?php endif;?>
 				<div class="clear"></div>
 				<?php $this->load->helper('text');?>
 			<?php for($i=0;$i<count($properties);$i++):?>
 				<div class="media">
 					<a class="none pull-left" href="#">
-						<img class="span2 img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">
+						<img class="img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">
 					</a>
 					<div class="media-body">
-						<a href="<?=site_url(OWNER_START_PAGE.'/edit/'.$properties[$i]['id']);?>" class="btn btn-mini pull-right" type="button"><i class="icon-edit"></i> Edit property</a>
-						<h4 class="media-heading"><?=$properties[$i]['address1'];?></h4>
+						<h4 class="media-heading">
+							<a href="<?=site_url('homeowner/'.$this->uri->segment(2).'/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'].', '.$properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code'];?></a>
+						</h4>
 						<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 						<p>
-							<?=$properties[$i]['city'].', '.$properties[$i]['state'].', '.$properties[$i]['type'];?><br/>
-							Bathrooms: <?=$properties[$i]['bathrooms'];?>; Bedrooms: <?=$properties[$i]['bathrooms'];?>; Square: <?=$properties[$i]['sqf'];?>;
-							Tax: <?=$properties[$i]['tax'];?>; Price: <?=$properties[$i]['price'];?>;
+							For Sale: $<?=$properties[$i]['price'];?> <br/>
+							Bedrooms: <?=$properties[$i]['bedrooms'];?> beds <br/>
+							Bathrooms: <?=$properties[$i]['bathrooms'];?> baths <br/>
+							<?= ucfirst($properties[$i]['type']); ?>: <?=$properties[$i]['sqf'];?> sq ft<br/>
+							Lot: <?= $properties[$i]['sqf'];?> sq ft <br/>
+							Tax: $<?= $properties[$i]['tax']; ?>
 						</p>
 					</div>
+		<?php if($properties[$i]['owner_id'] != $this->session->userdata('current_owner')):?>
+			<?php if(($this->uri->segment(2) == 'favorite')):?>
+				<?php if($properties[$i]['favorite']):?>
+					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
+				<?php endif;?>
+				<?php if(!$properties[$i]['potentialby']):?>
+					<button class="btn btn-mini btn-link btn-property-add-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+				<?php elseif($properties[$i]['potentialby']):?>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+				<?php endif;?>
+			<?php endif;?>
+			<?php if(($this->uri->segment(2) == 'potential-by')):?>
+				<?php if($properties[$i]['potentialby']):?>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+				<?php endif;?>
+			<?php endif;?>
+		<?php endif;?>
 				</div>
 			<?php endfor;?>
+			<?php if(!$properties):?>
+				<p>Properties list is empty</p>
+			<?php endif;?>
 			</div>
 		</div>
 	</div>
+	<?php $this->load->view("owner_interface/includes/footer");?>
 	<?php $this->load->view("owner_interface/includes/scripts");?>
 </body>
 </html>

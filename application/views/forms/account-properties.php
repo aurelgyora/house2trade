@@ -1,4 +1,11 @@
 <?=form_open($this->uri->uri_string(),array('class'=>'form-horizontal','id'=>'form-property-register')); ?>
+<?php
+	$seller = FALSE;
+	if(isset($this->owner['seller']) && $this->owner['seller']):
+		$seller = TRUE;
+	endif;
+?>
+<?php if(!$seller):?>
 	<legend>HomeOwner data</legend>
 	<div class="span4">
 		<fieldset>
@@ -17,6 +24,7 @@
 		</fieldset>
 	</div>
 	<div class="clear"></div>
+<?php endif;?>
 	<legend>Property data</legend>
 	<div class="span4">
 		<fieldset>
@@ -81,7 +89,11 @@
 	<div class="clear"></div>
 	<div class="form-actions">
 		<div id="form-request"></div>
+	<?php if($this->user['class'] == 3 && $this->owner['seller']):?>
+		<button class="btn btn-success" type="submit" id="seller-register-properties" name="submit" value="send">Add property</button>
+	<?php else:?>
 		<button class="btn btn-success" type="submit" id="register-properties" name="submit" value="send">Add property</button>
+	<?php endif;?>
 		<span class="decision">or</span>
 		<a class="none link-more" id="set-properties-auto-data" href="#">Add property info by ZIP</a>
 	</div>

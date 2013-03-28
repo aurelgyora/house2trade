@@ -1,17 +1,15 @@
 <div class="span3">
 	<div class="well sidebar-nav">
 		<ul class="nav nav-pills nav-stacked">
-			<li class="nav-header">Menu</li>
+			<li class="nav-header">Navigation</li>
+			<li data-active="search"><?=anchor('homeowner/search','Search');?></li>
+			<li data-active="profile"><?=anchor('homeowner/profile','My account');?></li>
+			<li data-active="properties"><?=anchor(OWNER_START_PAGE,'Properties');?></li>
+			<li data-active="favorite"><?=anchor('homeowner/favorite','Favorite');?></li>
+			<li data-active="potential-by"><?=anchor('homeowner/potential-by','Potential by');?></li>
 			<!--
-			<li num="search"><?=anchor('homeowner/search','Search');?></li>
-			-->
-			<li num="profile"><?=anchor('homeowner/profile','My account');?></li>
-			<li num="properties"><?=anchor(OWNER_START_PAGE,'Properties');?></li>
-			<!--
-			<li num="favorite"><?=anchor('homeowner/favorite','Favorite');?></li>
-			<li num="potential-by"><?=anchor('homeowner/potential-by','Potential by');?></li>
-			<li num="instant-trade"><?=anchor('homeowner/instant-trade','Instant Trade');?></li>
-			<li num="match"><?=anchor('homeowner/match','Match');?></li>
+			<li data-active="instant-trade"><?=anchor('homeowner/instant-trade','Instant Trade');?></li>
+			<li data-active="match"><?=anchor('homeowner/match','Match');?></li>
 			-->
 			<li class="nav-header">Actions</li>
 			<li><?=anchor('/','Home Page');?></li>

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php $this->load->view("broker_interface/includes/head");?>
+<?php $this->load->view("owner_interface/includes/head");?>
 </head>
 <body>
-	<?php $this->load->view("broker_interface/includes/header");?>
+	<?php $this->load->view("owner_interface/includes/header");?>
 	<div class="container">
 		<div class="row">
 			<hr/>
-			<?php $this->load->view("broker_interface/includes/rightbar");?>
+			<?php $this->load->view("owner_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-					<?php $this->load->view("forms/select-active-owner");?>
+					
 				</div>
 				<div class="clear"></div>
 				<div id="div-search-property" <?=($this->session->userdata('search_sql'))?'class="hidden"':'';?>>
@@ -31,7 +31,7 @@
 							<div class="media-body">
 								<h4 class="media-heading">
 								<?php if($zillow_exist_id):?>
-									<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$zillow['id']);?>"><?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?></a>
+									<a href="<?=site_url(OWNER_START_PAGE.'/information/'.$zillow['id']);?>"><?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?></a>
 								<?php else:?>
 									<?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?> <br/>
 									<small>Property is not in our listing</small>
@@ -56,15 +56,15 @@
 								<?php endif;?>
 								</p>
 							</div>
-					<?php if($zillow_exist_id && !$zillow['potentialby']):?>
-						<?php if(!$zillow['favorite']):?>
-							<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$zillow['id'];?>">Add to favorite</button>
-							<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
-						<?php else:?>
-							<button class="btn btn-mini btn-link btn-property-remove-favorite" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
-							<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$zillow['id'];?>">Add to favorite</button>
+						<?php if($zillow_exist_id && !$zillow['potentialby']):?>
+							<?php if(!$zillow['favorite']):?>
+								<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$zillow['id'];?>">Add to favorite</button>
+								<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
+							<?php else:?>
+								<button class="btn btn-mini btn-link btn-property-remove-favorite" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
+								<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$zillow['id'];?>">Add to favorite</button>
+							<?php endif;?>
 						<?php endif;?>
-					<?php endif;?>
 						</div>
 					<?php endif;?>
 				<?php for($i=0;$i<count($properties);$i++):?>
@@ -77,7 +77,7 @@
 						</a>
 						<div class="media-body">
 							<h4 class="media-heading">
-								<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'].', '.$properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code'];?></a>
+								<a href="<?=site_url(OWNER_START_PAGE.'/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'].', '.$properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code'];?></a>
 							</h4>
 							<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 							<p>
@@ -89,7 +89,7 @@
 								Tax: $<?= $properties[$i]['tax']; ?>
 							</p>
 						</div>
-				<?php if($this->session->userdata('current_owner') && !$properties[$i]['potentialby']):?>
+				<?php if(!$properties[$i]['potentialby'] && ($properties[$i]['owner_id'] != $this->user['uid'])):?>
 					<?php if(!$properties[$i]['favorite']):?>
 						<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
 						<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
@@ -106,7 +106,7 @@
 			</div>
 		</div>
 	</div>
-	<?php $this->load->view("broker_interface/includes/footer");?>
-	<?php $this->load->view("broker_interface/includes/scripts");?>
+	<?php $this->load->view("owner_interface/includes/footer");?>
+	<?php $this->load->view("owner_interface/includes/scripts");?>
 </body>
 </html>
