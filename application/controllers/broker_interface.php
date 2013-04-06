@@ -152,7 +152,7 @@ class Broker_interface extends MY_Controller{
 									break;
 								endif;
 							endfor;
-							$pagevar['zillow']['photo'] = $this->images->mainPhoto($pagevar['zillow']['id']);
+							$pagevar['zillow']['photo'] = site_url($this->images->mainPhoto($pagevar['zillow']['id']));
 						endif;
 						$pagevar['zillow_exist_id'] = $zillow_exist;
 					else:
@@ -176,7 +176,14 @@ class Broker_interface extends MY_Controller{
 						if($pagevar['zillow']):
 							$pagevar['zillow']['favorite'] = FALSE;
 							$pagevar['zillow']['potentialby'] = FALSE;
-							$pagevar['zillow']['photo'] = 'img/thumb.png';
+							$pagevar['zillow']['photo'] = site_url('img/thumb.png');
+							$images = $this->arrayImagesFromPage($zillow_result['page-content']);
+							if($images):
+								$random = array_rand($images);
+								if(isset($random) && $random):
+									$pagevar['zillow']['photo'] = $images[$random];
+								endif;
+							endif;
 						endif;
 					endif;
 				endif;

@@ -24,7 +24,7 @@
 		<?php endif;?>
 			<ul class="main-nav">
 				<li><?=anchor('','Home');?></li>
-				<li><?=anchor('search','Search');?></li>
+				<!--<li><?=anchor('search','Search');?></li>-->
 				<li><?=anchor('how-it-works','How It Works');?></li>
 				<li><?=anchor('trading-concepts','Trading Concepts');?></li>
 				<li><?=anchor('about-us','About Us');?></li>

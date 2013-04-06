@@ -157,6 +157,34 @@ class Ajax_interface extends MY_Controller{
 						$this->load->model('owners');
 						$ownerID = $this->owners->insert_record($dataval);
 						$property_id = $this->properties->insert_record($dataval);
+						if($property_id):
+							$zillow_result = $this->zillowApi($dataval['address1'],$dataval['zip_code']);
+							if($zillow_result):
+								$this->load->model('images');
+								$randomNumber = mt_rand(1,1000);
+								$nextPropertyID = $this->images->nextID('images');
+								$insert = array('main'=>0,'property_id'=>$property_id,'photo'=>'','owner_id'=>$dataval['user_id']);
+								$images = $this->arrayImagesFromPage($zillow_result['page-content']);
+								if($images):
+									$insert['main'] = 1;
+									$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[0]);
+									file_put_contents(getcwd().'/upload_images/'.$newFileName,file_get_contents($images[0]));
+									$insert['photo'] = 'upload_images/'.$newFileName;
+									$this->images->insert_record($insert);
+									$insert['main'] = 0;
+									for($i=1;$i<count($images);$i++):
+										if(isset($images[$i])):
+											$nextPropertyID = $this->images->nextID('images');
+											$randomNumber = mt_rand(1,1000);
+											$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[$i]);
+											file_put_contents(getcwd().'/upload_images/'.$newFileName,file_get_contents($images[$i]));
+											$insert['photo'] = 'upload_images/'.$newFileName;
+											$this->images->insert_record($insert);
+										endif;
+									endfor;
+								endif;
+							endif;
+						endif;
 						$this->users->update_field($dataval['user_id'],'user_id',$ownerID,'users');
 						$this->users->update_field($dataval['user_id'],'class',3,'users');
 						$status = $this->users->read_field($this->user['uid'],'users','status');
@@ -178,7 +206,7 @@ class Ajax_interface extends MY_Controller{
 						$this->session->set_userdata(array('current_owner'=>$dataval['user_id'],'property_id'=>$property_id));
 					endif;
 				else:
-					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" />  Property already exist';
+					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
 				endif;
 			endif;
 		endif;

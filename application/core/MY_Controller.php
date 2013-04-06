@@ -235,6 +235,7 @@ class MY_Controller extends CI_Controller{
 				$tax = substr($tax, 0, strlen($tax)-2);
 			endif;
 			$result = array(
+				'page-content'=>(string)$search_result->response->results->result->links->homedetails,
 				'property-fname' => '',
 				'property-lname' => '',
 				'login-email' => '',
@@ -255,6 +256,25 @@ class MY_Controller extends CI_Controller{
 				'property-discription' => ''
 			);
 			return $result;
+		else:
+			return FALSE;
+		endif;
+	}
+
+	public function arrayImagesFromPage($siteURL){
+		
+		$images = array();
+		if(!empty($siteURL)):
+			$content = file_get_contents($siteURL);
+			preg_match_all("/<img.*?class=\"hip-photo\".*?(http:\/\/(.*?))\">/",$content,$matches,PREG_SET_ORDER);
+			foreach($matches as $key => $value):
+				if(isset($value[1])):
+					$images[] = $value[1];
+				endif;
+			endforeach;
+		endif;
+		if($images):
+			return $images;
 		else:
 			return FALSE;
 		endif;

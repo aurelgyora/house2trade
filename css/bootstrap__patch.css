@@ -1,4 +1,4 @@
-body { font: 16px/1.4em 'Source Sans Pro', Arial, Helvetica, Geneva, sans-serif; font-weight: 400; color: #222; }
+body { font: 16px/1.4em 'Source Sans Pro', Arial, Helvetica, Geneva, sans-serif; font-weight: 400; color: #222; background: url(https://d3dma7a8zw52bz.cloudfront.net/assets/wallpapers/paper-c6ac1a36a1a244825bfdacdfc86e4aa6.jpg) #F5EFE6; }
 
 h1 { font: 34px/53px 'Source Sans Pro', Arial, Helvetica, Geneva, sans-serif; margin: 0 0 0.25em; font-weight: 400; line-height: 1.25em; color: #444; }
 	h1.admin-header { color: #555; margin: 0.5em 0 0; }
@@ -8,7 +8,7 @@ h3 { font-weight: 600; text-transform: uppercase; font-size: 20px; margin: 0 0 1
 
 li { line-height: 22px; }
 
-.navbar .brand { font-size: 18px; font-weight: 400; }
+.navbar .brand { font-size: 25px; margin: 0 0 0.5em; padding: 0.5em 0 0; font-weight: 400; text-transform: uppercase; line-height: 1.25em; color: #222; }
 
 .btn {
 	display: inline-block;
@@ -39,7 +39,41 @@ label { display: block; margin-bottom: 4px; margin-top: 12px; color: #333; font-
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input { width: 180px; margin-left: 0; margin-right: 0; border: 1px solid #777; box-shadow: inset 1px 1px 2px 1px #CCC; padding: 10px; font-size: 13px; background: #fff; border-radius: 0; }
 select, .form-horizontal select { border: 1px solid #777; box-shadow: inset 1px 1px 2px 1px #CCC; padding: 9px; font-size: 13px; background: #fff; min-width: 110px; margin: 0 2px 7px; border-radius: 0; height: 40px; }
 .navbar select { margin: 0; }
+.navbar .nav { margin: 8px 10px 0 0; }
 input[type="radio"] { margin: 7px 5px; }
 legend { font-weight: 600; color: #444; padding-left: 0.75em; }
 .media-object { width: 90px; }
-.navbar-inner { line-height: 40px; }
+.navbar-inner { line-height: 40px; border: 0; background: none; box-shadow: none; padding-left: 0; padding-right: 0; }
+
+header { background: url('../img/header_default_3.jpg') no-repeat; position: relative; box-shadow: 0 -3px 5px #555 inset; height: 82px; margin-bottom: 1.5em; }
+header h1.admin-header { color: #fff; margin-top: 0.6em; }
+hr { display: none; }
+.well { padding: 0 25px 0 0; background: none; border: 0 none; box-shadow: none; }
+.nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus { background: #767676; padding-top: .75em; padding-bottom: .75em; border-radius: 5px; border-bottom: 0; }
+.nav-pills > li > a { border-radius: 0; }
+
+a { text-decoration: none; color: #222; /* border-bottom: 1px solid #9CF; */ font-weight: 600; }
+.navbar .nav > li > a { color: #222; }
+.pagination ul > li > a, .pagination ul > li > span { padding: 10px 15px; }
+
+footer { background: url('../img/footer_bg.jpg'); color: #8C8C8C; }
+footer h3 { font-size: 14px; color: #fff; margin: 0 0 4.5em 0; text-transform: uppercase; }
+footer .container_12 { padding: 14px 0 0; }
+.footer-inner { background: url('../img/footer_bg_top.jpg') 0 0 repeat-x; }
+footer .menu { list-style: none; margin: 0; padding: 0; }
+footer .menu li a { color: #fff; text-decoration: none; font-size: 14px; line-height: 1.4em; display: inline-block; margin-bottom: 0.75em; }
+footer .menu li a:hover { color: #F6C20F; }
+footer .menu-container { font-size: 14px; } 
+footer .copyright { margin: 3.5em 0 0; padding: 1.5em 0; border-top: 1px solid #222; }
+p.copy { font-size: 13px; float: left; margin: 0.1em 2em 0 0; }
+.piped { display: block; zoom: 1; list-style: none outside; margin: 0; padding: 0; }
+.piped::after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+.piped li { float: left; display: inline; line-height: 1.4em; }
+.piped a { padding: 0 0 0 0.75em; margin-left: 0.75em; border-left: 1px solid #222; color: #ccc; font-size: 12px; line-height: 1em; text-decoration: none; }
+.piped a.first { border-left: 0 !important; padding-left: 0; margin-left: 0 !important; }
+.btn-link { color: #222; border-bottom: 1px solid #9CF; font-weight: 700 !important; border: 1px solid #c0c0c0 !important; }
+
+html { position: relative; min-height: 100%; }
+body { margin: 0 0 430px; /* bottom = footer height */ }
+footer { position: absolute; left: 0; bottom: 0; height: 430px; width: 100%; }
+

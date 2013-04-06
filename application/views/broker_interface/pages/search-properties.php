@@ -26,7 +26,7 @@
 					<?php if(isset($zillow) && $zillow):?>
 						<div class="media">
 							<a class="none pull-left" href="#">
-								<img class="img-polaroid media-object" src="<?=site_url($zillow['photo']);?>" alt="">
+								<img class="img-polaroid media-object" src="<?=$zillow['photo'];?>" alt="">
 							</a>
 							<div class="media-body">
 								<h4 class="media-heading">

@@ -89,6 +89,7 @@
 	<div class="clear"></div>
 	<div class="form-actions">
 		<div id="form-request"></div>
+		<span class="wait-request hidden"><img src="<?=site_url('img/loading.gif');?>" alt="" /></span>
 	<?php if($this->user['class'] == 3 && $this->owner['seller']):?>
 		<button class="btn btn-success" type="submit" id="seller-register-properties" name="submit" value="send">Add property</button>
 	<?php else:?>

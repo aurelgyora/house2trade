@@ -13,7 +13,7 @@
 			<div class="span9">
 				<div class="navbar">
 					<div class="navbar-inner">
-						<a class="brand" href="<?=site_url(uri_string());?>">Mails list</a>
+						<a class="brand" href="<?=site_url(uri_string());?>">Email templates list</a>
 					</div>
 				</div>
 				<div class="clear"></div>

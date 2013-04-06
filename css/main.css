@@ -69,8 +69,8 @@ header.single { background-position: center bottom; height: 100px; box-shadow: 0
 .main-nav li a { display: inline-block; color: #fff; height: 20px; text-decoration: none; text-shadow: 0 1px 1px #000;  }
 
 .auth { list-style: none; margin: 10px 6px 0 0; padding: 0; text-align: right; }
-.auth li { display: inline-block; margin: 0 2px 0 0; font-style: italic; }
-.auth li a { text-shadow: #7D7D7D 1px 1px 1px; color: #000; font-size: 10px; text-transform: uppercase; font-weight: 600; text-decoration: none; font-style: normal; }
+.auth li { display: inline-block; margin: 0 2px 0 0; font-style: italic; color: #E0E0E0; font-size: 0.9em; }
+.auth li a { text-shadow: #333 1px 1px 1px; color: #fff; font-size: 10px; text-transform: uppercase; font-weight: 600; text-decoration: none; font-style: normal; border-bottom: 1px solid; }
 
 h1 { font: 48px/57px 'Source Sans Pro', Arial, Helvetica, Geneva, sans-serif; margin: 0 0 0.25em; font-weight: 600; line-height: 1.25em; color: #444; }
 .single h1 { text-shadow: 0 1px 0 #fff; }
@@ -146,6 +146,8 @@ form .btn-submit { background: #FFCC1D; color: #333; text-shadow: none; font-wei
 
 .how-steps { list-style: none; margin: 0; padding: 0; }
 .how-steps li { font-size: 18px; line-height: 130%; font-weight: 300; margin-bottom: 0.5em; }
+
+ul { list-style: none; margin: 1em 0; padding: 0; }
 
 /* ==========================================================================
    Media Queries

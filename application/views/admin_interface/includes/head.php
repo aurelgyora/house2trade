@@ -6,4 +6,5 @@
 
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400,700,300" type="text/css" />
 <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,200italic,300italic,400italic,600italic" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="<?=site_url('css/960.css');?>" />
 <link rel="stylesheet" href="<?=site_url('css/bootstrap__patch.css');?>" />

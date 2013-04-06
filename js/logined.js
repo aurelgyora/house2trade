@@ -13,21 +13,20 @@
 	$("#cancel").click(function(event){event.preventDefault();$.cookie('operation',null);mt.redirect($.cookie('backpath'))});
 	$("#register-properties").click(function(event){
 		event.preventDefault();
-		var err = false;
+		var err = false; var _this = this;
+		$("#form-request").html('');
 		var user_email = $("#login-email").val();var user_password = $("#login-password").val();
 		$("input.valid-required").tooltip("destroy");$("#block-message").html('');
 		$("#form-property-register .valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
 		if(!err && !mt.isValidEmailAddress(user_email)){$("#login-email").attr('data-original-title','Incorrect Email Address').tooltip('show');err = true;}
 		var notNumerics = mt.FieldsIsNotNumeric($("#form-property-register"));
-		if(notNumerics){
-			for(var element in notNumerics){
-				$("#"+notNumerics[element]).attr('data-original-title','Incorrect numeric value').tooltip('show');err = true;
-			}
-		}
+		if(notNumerics){for(var element in notNumerics){$("#"+notNumerics[element]).attr('data-original-title','Incorrect numeric value').tooltip('show');err = true;}}
 		if(!err){
 			var postdata = mt.formSerialize($("#form-property-register .FieldSend"));
+			$(_this).siblings("span.wait-request").removeClass('hidden');
 			$.post(mt.baseURL+"signup-properties",{'postdata':postdata},
 				function(data){
+					$(_this).siblings("span.wait-request").addClass('hidden');
 					$("input.valid-required").tooltip("destroy");
 					if(data.status){
 						$("#div-choise-metod").remove();
