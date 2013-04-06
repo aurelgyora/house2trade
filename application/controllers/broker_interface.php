@@ -50,6 +50,7 @@ class Broker_interface extends MY_Controller{
 		$this->load->model('union');
 		$this->load->model('property_type');
 		$from = (int)$this->uri->segment(5);
+		$potentialby = $favorite = FALSE;
 		$pagevar = array(
 			'zillow' => array(),
 			'zillow_exist_id' => FALSE,
