@@ -29,6 +29,7 @@
 			</div>
 		</div>
 	</div>
+	<?php $this->load->view("admin_interface/includes/footer");?>
 	<?php $this->load->view("admin_interface/includes/scripts");?>
 </body>
 </html>

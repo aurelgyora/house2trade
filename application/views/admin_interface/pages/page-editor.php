@@ -26,6 +26,7 @@
 			</div>
 		</div>
 	</div>
+	<?php $this->load->view("admin_interface/includes/footer");?>
 	<?php $this->load->view("admin_interface/includes/scripts");?>
 	<script type="text/javascript" src="<?=site_url('ckeditor/ckeditor.js');?>"></script>
 </body>
