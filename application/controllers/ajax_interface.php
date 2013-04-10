@@ -42,6 +42,45 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 	
+	/******************************************** company *******************************************************/
+	
+	function saveCompany(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$json_request = array('status'=>FALSE,'message'=>'Company saved','redirect'=>'');
+		$data = trim($this->input->post('postdata'));
+		if($data):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$dataval[$dataid[0]] = trim($dataid[1]);
+			endfor;
+			if($dataval):
+				$this->load->model('company');
+				if(isset($dataval['id'])):
+					$this->company->update_record($dataval);
+				else:
+					$dataval['id'] = $this->company->insert_record($dataval);
+				endif;
+				print_r($_FILES);
+				if(isset($_FILES['logo'])):
+					if($_FILES['logo']['error'] != 4):
+						print_r($_FILES['logo']['error']);
+						$photo = file_get_contents($_FILES['logo']['tmp_name']);
+						if($photo && $dataval['id']):
+							$this->company->update_field($dataval['id'],'logo',$photo,'company');
+						endif;
+					endif;
+				endif;
+				$json_request['status'] = TRUE;
+				$json_request['redirect'] = site_url('administrator/companies');
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
 	/******************************************** accounts *******************************************************/
 	function login(){
 		
@@ -149,64 +188,68 @@ class Ajax_interface extends MY_Controller{
 			endfor;
 			if($dataval):
 				$this->load->model('properties');
-				if(!$this->users->user_exist('email',$dataval['email']) && !$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
-					$this->load->helper('string');
-					$dataval['password'] = random_string('alnum',12);
-					$dataval['user_id'] = $this->users->insert_record($dataval);
-					if($dataval['user_id']):
-						$this->load->model('owners');
-						$ownerID = $this->owners->insert_record($dataval);
-						$property_id = $this->properties->insert_record($dataval);
-						if($property_id):
-							$zillow_result = $this->zillowApi($dataval['address1'],$dataval['zip_code']);
-							if($zillow_result):
-								$this->load->model('images');
-								$randomNumber = mt_rand(1,1000);
-								$nextPropertyID = $this->images->nextID('images');
-								$insert = array('main'=>0,'property_id'=>$property_id,'photo'=>'','owner_id'=>$dataval['user_id']);
-								$images = $this->arrayImagesFromPage($zillow_result['page-content']);
-								if($images):
-									$insert['main'] = 1;
-									$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[0]);
-									file_put_contents(getcwd().'/upload_images/'.$newFileName,file_get_contents($images[0]));
-									$insert['photo'] = 'upload_images/'.$newFileName;
-									$this->images->insert_record($insert);
-									$insert['main'] = 0;
-									for($i=1;$i<count($images);$i++):
-										if(isset($images[$i])):
-											$nextPropertyID = $this->images->nextID('images');
-											$randomNumber = mt_rand(1,1000);
-											$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[$i]);
-											file_put_contents(getcwd().'/upload_images/'.$newFileName,file_get_contents($images[$i]));
-											$insert['photo'] = 'upload_images/'.$newFileName;
-											$this->images->insert_record($insert);
-										endif;
-									endfor;
+				if(!$this->users->user_exist('email',$dataval['email'])):
+					if(!$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
+						$this->load->helper('string');
+						$dataval['password'] = random_string('alnum',12);
+						$dataval['user_id'] = $this->users->insert_record($dataval);
+						if($dataval['user_id']):
+							$this->load->model('owners');
+							$ownerID = $this->owners->insert_record($dataval);
+							$property_id = $this->properties->insert_record($dataval);
+							if($property_id):
+								$zillow_result = $this->zillowApi($dataval['address1'],$dataval['zip_code']);
+								if($zillow_result):
+									$this->load->model('images');
+									$randomNumber = mt_rand(1,1000);
+									$nextPropertyID = $this->images->nextID('images');
+									$insert = array('main'=>0,'property_id'=>$property_id,'photo'=>'','owner_id'=>$dataval['user_id']);
+									$images = $this->arrayImagesFromPage($zillow_result['page-content']);
+									if($images):
+										$insert['main'] = 1;
+										$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[0]);
+										file_put_contents(getcwd().'/upload_images/'.$newFileName,file_get_contents($images[0]));
+										$insert['photo'] = 'upload_images/'.$newFileName;
+										$this->images->insert_record($insert);
+										$insert['main'] = 0;
+										for($i=1;$i<count($images);$i++):
+											if(isset($images[$i])):
+												$nextPropertyID = $this->images->nextID('images');
+												$randomNumber = mt_rand(1,1000);
+												$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[$i]);
+												file_put_contents(getcwd().'/upload_images/'.$newFileName,file_get_contents($images[$i]));
+												$insert['photo'] = 'upload_images/'.$newFileName;
+												$this->images->insert_record($insert);
+											endif;
+										endfor;
+									endif;
 								endif;
 							endif;
+							$this->users->update_field($dataval['user_id'],'user_id',$ownerID,'users');
+							$this->users->update_field($dataval['user_id'],'class',3,'users');
+							$status = $this->users->read_field($this->user['uid'],'users','status');
+							$this->properties->update_field($property_id,'status',$status,'properties');
+							$this->load->library('parser');
+							$this->load->model('mails');
+							$mail_content = $this->mails->read_record(2,'mails');
+							$parser_data = array(
+								'user_first_name' => $dataval['fname'],
+								'user_last_name' => $dataval['lname'],
+								'user_login' => $dataval['email'],
+								'user_password' => $dataval['password'],
+								'cabinet_link' => site_url('homeowner/profile')
+							);
+							$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
+							$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
+							$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
+							$json_request['status'] = TRUE;
+							$this->session->set_userdata(array('current_owner'=>$dataval['user_id'],'property_id'=>$property_id));
 						endif;
-						$this->users->update_field($dataval['user_id'],'user_id',$ownerID,'users');
-						$this->users->update_field($dataval['user_id'],'class',3,'users');
-						$status = $this->users->read_field($this->user['uid'],'users','status');
-						$this->properties->update_field($property_id,'status',$status,'properties');
-						$this->load->library('parser');
-						$this->load->model('mails');
-						$mail_content = $this->mails->read_record(2,'mails');
-						$parser_data = array(
-							'user_first_name' => $dataval['fname'],
-							'user_last_name' => $dataval['lname'],
-							'user_login' => $dataval['email'],
-							'user_password' => $dataval['password'],
-							'cabinet_link' => site_url('homeowner/profile')
-						);
-						$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
-						$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
-						$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
-						$json_request['status'] = TRUE;
-						$this->session->set_userdata(array('current_owner'=>$dataval['user_id'],'property_id'=>$property_id));
+					else:
+						$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
 					endif;
 				else:
-					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
+					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Homeowner already exist';
 				endif;
 			endif;
 		endif;

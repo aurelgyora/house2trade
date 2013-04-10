@@ -73,6 +73,76 @@ class Admin_interface extends MY_Controller{
 		$this->load->view("admin_interface/pages/profile");
 	}
 	
+	/********************************************* company ******************************************************/
+	
+	public function companies(){
+		
+		$from = intval($this->uri->segment(4));
+		$per_page = 10;
+		$this->load->model('company');
+		$pagevar = array(
+			'company' => $this->company->read_limit_records($per_page,$from,'company','title','ASC'),
+			'pages' => $this->pagination('administrator/compnies',4,$this->company->count_records('company'),$per_page),
+		);
+		$this->session->set_userdata('backpath',site_url(uri_string()));
+		$this->load->view("admin_interface/company/list",$pagevar);
+	}
+	
+	public function insertCompany(){
+		
+		if($this->input->post('submit')):
+			$this->load->library('form_validation');
+			$this->form_validation->set_rules('title','','required|trim|xss_clean');
+			$this->form_validation->set_rules('phone','','required|trim|xss_clean');
+			$this->form_validation->set_rules('email','','required|trim|valid_email|xss_clean');
+			$this->form_validation->set_rules('website','','required|trim|xss_clean');
+			$this->form_validation->set_rules('address1','','required|trim|xss_clean');
+			$this->form_validation->set_rules('address2','','trim|xss_clean');
+			$this->form_validation->set_rules('city','','required|trim|xss_clean');
+			$this->form_validation->set_rules('state','','required|trim|xss_clean');
+			$this->form_validation->set_rules('zip_code','','required|trim|xss_clean');
+			if($this->form_validation->run()):
+				unset($_POST['submit']);
+				$this->load->model('company');
+				if(isset($_POST['id'])):
+					$this->company->update_record($_POST);
+					$id = $_POST['id'];
+				else:
+					$id = $this->company->insert_record($_POST);
+				endif;
+				if(isset($_FILES['logo'])):
+					if($_FILES['logo']['error'] != 4):
+						$photo = file_get_contents($_FILES['logo']['tmp_name']);
+						if($photo && isset($id)):
+							$this->company->update_field($id,'logo',$photo,'company');
+						endif;
+					endif;
+				endif;
+			else:
+				show_error(validation_errors());
+			endif;
+			redirect('administrator/companies');
+		endif;
+		
+		$this->load->view("admin_interface/company/manage");
+	}
+	
+	public function editCompany(){
+		
+		$this->load->model('company');
+		$pagevar = array('company'=>$this->company->read_record($this->uri->segment(4),'company'));
+		$this->load->view("admin_interface/company/manage",$pagevar);
+	}
+	
+	public function deleteCompany(){
+		
+		if($this->uri->segment(4)):
+			$this->load->model('company');
+			$this->company->delete_record($this->uri->segment(4),'company');
+			redirect('administrator/companies');
+		endif;
+	}
+	
 	/********************************************* users ********************************************************/
 	
 	public function control_accounts(){

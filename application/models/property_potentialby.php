@@ -5,6 +5,7 @@ class Property_potentialby extends MY_Model{
 	var $id = 0;
 	var $owner = '';
 	var $property = '';
+	var $down_payment = 0;
 
 	function __construct(){
 		parent::__construct();
@@ -14,6 +15,9 @@ class Property_potentialby extends MY_Model{
 		
 		$this->owner = $data['owner'];
 		$this->property = $data['property'];
+		if(isset($data['down_payment'])):
+			$this->down_payment = $data['down_payment'];
+		endif;
 		$this->db->insert('property_potentialby',$this);
 		return $this->db->insert_id();
 	}

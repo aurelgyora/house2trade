@@ -29,6 +29,7 @@ $route['remove-to-favorite'] = "ajax_interface/removeToFavorite";
 $route['add-to-potential-by'] = "ajax_interface/addToPotentialBy";
 $route['remove-to-potential-by'] = "ajax_interface/removeToPotentialBy";
 $route['get-property-zillow-api'] = "ajax_interface/getPropertyZillowAPI";
+
 /*************************************************** USERS INTRERFACE ***********************************************/
 
 $route['login']				= "users_interface/login";
@@ -53,6 +54,8 @@ $route['logout']			= "users_interface/logout";
 $route['confirm-registering/:any/activation-code/:any'] = "users_interface/confirm_registering";
 $route['password-recovery/:any/temporary-code/:any'] = "users_interface/confirm_temporary_code";
 
+/********** loading image *************/
+$route['loadimage/:any/:num'] = "users_interface/loadimage";
 /*************************************************** BROKERS INTRERFACE ***********************************************/
 
 $route[BROKER_START_PAGE] = "broker_interface/properties";
@@ -74,6 +77,9 @@ $route['broker/potential-by/from/:num'] = "broker_interface/potentialByProperty"
 
 $route['broker/profile'] = "broker_interface/profile";
 $route['broker/set-password'] = "broker_interface/setPassword";
+
+$route['broker/instant-trade'] = "broker_interface/instantTrade";
+$route['broker/match'] = "broker_interface/match";
 
 /*************************************************** OWNERS INTRERFACE ***********************************************/
 
@@ -106,6 +112,14 @@ $route['admin'] = "users_interface/login";
 $route[ADM_START_PAGE] = "admin_interface/control_panel";
 $route[ADM_START_PAGE.'/pages'] = "admin_interface/control_pages";
 $route[ADM_START_PAGE.'/pages/:any'] = "admin_interface/control_pages";
+
+$route['administrator/companies'] = "admin_interface/companies";
+$route['administrator/companies/pages'] = "admin_interface/companies";
+$route['administrator/companies/pages/:any'] = "admin_interface/companies";
+$route['administrator/companies/insert'] = "admin_interface/insertCompany";
+$route['administrator/companies/edit/:num'] = "admin_interface/editCompany";
+$route['administrator/companies/delete/:num'] = "admin_interface/deleteCompany";
+
 $route['administrator/:any/accounts'] = "admin_interface/control_accounts";
 $route['administrator/:any/accounts/from'] = "admin_interface/control_accounts";
 $route['administrator/:any/accounts/from/:num'] = "admin_interface/control_accounts";

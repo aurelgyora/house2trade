@@ -291,6 +291,34 @@ class Broker_interface extends MY_Controller{
 		$this->load->view("broker_interface/pages/list-properties",$pagevar);
 	}
 	
+	public function instantTrade(){
+		
+		if(!$this->session->userdata('current_owner')):
+			$this->session->set_userdata('current_owner',0);
+		endif;
+		$this->load->model('union');
+		$pagevar = array(
+			'owners' => $this->union->ownersList($this->user['uid']),
+			'properties' => array()
+		);
+		$this->session->set_userdata('backpath',uri_string());
+		$this->load->view("broker_interface/pages/instant-trade",$pagevar);
+	}
+	
+	public function match(){
+		
+		if(!$this->session->userdata('current_owner')):
+			$this->session->set_userdata('current_owner',0);
+		endif;
+		$this->load->model('union');
+		$pagevar = array(
+			'owners' => $this->union->ownersList($this->user['uid']),
+			'properties' => array()
+		);
+		$this->session->set_userdata('backpath',uri_string());
+		$this->load->view("broker_interface/pages/match",$pagevar);
+	}
+	
 	/********************************************* properties ********************************************************/
 	
 	public function properties(){

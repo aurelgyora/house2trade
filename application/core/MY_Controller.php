@@ -97,8 +97,7 @@ class MY_Controller extends CI_Controller{
 		$section = $this->uri->segment(2);
 		$id = $this->uri->segment(3);
 		switch ($section):
-			case 'photo':$image = $this->mdusers->read_field($id,'users','photo'); break;
-			case 'avatar':$image = $this->mdusers->read_field($id,'users','thumbnail'); break;
+			case 'logo': $this->load->model('company'); $image = $this->company->read_field($id,'company','logo'); break;
 			default : show_404();break;
 		endswitch;
 		if(!$image):

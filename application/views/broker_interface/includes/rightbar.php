@@ -7,10 +7,8 @@
 			<li data-active="properties"><?=anchor(BROKER_START_PAGE,'Properties');?></li>
 			<li data-active="favorite"><?=anchor('broker/favorite','Favorite');?></li>
 			<li data-active="potential-by"><?=anchor('broker/potential-by','Potential by');?></li>
-			<!--
 			<li data-active="instant-trade"><?=anchor('broker/instant-trade','Instant Trade');?></li>
 			<li data-active="match"><?=anchor('broker/match','Match');?></li>
-			-->
 			<li class="nav-header">Actions</li>
 			<li><?=anchor('/','Home Page');?></li>
 			<li><?=anchor('logout','Logout');?></li>

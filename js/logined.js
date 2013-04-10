@@ -216,4 +216,12 @@
 		var parameter = $(this).val();
 		$.post(mt.baseURL+"set-current-owner",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
 	});
+	$("#form-manage-company").submit(function(){
+		var err = false;
+		$(".valid-required").tooltip("destroy");
+		$(".valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
+		if(!err && !mt.isValidEmailAddress($("#company-email").val())){$("#company-email").attr('data-original-title','Incorrect Email Address').tooltip('show');err = true;}
+		if(!err && !mt.isValidPhone($("#company-phone").val())){$("#login-email").attr('data-original-title','Incorrect Phone Number').tooltip('show');err = true;}
+		if(err){return false;}
+	})
 })(window.jQuery);
