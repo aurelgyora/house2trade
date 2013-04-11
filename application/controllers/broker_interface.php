@@ -36,12 +36,18 @@ class Broker_interface extends MY_Controller{
 	public function profile(){
 		
 		$this->load->model('brokers');
-		$pagevar = array('profile' => $this->users->read_record($this->user['uid'],'users'));
+		$this->load->model('company');
+		$pagevar = array(
+			'profile' => $this->users->read_record($this->user['uid'],'users'),
+			'companies' => $this->company->companyTitles()
+		);
 		$pagevar['profile']['info'] = $this->brokers->read_record($pagevar['profile']['user_id'],'brokers');
+		$pagevar['profile']['company'] = $this->company->read_field($pagevar['profile']['info']['company'],'company','title');
 		$this->load->view("broker_interface/pages/profile",$pagevar);
 	}
 	
 	/********************************************* trading ********************************************************/
+	
 	public function searchProperty(){
 		
 		if($this->uri->total_segments() < 3):

@@ -29,4 +29,14 @@ class Company extends MY_Model{
 		return $this->db->affected_rows();
 	}
 	
+	function companyTitles(){
+		
+		$this->db->select('id,title');
+		$this->db->order_by('title');
+		$this->db->where('id >',0);
+		$query = $this->db->get('company');
+		$data = $query->result_array();
+		if(count($data)) return $data;
+		return NULL;
+	}
 }

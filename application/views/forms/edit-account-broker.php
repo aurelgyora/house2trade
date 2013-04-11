@@ -30,34 +30,17 @@
 		<fieldset>
 			<div class="control-group">
 				<label for="company">Company name*: </label>
-				<input class="span4 valid-required FieldSend" name="company" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$profile['info']['company'];?>">
-			</div>
-			<div class="control-group">
-				<label for="address">Company address: </label>
-				<input class="span4 FieldSend" name="address" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$profile['info']['address'];?>">
-			</div>
-			<div class="control-group">
-				<label for="cphone">Company phone: </label>
-				<input class="span4 FieldSend" name="cphone" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$profile['info']['cphone'];?>">
-			</div>
-			
-		</fieldset>
-	</div>
-	<div class="span4">
-		<fieldset>
-			<div class="control-group">
-				<label for="cmail">Company email: </label>
-				<input class="span4 FieldSend" name="cmail" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$profile['info']['cmail'];?>">
-			</div>
-			<div class="control-group">
-				<label for="website">Company website: </label>
-				<input class="span4 FieldSend" name="website" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$profile['info']['website'];?>">
+				<select class="FieldSend" name="company">
+				<option value="0">None company</option>
+				<?php for($i=0;$i<count($companies);$i++):?>
+					<option value="<?=$companies[$i]['id'];?>" <?=($companies[$i]['id'] == $profile['info']['company'])?'selected="selected"':'';?>><?=$companies[$i]['title'];?></option>
+				<?php endfor;?>
+				</select>
 			</div>
 			<div class="control-group">
 				<label for="cphone">Company license: </label>
-				<input class="span4 FieldSend" name="license" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$profile['info']['cphone'];?>">
+				<input class="span4 FieldSend" name="license" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=($profile['info']['license'])?$profile['info']['license']:'';?>">
 			</div>
-			
 		</fieldset>
 	</div>
 	<div class="clear"></div>

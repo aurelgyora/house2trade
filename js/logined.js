@@ -34,8 +34,10 @@
 						$("#div-insert-photo-properties").hide().removeClass('hidden').fadeIn('slow');
 						$(".FieldSend").val('');
 						$("#photos-block-message").html(data.message);
+					}else{
+						$("#form-request").html(data.message);
 					}
-					$("#form-request").html(data.message);
+					
 				},"json");
 		}
 	})

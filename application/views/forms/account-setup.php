@@ -18,7 +18,12 @@
 		</p>
 		<p data-class="broker">
 			<label>Company name *</label>
-			<input id="login-company" class="valid-required FieldSend" name="company" <?=TOOLTIP_FIELD_BLANK;?> size="30" type="text">
+			<select class="FieldSend" name="company">
+				<option value="0" selected="selected">None company</option>
+			<?php for($i=0;$i<count($companies);$i++):?>
+				<option value="<?=$companies[$i]['id'];?>"><?=$companies[$i]['title'];?></option>
+			<?php endfor;?>
+			</select>
 		</p>
 	</div>
 	<div class="grid_3">

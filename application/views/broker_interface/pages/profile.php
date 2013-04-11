@@ -37,26 +37,7 @@
 					<div class="span4">
 						<fieldset>
 							<div class="control-group">
-								Company name: <span id="company"><?=$profile['info']['company'];?></span>
-							</div>
-							<div class="control-group">
-								Company address: <span id="address"><?=$profile['info']['address'];?></span>
-							</div>
-							<div class="control-group">
-								Company phone: <span id="cphone"><?=$profile['info']['cphone'];?></span>
-							</div>
-						</fieldset>
-					</div>
-					<div class="span4">
-						<fieldset>
-							<div class="control-group">
-								Company email: <span id="cmail"><?=$profile['info']['cmail'];?></span>
-							</div>
-							<div class="control-group">
-								Company website: <span id="website"><?=$profile['info']['website'];?></span>
-							</div>
-							<div class="control-group">
-								Company license: <span id="license"><?=$profile['info']['license'];?></span>
+								Company name: <span id="company"><?=$profile['company'];?></span>
 							</div>
 						</fieldset>
 					</div>

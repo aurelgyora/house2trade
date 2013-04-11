@@ -288,6 +288,7 @@ class Ajax_interface extends MY_Controller{
 	}
 	
 	function change_user_status(){
+		
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
@@ -395,6 +396,8 @@ class Ajax_interface extends MY_Controller{
 						$this->users->update_field($this->user['uid'],'password',md5($dataval['password']),'users');
 					endif;
 					unset($dataval['password']);unset($dataval['confirm']);unset($dataval['subcribe']);unset($dataval['id']);
+					$this->load->model('company');
+					$dataval['company'] = $this->company->read_field($dataval['company'],'company','title');
 					$json_request['new_data'] = $dataval;
 				endif;
 			endif;

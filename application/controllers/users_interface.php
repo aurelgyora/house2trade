@@ -101,7 +101,11 @@ class Users_interface extends MY_Controller{
 	
 	public function signup(){
 		
-		$pagevar = array('page'=>$this->pages->read_record(uri_string()));
+		$this->load->model('company');
+		$pagevar = array(
+			'page'=>$this->pages->read_record(uri_string()),
+			'companies' => $this->company->companyTitles()
+		);
 		$this->load->view("users_interface/pages/signup",$pagevar);
 	}
 	
