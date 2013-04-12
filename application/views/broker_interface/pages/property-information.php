@@ -39,12 +39,14 @@
 				<p>
 					<?=$property['description'];?>
 				</p>
+			<?php if($property['status'] < 17):?>
 				<h2 class="pp">Contacts</h2>
 				<p>
 					Phone: <?=$property['phone'];?><br/>
 					Cell: <?=$property['cell'];?><br/>
 					Email: <a href="mailto:<?=$property['email'];?>"><?=$property['email'];?></a>
 				</p>
+			<?php endif;?>
 			<?php if($property['broker_id'] == $this->user['uid']):?>
 					<a href="<?=site_url(BROKER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>
 					<a class="btn btn-mini btn-link link-operation-account" href="#confirm-user" data-toggle="modal" data-src="<?=$property['id'];?>" data-url="<?=site_url(BROKER_START_PAGE.'/delete');?>">Delete property</a>

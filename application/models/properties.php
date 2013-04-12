@@ -59,7 +59,9 @@ class Properties extends MY_Model{
 	
 	function read_records($owner){
 		
-		$query = $this->db->get_where('properties',array('owner_id'=>$owner));
+		$this->db->where('owner_id',$owner);
+		$this->db->where('status <',17);
+		$query = $this->db->get('properties');
 		$data = $query->result_array();
 		if($data) return $data;
 		return NULL;
@@ -69,6 +71,17 @@ class Properties extends MY_Model{
 		
 		$this->db->where('state',$state);
 		$this->db->where('zip_code',$zip_code);
+		$query = $this->db->get('properties',1);
+		$data = $query->result_array();
+		if($data) return $data[0]['id'];
+		return FALSE;
+	}
+	
+	function csvPropertiesExits($where){
+		
+		$this->db->where('address1',$where['address']);
+		$this->db->where('state',$where['state']);
+		$this->db->where('zip_code',$where['zip_code']);
 		$query = $this->db->get('properties',1);
 		$data = $query->result_array();
 		if($data) return $data[0]['id'];

@@ -669,7 +669,10 @@ class Ajax_interface extends MY_Controller{
 				if(!empty($dataval['type'])):
 					$sql .= ' AND properties.type = '.$dataval['type'];
 				endif;
-				$sql .= ' ORDER BY users.signdate DESC,users.id';
+				$sql .= ' ORDER BY properties.address1 ASC, properties.state ASC, properties.zip_code ASC';
+				
+				print_r($sql);exit;
+				
 				$this->load->model('properties');
 				$properties = $this->properties->query_execute($sql);
 				$zillow_result = FALSE;

@@ -67,7 +67,7 @@
 					<?php endif;?>
 						</div>
 					<?php endif;?>
-				<?php for($i=0;$i<count($properties);$i++):?>
+			<?php for($i=0;$i<count($properties);$i++):?>
 					<?php if(isset($zillow_exist_id) && ($properties[$i]['id'] == $zillow_exist_id)):?>
 						<?php continue;?>
 					<?php endif;?>
@@ -90,16 +90,18 @@
 							</p>
 						</div>
 				<?php if($this->session->userdata('current_owner') && !$properties[$i]['potentialby']):?>
-					<?php if(!$properties[$i]['favorite']):?>
+					<?php if($properties[$i]['owner_id'] != $this->session->userdata('current_owner')):?>
+						<?php if(!$properties[$i]['favorite']):?>
 						<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
 						<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
-					<?php else:?>
+						<?php else:?>
 						<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
 						<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
+						<?php endif;?>
 					<?php endif;?>
 				<?php endif;?>
 					</div>
-				<?php endfor;?>
+			<?php endfor;?>
 				</div>
 				<?=$pages;?>
 			<?php endif;?>

@@ -7,6 +7,9 @@ $route['set-db-data'] = 'users_interface/setDbData';
 $route['clear-session'] = 'users_interface/clearSession';
 $route['valid/exist-email'] = 'ajax_interface/existEmail';
 
+/*************************************************** CRON INTRERFACE ***********************************************/
+$route['csv-export-properties'] = "cron_interface/csvExportProperties";
+
 /*************************************************** AJAX INTRERFACE ***********************************************/
 
 $route['login-in']				= "ajax_interface/login";
