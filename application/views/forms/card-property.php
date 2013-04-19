@@ -69,12 +69,20 @@
 				<input id="property-sqf" class="span2 valid-required FieldSend" name="sqf" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
 			</div>
 			<div class="control-group">
+				<label for="sqf">Loot Size*: </label>
+				<input id="property-lot-size" class="span2 valid-required FieldSend" name="lotsize" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
+			</div>
+			<div class="control-group">
 				<label for="price">Price*: </label>
 				<input id="property-price" class="span2 numeric-float valid-required FieldSend" name="price" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
 			</div>
 			<div class="control-group">
 				<label for="tax">Tax: </label>
 				<input id="property-tax" class="span2 digital FieldSend" name="tax" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
+			</div>
+			<div class="control-group">
+				<label for="mls">Bank price: </label>
+				<input id="property-bank-price" class="span2 numeric-float FieldSend" name="bank_price" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
 			</div>
 			<div class="control-group">
 				<label for="mls">MLS: </label>
@@ -90,7 +98,7 @@
 	<div class="form-actions">
 		<div id="form-request"></div>
 		<span class="wait-request hidden"><img src="<?=site_url('img/loading.gif');?>" alt="" /></span>
-	<?php if($this->user['class'] == 3 && $this->owner['seller']):?>
+	<?php if($this->account['group'] == 3 && $this->owner['seller']):?>
 		<button class="btn btn-success" type="submit" id="seller-register-properties" name="submit" value="send">Add property</button>
 	<?php else:?>
 		<button class="btn btn-success" type="submit" id="register-properties" name="submit" value="send">Add property</button>

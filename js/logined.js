@@ -3,14 +3,6 @@
  */
 
 (function($){
-	if($.cookie('operation') != null){
-		$.cookie('operation',null,{path:"/"});
-		$.cookie('backpath',null,{path:"/"});
-		$("#form-request").html('<img src="'+mt.baseURL+'img/check.png" alt="" /> <span class="text-info">Operation successful</span>');
-	}
-	$(".set-operation").click(function(event){$.cookie('backpath',mt.currentURL,{path:"/"});});
-	$("#saveItem").click(function(event){$.cookie('operation',true,{path:"/"});});
-	$("#cancel").click(function(event){event.preventDefault();$.cookie('operation',null);mt.redirect($.cookie('backpath'))});
 	$("#register-properties").click(function(event){
 		event.preventDefault();
 		var err = false; var _this = this;
@@ -23,10 +15,10 @@
 		if(notNumerics){for(var element in notNumerics){$("#"+notNumerics[element]).attr('data-original-title','Incorrect numeric value').tooltip('show');err = true;}}
 		if(!err){
 			var postdata = mt.formSerialize($("#form-property-register .FieldSend"));
-			$(_this).siblings("span.wait-request").removeClass('hidden');
-			$.post(mt.baseURL+"signup-properties",{'postdata':postdata},
+			$(_this).addClass('disabled').attr('disabled','disabled').siblings("span.wait-request").removeClass('hidden');
+			$.post(mt.baseURL+"signup-property",{'postdata':postdata},
 				function(data){
-					$(_this).siblings("span.wait-request").addClass('hidden');
+					$(_this).removeClass('disabled').removeAttr('disabled').siblings("span.wait-request").addClass('hidden');
 					$("input.valid-required").tooltip("destroy");
 					if(data.status){
 						$("#div-choise-metod").remove();
@@ -40,7 +32,44 @@
 					
 				},"json");
 		}
-	})
+	});
+	$("#set-properties-data").click(function(event){
+		event.preventDefault();
+		var err = false;
+		var _this = this;
+		$("input.valid-required").tooltip("destroy");$("#block-message").html('');
+		$("#form-metod-property-register .valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
+		if(!err){
+			var address = $("#address-parameter").val();
+			var zip = $("#zipcode-parameter").val();
+			$(_this).addClass('disabled').attr('disabled','disabled');
+			$("span.wait-request").removeClass('hidden');
+			$.post(mt.baseURL+"get-property-zillow-api",{'address':address,'zip':zip},
+				function(data){
+					$("span.wait-request").addClass('hidden');
+					$(_this).removeClass('disabled').removeAttr('disabled');
+					if(data.status){
+						mt.setJsonRequest(data.result,'val');
+						$("#property-type :contains('"+data.result['property-type']+"')").attr("selected","selected");
+						$("#set-properties-manual-data").click()
+					}else{
+						$("#metod-block-message").html(data.messages);
+					}
+				}
+			,"json");
+		}
+	});
+	
+	$("#input-select-property").change(function(){
+		var parameter = $(this).val();
+		$.post(mt.baseURL+"set-active-property",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
+	});
+	$("#input-select-current-property").change(function(){
+		var parameter = $(this).val();
+		$.post(mt.baseURL+"set-current-property",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
+	});
+	
+	
 	$("#seller-register-properties").click(function(event){
 		event.preventDefault();
 		var err = false;
@@ -126,32 +155,6 @@
 		$("#div-choise-metod").addClass('hidden');
 		$("#div-account-properties").hide().removeClass('hidden').fadeIn('slow');
 	});
-	$("#set-properties-data").click(function(event){
-		event.preventDefault();
-		var err = false;
-		var _this = this;
-		$("input.valid-required").tooltip("destroy");$("#block-message").html('');
-		$("#form-metod-property-register .valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
-		if(!err){
-			var address = $("#address-parameter").val();
-			var zip = $("#zipcode-parameter").val();
-			$(_this).addClass('disabled').attr('disabled','disabled');
-			$("span.wait-request").removeClass('hidden');
-			$.post(mt.baseURL+"get-property-zillow-api",{'address':address,'zip':zip},
-				function(data){
-					$("span.wait-request").addClass('hidden');
-					$(_this).removeClass('disabled').removeAttr('disabled');
-					if(data.status){
-						mt.setJsonRequest(data.result,'val');
-						$("#property-type :contains('"+data.result['property-type']+"')").attr("selected","selected");
-						$("#set-properties-manual-data").click()
-					}else{
-						$("#metod-block-message").html(data.messages);
-					}
-				}
-			,"json");
-		}
-	});
 	$("#save-profile").click(function(event){
 		event.preventDefault();
 		var err = false;
@@ -214,10 +217,7 @@
 		$("#div-insert-photo-properties").hide().addClass('hidden');
 		$("#div-remove-photo-properties").hide().removeClass('hidden').fadeIn('slow');
 	});
-	$("#input-select-owner").change(function(){
-		var parameter = $(this).val();
-		$.post(mt.baseURL+"set-current-owner",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
-	});
+	
 	$("#form-manage-company").submit(function(){
 		var err = false;
 		$(".valid-required").tooltip("destroy");

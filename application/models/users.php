@@ -1,24 +1,19 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Users extends MY_Model{
-
-	var $id				= 0;
-	var $class			= 2;
-	var $user_id		= 0;
-	var $email			= '';
-	var $password		= '';
-	var $signdate		= '';
-	var $temporary_code	= '';
+	
+	var $id = 0; var $group = 2; var $account = 0; var $code_life = 0;
+	var $email = ''; var $password = ''; var $signdate = ''; var $temporary_code = '';
 
 	function __construct(){
+		
 		parent::__construct();
-		$this->signdate = date("Y-m-d");
 	}
 	
-	function read_record($record_id,$table){
+	function read_record($id,$table){
 		
 		$this->db->select('id,class,user_id,email,status,signdate');
-		$query = $this->db->get_where('users',array('id'=>$record_id),1,0);
+		$query = $this->db->get_where('users',array('id'=>$id),1,0);
 		$data = $query->result_array();
 		if($data) return $data[0];
 		return FALSE;
@@ -28,19 +23,16 @@ class Users extends MY_Model{
 
 		$this->email = $data['email'];
 		if(isset($data['password']) && !empty($data['password'])):
-			$this->password	= md5($data['password']);
+			$this->password = md5($data['password']);
 		endif;
 		$this->db->insert('users',$this);
 		return $this->db->insert_id();
 	}
 	
-	function auth_user($login,$password){
+	function signIN($login,$password){
 		
-		$this->db->select('id,class,user_id,status');
-		$this->db->where('email',$login);
-		$this->db->where('password',md5($password));
-		$this->db->where('temporary_code','');
-		$query = $this->db->get('users',1);
+		$this->db->select('id,group,account,status');
+		$query = $this->db->get_where('users',array('email'=>$login,'password'=>md5($password)),1);
 		$data = $query->result_array();
 		if($data) return $data[0];
 		return FALSE;
@@ -54,7 +46,17 @@ class Users extends MY_Model{
 		if(count($data)) return $data[0]['id'];
 		return FALSE;
 	}
-
+	
+	function valid_code($code){
+		
+		$this->db->where('temporary_code',$code);
+		$this->db->where('code_life >=',now());
+		$query = $this->db->get('users',1);
+		$data = $query->result_array();
+		if(count($data)) return $data[0]['id'];
+		return FALSE;
+	}
+	
 	function valid_password($id,$field,$parameter){
 			
 		$this->db->where('id',$id);

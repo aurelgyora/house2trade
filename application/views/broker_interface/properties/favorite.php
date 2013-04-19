@@ -11,7 +11,7 @@
 			<?php $this->load->view("broker_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-				<?php $this->load->view("forms/select-active-owner");?>
+				<?php $this->load->view("broker_interface/forms/set-active-property");?>
 				<?php if($this->uri->segment(2) == 'properties'):?>
 					<a href="<?=site_url('broker/register-properties');?>" class="btn btn-small btn-link" type="button">Add new Property</a>
 				<?php endif;?>
@@ -37,29 +37,14 @@
 							Tax: $<?= $properties[$i]['tax']; ?>
 						</p>
 					</div>
-		<?php if($properties[$i]['owner_id'] != $this->session->userdata('current_owner')):?>
-			<?php if(($this->uri->segment(2) == 'favorite')):?>
-				<?php if($properties[$i]['favorite']):?>
-					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
+					<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$property['id'];?>">Add to favorite</button>
 				<?php endif;?>
-				<?php if(!$properties[$i]['potentialby']):?>
-					<button class="btn btn-mini btn-link btn-property-add-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
-				<?php elseif($properties[$i]['potentialby']):?>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+				<?php if($property['potentialby']):?>
+					<h3>Already added to potential by</h3>
 				<?php endif;?>
-			<?php endif;?>
-			<?php if(($this->uri->segment(2) == 'potential-by')):?>
-				<?php if($properties[$i]['potentialby']):?>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
-				<?php endif;?>
-			<?php endif;?>
-		<?php endif;?>
 				</div>
 			<?php endfor;?>
-			<?php if(!$properties):?>
-				<p>Properties list is empty or homeowner is not selected</p>
-			<?php endif;?>
+			<?=$pagination;?>
 			</div>
 		</div>
 	</div>

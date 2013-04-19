@@ -1,7 +1,7 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
 class MY_Model extends CI_Model{
-
+	
 	function __construct(){
 		parent::__construct();
 	}
@@ -16,13 +16,13 @@ class MY_Model extends CI_Model{
 		return FALSE;
 	}
 	
-	function read_record($record_id,$table){
+	function read_record($id,$table){
 		
-		$this->db->where('id',$record_id);
+		$this->db->where('id',$id);
 		$query = $this->db->get($table,1);
 		$data = $query->result_array();
-		if(isset($data[0])) return $data[0];
-		return NULL;
+		if($data) return $data[0];
+		return FALSE;
 	}
 	
 	function read_records($table,$field = 'id',$order = 'ASC'){

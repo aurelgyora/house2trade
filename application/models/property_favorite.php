@@ -3,8 +3,7 @@
 class Property_favorite extends MY_Model{
 
 	var $id = 0;
-	var $owner = '';
-	var $property = '';
+	var $seller_id = ''; var $buyer_id = '';
 
 	function __construct(){
 		parent::__construct();
@@ -12,27 +11,27 @@ class Property_favorite extends MY_Model{
 	
 	function insert_record($data){
 		
-		$this->owner = $data['owner'];
-		$this->property = $data['property'];
+		$this->seller_id = $data['seller_id'];
+		$this->buyer_id = $data['buyer_id'];
 		$this->db->insert('property_favorite',$this);
 		return $this->db->insert_id();
 	}
 	
-	function record_exist($property,$owner){
+	function record_exist($seller_id,$buyer_id){
 		
-		$this->db->where('property',$property);
-		$this->db->where('owner',$owner);
+		$this->db->where('seller_id',$seller_id);
+		$this->db->where('buyer_id',$buyer_id);
 		$query = $this->db->get('property_favorite',1);
 		$data = $query->result_array();
 		if(count($data)) return $data[0]['id'];
 		return FALSE;
 	}
 	
-	function record_exists($properties,$owner){
+	function record_exists($seller_id,$buyer_id){
 		
-		$this->db->select('property');
-		$this->db->where_in('property',$properties);
-		$this->db->where('owner',$owner);
+		$this->db->select('id');
+		$this->db->where_in('seller_id',$seller_id);
+		$this->db->where_in('buyer_id',$buyer_id);
 		$query = $this->db->get('property_favorite');
 		$result = array();
 		foreach($query->result() as $row):
@@ -46,5 +45,5 @@ class Property_favorite extends MY_Model{
 			return NULL;
 		endif;
 	}
-	
+
 }

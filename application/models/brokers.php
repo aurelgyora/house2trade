@@ -2,15 +2,9 @@
 
 class Brokers extends MY_Model{
 
-	var $id		= 0;
-	var $fname	= '';
-	var $lname	= '';
-	var $phone	= '';
-	var $company= '';
-	var $cell	= '';
-	var $license= 0;
-	var $subcribe= 1;
-
+	var $id = 0; var $subcribe= 1;
+	var $fname = ''; var $lname= ''; var $phone = ''; var $cell = '';var $company= ''; var $license= '';
+	
 	function __construct(){
 		parent::__construct();
 	}

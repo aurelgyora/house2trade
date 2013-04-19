@@ -17,9 +17,9 @@ class Union extends CI_Model{
 		return NULL;
 	}
 	
-	function favoriteList($owner,$count,$from){
+	function favoriteList($seller,$count,$from){
 		
-		$query = "SELECT users.id AS uid,users.email,users.status,owners.id AS oid,owners.fname,owners.lname,properties.*,property_favorite.id AS fid FROM 	users,owners,properties,property_favorite WHERE users.user_id = owners.id AND users.id = properties.owner_id AND properties.id = property_favorite.property AND property_favorite.owner = $owner ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
+		$query = "SELECT properties.*,property_favorite.id AS fid FROM properties,property_favorite WHERE properties.id = property_favorite.buyer_id AND property_favorite.seller_id = $seller ORDER BY properties.address1,properties.state,properties.zip_code LIMIT $from,$count";
 		$query = $this->db->query($query);
 		$data = $query->result_array();
 		if($data) return $data;
@@ -44,23 +44,12 @@ class Union extends CI_Model{
 		return NULL;
 	}
 	
-	function brokerProperties($class,$broker){
+	function selectBrokerProperties($broker){
 		
-		$query = "SELECT users.id AS uid,users.email,users.status,owners.id AS oid,owners.fname,owners.lname,owners.phone,owners.cell,properties.* FROM users INNER JOIN owners ON users.user_id = owners.id INNER JOIN properties ON users.id = properties.owner_id WHERE users.class = $class AND properties.broker_id = $broker ORDER BY users.signdate DESC,users.id";
+		$query = "select properties.id,properties.type,properties.address1,properties.city,properties.state,properties.zip_code,properties.price,users.email,owners.fname,owners.lname FROM properties,users,owners WHERE properties.broker = $broker AND properties.owner = users.id AND users.account = owners.id ORDER BY properties.zip_code,properties.state,properties.address1";
 		$query = $this->db->query($query);
 		$data = $query->result_array();
 		if($data) return $data;
-		return NULL;
-	}
-	
-	/********************************************* single account ********************************************************/
-	
-	function propertyInformation($property){
-		
-		$query = "SELECT users.id AS uid,users.email,users.status,owners.id AS oid,owners.fname,owners.lname,owners.phone,owners.cell,properties.* FROM users INNER JOIN owners ON users.user_id = owners.id INNER JOIN properties ON users.id = properties.owner_id WHERE properties.id = $property ORDER BY properties.id DESC LIMIT 1";
-		$query = $this->db->query($query);
-		$data = $query->result_array();
-		if($data) return $data[0];
 		return NULL;
 	}
 	

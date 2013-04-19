@@ -110,6 +110,14 @@ class Users_interface extends MY_Controller{
 	}
 	
 	public function login(){
+		
+		if($this->loginstatus):
+			switch($this->account['group']):
+				case 1: redirect(ADM_START_PAGE); break;
+				case 2: redirect(BROKER_START_PAGE); break;
+				case 3: redirect(OWNER_START_PAGE); break;
+			endswitch;
+		endif;
 		$pagevar = array('page'=>$this->pages->read_record(uri_string()));
 		$this->load->view("users_interface/pages/login",$pagevar);
 	}

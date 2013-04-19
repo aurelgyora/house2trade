@@ -5,10 +5,10 @@ class Broker_interface extends MY_Controller{
 	function __construct(){
 		
 		parent::__construct();
-		if(!$this->loginstatus || ($this->user['class'] != 2)):
+		if(!$this->loginstatus || ($this->account['group'] != 2)):
 			redirect('login');
 		endif;
-		$password = $this->users->read_field($this->user['uid'],'users','password');
+		$password = $this->users->read_field($this->account['id'],'users','password');
 		if(empty($password) && ($this->uri->segment(2) != 'set-password')):
 			redirect('broker/set-password');
 		endif;
@@ -18,7 +18,7 @@ class Broker_interface extends MY_Controller{
 	
 	public function setPassword(){
 	
-		$password = $this->users->read_field($this->user['uid'],'users','password');
+		$password = $this->users->read_field($this->account['id'],'users','password');
 		if(!empty($password)):
 			redirect(BROKER_START_PAGE);
 		endif;
@@ -30,7 +30,7 @@ class Broker_interface extends MY_Controller{
 		$this->load->model('property_type');
 		$pagevar = array('property_type'=>$this->property_type->read_records('property_type'));
 		$this->session->unset_userdata(array('property_id'=>''));
-		$this->load->view("broker_interface/pages/properties",$pagevar);
+		$this->load->view("broker_interface/properties/insert-property",$pagevar);
 	}
 	
 	public function profile(){
@@ -203,15 +203,11 @@ class Broker_interface extends MY_Controller{
 		
 		$this->load->model('property_favorite');
 		$this->load->model('union');
-		$this->load->model('images');
 		$from = (int)$this->uri->segment(4);
-		if(!$this->session->userdata('current_owner')):
-			$this->session->set_userdata('current_owner',0);
-		endif;
 		$pagevar = array(
-			'owners' => $this->union->ownersList($this->user['uid']),
-			'properties' => $this->union->favoriteList($this->session->userdata('current_owner'),7,$from),
-			'pages' => $this->pagination('broker/favorite',4,$this->property_favorite->count_records('property_favorite','owner',$this->session->userdata('current_owner')),7)
+			'select' => $this->union->selectBrokerProperties($this->account['id']),
+			'properties' => $this->union->favoriteList($this->session->userdata('current_property'),7,$from),
+			'pages' => $this->pagination('broker/favorite',4,$this->property_favorite->count_records('property_favorite','seller_id',$this->session->userdata('current_property')),7)
 		);
 		$ids = array();
 		for($i=0;$i<count($pagevar['properties']);$i++):
@@ -219,21 +215,15 @@ class Broker_interface extends MY_Controller{
 		endfor;
 		if($ids):
 			$this->load->model('images');
-			$this->load->model('property_favorite');
 			$this->load->model('property_potentialby');
 			$mainPhotos = $this->images->mainPhotos($ids);
-			$favorite = $this->property_favorite->record_exists($ids,$this->session->userdata('current_owner'));
-			$potentialby = $this->property_potentialby->record_exists($ids,$this->session->userdata('current_owner'));
+			$potentialby = $this->property_potentialby->record_exists($ids,$this->session->userdata('current_property'));
 			$this->load->model('property_type');
 			$property_type = $this->property_type->read_records('property_type');
 			for($i=0;$i<count($pagevar['properties']);$i++):
 				$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
 				if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
 					$pagevar['properties'][$i]['photo'] = $mainPhotos[$pagevar['properties'][$i]['id']];
-				endif;
-				$pagevar['properties'][$i]['favorite'] = FALSE;
-				if($favorite && array_key_exists($pagevar['properties'][$i]['id'],$favorite)):
-					$pagevar['properties'][$i]['favorite'] = TRUE;
 				endif;
 				$pagevar['properties'][$i]['potentialby'] = FALSE;
 				if($potentialby && array_key_exists($pagevar['properties'][$i]['id'],$potentialby)):
@@ -248,7 +238,7 @@ class Broker_interface extends MY_Controller{
 			endfor;
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
-		$this->load->view("broker_interface/pages/list-properties",$pagevar);
+		$this->load->view("broker_interface/properties/favorite",$pagevar);
 	}
 	
 	public function potentialByProperty(){
@@ -329,21 +319,46 @@ class Broker_interface extends MY_Controller{
 	
 	public function properties(){
 		
-		$this->load->model('properties');
 		$this->load->model('union');
+		$this->load->model('properties');
 		$this->load->model('images');
-		if(!$this->session->userdata('current_owner')):
-			$this->session->set_userdata('current_owner',0);
+		if(!$this->session->userdata('current_property')):
+			$this->session->set_userdata('current_property',0);
 		endif;
 		$pagevar = array(
-			'owners' => $this->union->ownersList($this->user['uid']),
-			'properties' => $this->properties->read_records($this->session->userdata('current_owner'))
+			'select' => $this->union->selectBrokerProperties($this->account['id']),
+			'property' => $this->properties->read_record($this->session->userdata('current_property'),'properties')
+		);
+		if($pagevar['property']):
+			$pagevar['property']['photo'] = $this->images->mainPhoto($pagevar['property']['id']);
+			if(!$pagevar['property']['photo']):
+				$pagevar['property']['photo'] = 'img/property.png';
+			endif;
+			$this->load->model('property_type');
+			$pagevar['property']['type'] = $this->property_type->read_field($pagevar['property']['type'],'property_type','title');
+		endif;
+		$this->session->set_userdata('backpath',uri_string());
+		$this->session->unset_userdata('property_id');
+		$this->load->view("broker_interface/properties/single-property",$pagevar);
+	}
+	
+	public function propertiesFullList(){
+		
+		$offset = intval($this->uri->segment(5));
+		$per_page = 10;
+		$this->load->model('union');
+		$this->load->model('properties');
+		$pagevar = array(
+			'select' => $this->union->selectBrokerProperties($this->account['id']),
+			'properties' => $this->properties->read_limit_records($per_page,$offset,'properties','address1','ASC'),
+			'pagination' => $this->pagination(BROKER_START_PAGE.'/full-list',5,$this->properties->countRecords(2),$per_page),
 		);
 		if($pagevar['properties']):
 			$ids = array();
 			for($i=0;$i<count($pagevar['properties']);$i++):
 				$ids[] = $pagevar['properties'][$i]['id'];
 			endfor;
+			$this->load->model('images');
 			$mainPhotos = $this->images->mainPhotos($ids);
 			$this->load->model('property_type');
 			$property_type = $this->property_type->read_records('property_type');
@@ -363,10 +378,10 @@ class Broker_interface extends MY_Controller{
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
 		$this->session->unset_userdata('property_id');
-		$this->load->view("broker_interface/pages/list-properties",$pagevar);
+		$this->load->view("broker_interface/properties/multi-property",$pagevar);
 	}
 	
-	public function property(){
+	public function propertyDetail(){
 		
 		$current_property = $this->session->userdata('property_id');
 		if($this->uri->total_segments() == 4):
@@ -375,25 +390,36 @@ class Broker_interface extends MY_Controller{
 		elseif(!$current_property && $this->uri->total_segments() == 3):
 			redirect(BROKER_START_PAGE);
 		endif;
-		$this->load->model('union');
+		$this->load->model('properties');
 		$this->load->model('images');
+		$this->load->model('union');
 		$pagevar = array(
-			'property' => $this->union->propertyInformation($current_property),
-			'images' => $this->images->read_records($current_property,$this->session->userdata('current_owner'))
+			'select' => $this->union->selectBrokerProperties($this->account['id']),
+			'property' => $this->properties->read_record($current_property,'properties'),
+			'images' => $this->images->read_records($current_property)
 		);
 		if(!$pagevar['property']):
 			show_error('Property missing');
 		endif;
+		$this->load->model('accounts_owners');
+		if($pagevar['property']['owner']):
+			$owner = $this->accounts_owners->read_record($pagevar['property']['owner'],'accounts_owners');
+			if($owner):
+				$pagevar['property']['phone'] = $owner['phone'];
+				$pagevar['property']['cell'] = $owner['cell'];
+				$pagevar['property']['email'] = $owner['email'];
+			endif;
+		endif;
 		$this->load->model('property_potentialby');
 		$pagevar['property']['favorite'] = FALSE;
 		$pagevar['property']['potentialby'] = FALSE;
-		if($pagevar['property']['owner_id'] != $this->session->userdata('current_owner')):
-			$pagevar['property']['potentialby'] = $this->property_potentialby->record_exist($current_property,$this->session->userdata('current_owner'));
+		if($this->session->userdata('current_property') && ($pagevar['property']['id'] != $this->session->userdata('current_property'))):
+			$pagevar['property']['potentialby'] = $this->property_potentialby->record_exist($this->session->userdata('current_property'),$current_property);
 		endif;
 		if(!$pagevar['property']['potentialby']):
 			$this->load->model('property_favorite');
-			if($pagevar['property']['owner_id'] != $this->session->userdata('current_owner')):
-				$pagevar['property']['favorite'] = $this->property_favorite->record_exist($current_property,$this->session->userdata('current_owner'));
+			if($this->session->userdata('current_property') && ($pagevar['property']['id'] != $this->session->userdata('current_property'))):
+				$pagevar['property']['favorite'] = $this->property_favorite->record_exist($this->session->userdata('current_property'),$current_property);
 			endif;
 		endif;
 		$this->load->model('property_type');
@@ -404,7 +430,7 @@ class Broker_interface extends MY_Controller{
 				break;
 			endif;
 		endfor;
-		$this->load->view("broker_interface/pages/property-information",$pagevar);
+		$this->load->view("broker_interface/properties/property-detail",$pagevar);
 	}
 	
 	public function edit_property(){

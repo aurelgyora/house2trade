@@ -2,12 +2,8 @@
 
 class Images extends MY_Model{
 	
-	var $id = 0; 
-	var $main = 0;
+	var $id = 0; var $main = 0; var $property = 0;
 	var $photo = '';
-	var $property_id = 0;
-	var $owner_id = 0;
-	var $broker_id = 0;
 	
 	function __construct(){
 		parent::__construct();
@@ -17,22 +13,17 @@ class Images extends MY_Model{
 		
 		$this->main = $data['main'];
 		$this->photo = $data['photo'];
-		$this->property_id = $data['property_id'];
-		$this->owner_id = $data['owner_id'];
-		if(isset($data['broker_id'])):
-			$this->broker_id = $data['broker_id'];
-		endif;
+		$this->property = $data['property_id'];
 		$this->db->insert('images',$this);
 		return $this->db->insert_id();
 	}
 	
-	function read_records($property,$owner){
+	function read_records($property){
 		
 		$this->db->select('id,main,photo');
 		$this->db->order_by('main','DESC');
 		$this->db->order_by('id');
-		$this->db->where('property_id',$property);
-		$this->db->where('owner_id',$owner);
+		$this->db->where('property',$property);
 		$query = $this->db->get('images');
 		$data = $query->result_array();
 		if(count($data)) return $data;
@@ -43,7 +34,7 @@ class Images extends MY_Model{
 		
 		$this->db->select('photo');
 		$this->db->where('main',1);
-		$this->db->where('property_id',$property);
+		$this->db->where('property',$property);
 		$query = $this->db->get('images');
 		$data = $query->result_array();
 		if($data) return $data[0]['photo'];
@@ -52,9 +43,9 @@ class Images extends MY_Model{
 	
 	function mainPhotos($propertiesID){
 		
-		$this->db->select('property_id,photo');
+		$this->db->select('property,photo');
 		$this->db->where('main',1);
-		$this->db->where_in('property_id',$propertiesID);
+		$this->db->where_in('property',$propertiesID);
 		$query = $this->db->get('images');
 		$result = array();
 		foreach($query->result() as $row):
@@ -78,19 +69,9 @@ class Images extends MY_Model{
 	
 	function image_exist($property){
 		
-		$query = $this->db->get_where('images',array('property_id'=>$property),1);
+		$query = $this->db->get_where('images',array('property'=>$property),1);
 		$data = $query->result_array();
 		if($data) return TRUE;
 		return FALSE;
-	}
-	
-	function delete_records($property,$broker = FALSE){
-	
-		$this->db->where('property_id',$property);
-		if($broker):
-			$this->db->where('broker_id',$broker);
-		endif;
-		$this->db->delete('images');
-		return $this->db->affected_rows();
 	}
 }

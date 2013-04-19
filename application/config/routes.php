@@ -8,13 +8,14 @@ $route['clear-session'] = 'users_interface/clearSession';
 $route['valid/exist-email'] = 'ajax_interface/existEmail';
 
 /*************************************************** CRON INTRERFACE ***********************************************/
-$route['csv-export-properties'] = "cron_interface/csvExportProperties";
+$route['csv-export-properties'] = "scripts_interface/csvExportProperties";
+$route['remove-images-by-zipcode'] = "scripts_interface/removeImagesByZipcode";
 
 /*************************************************** AJAX INTRERFACE ***********************************************/
 
 $route['login-in']				= "ajax_interface/login";
 $route['signup-account']		= "ajax_interface/signup_account";
-$route['signup-properties']		= "ajax_interface/signup_properties";
+$route['signup-property']		= "ajax_interface/signupProperty";
 $route['seller-signup-properties'] = "ajax_interface/seller_signup_properties";
 $route['change-user-status']	= "ajax_interface/change_user_status";
 $route['save-property-info']	= "ajax_interface/save_property_info";
@@ -22,7 +23,10 @@ $route['send-forgot-password']	= "ajax_interface/send_forgot_password";
 $route['multi-upload']			= "ajax_interface/multiUpload";
 $route['delete-property-images']= "ajax_interface/deletePropertyImages";
 $route['save-profile']			= "ajax_interface/saveProfile";
-$route['set-current-owner']			= "ajax_interface/setCurrentOwner";
+
+$route['set-active-property'] = "ajax_interface/setActiveProperty";
+$route['set-current-property'] = "ajax_interface/setCurrentProperty";
+
 $route['text-load/:any/from/:num']	= "ajax_interface/text_load";
 $route[BROKER_START_PAGE.'/delete']	= "ajax_interface/deleteProperty";
 $route[OWNER_START_PAGE.'/delete/seller']	= "ajax_interface/deletePropertySeller";
@@ -62,8 +66,13 @@ $route['loadimage/:any/:num'] = "users_interface/loadimage";
 /*************************************************** BROKERS INTRERFACE ***********************************************/
 
 $route[BROKER_START_PAGE] = "broker_interface/properties";
-$route['broker/:any/information'] = "broker_interface/property";
-$route['broker/:any/information/:num'] = "broker_interface/property";
+$route[BROKER_START_PAGE.'/full-list'] = "broker_interface/propertiesFullList";
+$route[BROKER_START_PAGE.'/full-list/from'] = "broker_interface/propertiesFullList";
+$route[BROKER_START_PAGE.'/full-list/from/:num'] = "broker_interface/propertiesFullList";
+
+$route['broker/:any/information'] = "broker_interface/propertyDetail";
+$route['broker/:any/information/:num'] = "broker_interface/propertyDetail";
+
 $route['broker/register-properties'] = "broker_interface/register_properties";
 $route[BROKER_START_PAGE.'/edit'] = "broker_interface/edit_property";
 $route[BROKER_START_PAGE.'/edit/:num'] = "broker_interface/edit_property";

@@ -64,10 +64,8 @@ class Ajax_interface extends MY_Controller{
 				else:
 					$dataval['id'] = $this->company->insert_record($dataval);
 				endif;
-				print_r($_FILES);
 				if(isset($_FILES['logo'])):
 					if($_FILES['logo']['error'] != 4):
-						print_r($_FILES['logo']['error']);
 						$photo = file_get_contents($_FILES['logo']['tmp_name']);
 						if($photo && $dataval['id']):
 							$this->company->update_field($dataval['id'],'logo',$photo,'company');
@@ -81,7 +79,248 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 	
+	/******************************************** property *******************************************************/
+	
+	function signupProperty(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$json_request = array('status'=>FALSE,'message'=>'Signup is impossible');
+		$data = trim($this->input->post('postdata'));
+		if($data):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$dataval[$dataid[0]] = trim($dataid[1]);
+			endfor;
+			if($dataval):
+				$this->load->model('properties');
+				if(!$this->users->user_exist('email',$dataval['email'])):
+					if(!$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
+						$this->load->helper('string');
+						$dataval['password'] = random_string('alnum',12);
+						$dataval['user_id'] = $this->users->insert_record($dataval);
+						if($dataval['user_id']):
+							$this->load->model('owners');
+							$ownerID = $this->owners->insert_record($dataval);
+							$property_id = $this->properties->insert_record($dataval);
+							if($property_id):
+								$zillow_result = $this->zillowApi($dataval['address1'],$dataval['zip_code']);
+								if($zillow_result):
+									$this->load->model('images');
+									$randomNumber = mt_rand(1,1000);
+									$nextPropertyID = $this->images->nextID('images');
+									$insert = array('main'=>0,'property_id'=>$property_id,'photo'=>'','owner_id'=>$dataval['user_id']);
+									$images = $this->arrayImagesFromPage($zillow_result['page-content']);
+									if($images):
+										$dirPath = getcwd().'/upload_images/'.$dataval['zip_code'];
+										if(!file_exists($dirPath) && !is_dir($dirPath)):
+											mkdir($dirPath,0777);
+										endif;
+										$insert['main'] = 1;
+										$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[0]);
+										file_put_contents($dirPath.'/'.$newFileName,file_get_contents($images[0]));
+										$insert['photo'] = 'upload_images/'.$dataval['zip_code'].'/'.$newFileName;
+										$this->images->insert_record($insert);
+										$insert['main'] = 0;
+										for($i=1;$i<count($images);$i++):
+											if(isset($images[$i])):
+												$nextPropertyID = $this->images->nextID('images');
+												$randomNumber = mt_rand(1,1000);
+												$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[$i]);
+												file_put_contents($dirPath.'/'.$newFileName,file_get_contents($images[$i]));
+												$insert['photo'] = 'upload_images/'.$dataval['zip_code'].'/'.$newFileName;
+												$this->images->insert_record($insert);
+											endif;
+										endfor;
+									endif;
+								endif;
+							endif;
+							$this->users->update_field($dataval['user_id'],'account',$ownerID,'users');
+							$this->users->update_field($dataval['user_id'],'group',3,'users');
+							$status = $this->users->read_field($this->account['id'],'users','status');
+							$this->properties->update_field($property_id,'status',$status,'properties');
+							$this->load->library('parser');
+							$this->load->model('mails');
+							$mail_content = $this->mails->read_record(2,'mails');
+							$parser_data = array(
+								'user_first_name' => $dataval['fname'],
+								'user_last_name' => $dataval['lname'],
+								'user_login' => $dataval['email'],
+								'user_password' => $dataval['password'],
+								'cabinet_link' => site_url('homeowner/profile')
+							);
+							$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
+							$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
+							$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
+							$json_request['status'] = TRUE;
+							$this->session->set_userdata(array('current_property'=>$property_id,'property_id'=>$property_id));
+						endif;
+					else:
+						$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
+					endif;
+				else:
+					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Homeowner already exist';
+				endif;
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function multiUpload(){
+		
+		$this->load->model('images');
+		$this->load->model('properties');
+		$randomNumber = mt_rand(1,1000);
+		$nextPropertyID = $this->images->nextID('images');
+		$insert = array('main'=>0,'property_id'=>0,'photo'=>'','owner_id'=>0);
+		$insert['property_id'] = $this->session->userdata('property_id');
+		$zipcode = $this->properties->read_field($insert['property_id'],'properties','zip_code');
+		if(!$this->images->image_exist($insert['property_id'])):
+			$insert['main'] = 1;
+		endif;
+		$fn = (isset($_SERVER['HTTP_X_FILENAME'])?$_SERVER['HTTP_X_FILENAME']:false);
+		if($fn):
+			$dirPath = getcwd().'/upload_images/'.$zipcode;
+			if(!file_exists($dirPath) && !is_dir($dirPath)):
+				mkdir($dirPath,0777);
+			endif;
+			$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$fn);
+			file_put_contents($dirPath.'/'.$newFileName,file_get_contents('php://input'));
+			$insert['photo'] = 'upload_images/'.$zipcode.'/'.$newFileName;
+			$insert['photo'] = 'upload_images/'.$newFileName;
+			$this->images->insert_record($insert);
+			echo "$fn uploaded";
+			return TRUE;
+		endif;
+		return FALSE;
+	}
+	
+	function setActiveProperty(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		if($property):
+			$this->session->set_userdata('current_property',$property);
+			echo json_encode(array('redirect'=>site_url(BROKER_START_PAGE)));
+		else:
+			$this->session->unset_userdata('current_property');
+			echo json_encode(array('redirect'=>site_url(BROKER_START_PAGE.'/full-list')));
+		endif;
+	}
+	
+	function setCurrentProperty(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		if($property):
+			$this->session->set_userdata('current_property',$property);
+		endif;
+		echo json_encode(array('redirect'=>site_url(BROKER_START_PAGE.'/information')));
+	}
+	
+	/************************************** favorite & potential by **********************************************/
+	
+	function addToFavorite(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
+		if($property):
+			$this->load->model('property_favorite');
+			$this->load->model('properties');
+			if($this->properties->record_exist('properties','id',$property) && !$this->property_favorite->record_exist($this->session->userdata('current_property'),$property)):
+				$insert['seller_id'] = $this->session->userdata('current_property');
+				$insert['buyer_id'] = $property;
+				$this->property_favorite->insert_record($insert);
+				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function removeToFavorite(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
+		if($property):
+			$this->load->model('property_favorite');
+			$this->load->model('properties');
+			$favoriteID = $this->property_favorite->record_exist($this->session->userdata('current_property'),$property);
+			if($favoriteID):
+				$this->property_favorite->delete_record($favoriteID,'property_favorite');
+				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from favorite';
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function addToPotentialBy(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
+		if($property):
+			$current_owner = $this->session->userdata('current_owner');
+			if($this->user['class'] == 3):
+				$current_owner = $this->user['uid'];
+			endif;
+			$this->load->model('property_potentialby');
+			$this->load->model('properties');
+			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($property,$current_owner)):
+				$insert['property'] = $property;
+				$insert['owner'] = $current_owner;
+				$result = $this->property_potentialby->insert_record($insert);
+				if($result):
+					$this->load->model('property_favorite');
+					$favoriteID = $this->property_favorite->record_exist($property,$current_owner);
+					if($favoriteID):
+						$this->property_favorite->delete_record($favoriteID,'property_favorite');
+					endif;
+				endif;
+				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function removeToPotentialBy(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
+		if($property):
+			$current_owner = $this->session->userdata('current_owner');
+			if($this->user['class'] == 3):
+				$current_owner = $this->user['uid'];
+			endif;
+			$this->load->model('property_potentialby');
+			$this->load->model('properties');
+			$favoriteID = $this->property_potentialby->record_exist($property,$current_owner);
+			if($favoriteID):
+				$this->property_potentialby->delete_record($favoriteID,'property_potentialby');
+				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from potential by';
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
 	/******************************************** accounts *******************************************************/
+	
 	function login(){
 		
 		if(!$this->input->is_ajax_request()):
@@ -96,18 +335,16 @@ class Ajax_interface extends MY_Controller{
 				$dataval[$i] = trim($dataid[1]);
 			endfor;
 			if($dataval):
-				$user = $this->users->auth_user($dataval[0],$dataval[1]);
+				$user = $this->users->signIN($dataval[0],$dataval[1]);
 				if($user):
 					$json_request['status'] = TRUE;
 					$json_request['message'] = '';
-					$this->session->set_userdata(array('logon'=>md5($dataval[0]),'userid'=>$user['id']));
-					switch($user['class']):
-						case 1: $json_request['redirect'] .= ADM_START_PAGE;
-							break;
-						case 2: $json_request['redirect'] .= BROKER_START_PAGE;
-							break;
-						case 3: $json_request['redirect'] .= OWNER_START_PAGE;
-							break;
+					$account = json_encode(array('id'=>$user['id'],'group'=>$user['group']));
+					$this->session->set_userdata(array('logon'=>md5($dataval[0]),'account'=>$account));
+					switch($user['group']):
+						case 1: $json_request['redirect'] .= ADM_START_PAGE; break;
+						case 2: $json_request['redirect'] .= BROKER_START_PAGE; break;
+						case 3: $json_request['redirect'] .= OWNER_START_PAGE; break;
 					endswitch;
 				endif;
 			endif;
@@ -173,89 +410,6 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 
-	function signup_properties(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Аccess denied');
-		endif;
-		$json_request = array('status'=>FALSE,'message'=>'Signup is impossible');
-		$data = trim($this->input->post('postdata'));
-		if($data):
-			$data = preg_split("/&/",$data);
-			for($i=0;$i<count($data);$i++):
-				$dataid = preg_split("/=/",$data[$i]);
-				$dataval[$dataid[0]] = trim($dataid[1]);
-			endfor;
-			if($dataval):
-				$this->load->model('properties');
-				if(!$this->users->user_exist('email',$dataval['email'])):
-					if(!$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
-						$this->load->helper('string');
-						$dataval['password'] = random_string('alnum',12);
-						$dataval['user_id'] = $this->users->insert_record($dataval);
-						if($dataval['user_id']):
-							$this->load->model('owners');
-							$ownerID = $this->owners->insert_record($dataval);
-							$property_id = $this->properties->insert_record($dataval);
-							if($property_id):
-								$zillow_result = $this->zillowApi($dataval['address1'],$dataval['zip_code']);
-								if($zillow_result):
-									$this->load->model('images');
-									$randomNumber = mt_rand(1,1000);
-									$nextPropertyID = $this->images->nextID('images');
-									$insert = array('main'=>0,'property_id'=>$property_id,'photo'=>'','owner_id'=>$dataval['user_id']);
-									$images = $this->arrayImagesFromPage($zillow_result['page-content']);
-									if($images):
-										$insert['main'] = 1;
-										$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[0]);
-										file_put_contents(getcwd().'/upload_images/'.$newFileName,file_get_contents($images[0]));
-										$insert['photo'] = 'upload_images/'.$newFileName;
-										$this->images->insert_record($insert);
-										$insert['main'] = 0;
-										for($i=1;$i<count($images);$i++):
-											if(isset($images[$i])):
-												$nextPropertyID = $this->images->nextID('images');
-												$randomNumber = mt_rand(1,1000);
-												$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[$i]);
-												file_put_contents(getcwd().'/upload_images/'.$newFileName,file_get_contents($images[$i]));
-												$insert['photo'] = 'upload_images/'.$newFileName;
-												$this->images->insert_record($insert);
-											endif;
-										endfor;
-									endif;
-								endif;
-							endif;
-							$this->users->update_field($dataval['user_id'],'user_id',$ownerID,'users');
-							$this->users->update_field($dataval['user_id'],'class',3,'users');
-							$status = $this->users->read_field($this->user['uid'],'users','status');
-							$this->properties->update_field($property_id,'status',$status,'properties');
-							$this->load->library('parser');
-							$this->load->model('mails');
-							$mail_content = $this->mails->read_record(2,'mails');
-							$parser_data = array(
-								'user_first_name' => $dataval['fname'],
-								'user_last_name' => $dataval['lname'],
-								'user_login' => $dataval['email'],
-								'user_password' => $dataval['password'],
-								'cabinet_link' => site_url('homeowner/profile')
-							);
-							$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
-							$this->send_mail($dataval['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
-							$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
-							$json_request['status'] = TRUE;
-							$this->session->set_userdata(array('current_owner'=>$dataval['user_id'],'property_id'=>$property_id));
-						endif;
-					else:
-						$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
-					endif;
-				else:
-					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Homeowner already exist';
-				endif;
-			endif;
-		endif;
-		echo json_encode($json_request);
-	}
-	
 	function seller_signup_properties(){
 		
 		if(!$this->input->is_ajax_request()):
@@ -396,8 +550,10 @@ class Ajax_interface extends MY_Controller{
 						$this->users->update_field($this->user['uid'],'password',md5($dataval['password']),'users');
 					endif;
 					unset($dataval['password']);unset($dataval['confirm']);unset($dataval['subcribe']);unset($dataval['id']);
-					$this->load->model('company');
-					$dataval['company'] = $this->company->read_field($dataval['company'],'company','title');
+					if(isset($dataval['company'])):
+						$this->load->model('company');
+						$dataval['company'] = $this->company->read_field($dataval['company'],'company','title');
+					endif;
 					$json_request['new_data'] = $dataval;
 				endif;
 			endif;
@@ -568,63 +724,6 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 	
-	function multiUpload(){
-		
-		$this->load->model('images');
-		$randomNumber = mt_rand(1,1000);
-		$nextPropertyID = $this->images->nextID('images');
-		$insert = array('main'=>0,'property_id'=>0,'photo'=>'','owner_id'=>0);
-		if($this->session->userdata('current_owner')):
-			$insert['owner_id'] = $this->session->userdata('current_owner');
-		endif;
-		$insert['property_id'] = $this->session->userdata('property_id');
-		if($this->user['class'] == 3):
-			$this->load->model('owners');
-			$insert['owner_id'] = $this->user['uid'];
-			$insert['broker_id'] = $this->owners->read_field($insert['owner_id'],'owners','broker_id');
-		elseif($this->user['class'] == 2):
-			$insert['broker_id'] = $this->user['uid'];
-		endif;
-		if(!$insert['owner_id'] || !$insert['property_id']):
-			show_error('Missing data');
-		endif;
-		if(!$this->images->image_exist($insert['property_id'])):
-			$insert['main'] = 1;
-		endif;
-		$fn = (isset($_SERVER['HTTP_X_FILENAME'])?$_SERVER['HTTP_X_FILENAME']:false);
-		if($fn):
-			$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$fn);
-			file_put_contents(getcwd().'/upload_images/'.$newFileName,file_get_contents('php://input'));
-			echo "$fn uploaded";
-			$insert['photo'] = 'upload_images/'.$newFileName;
-			$this->images->insert_record($insert);
-			exit();
-		else:
-			if(isset($_FILES['fileselect'])):
-				$files = $_FILES['fileselect'];
-				$i = 0;
-				foreach($files['error'] as $id => $err):
-					if($err == UPLOAD_ERR_OK):
-						$fn = $files['name'][$id];
-						$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$fn);
-						move_uploaded_file($files['tmp_name'][$id],getcwd().'/upload_images/'.$newFileName);
-						if(!$i):
-							$insert['main'] = 1;
-						else:
-							$insert['main'] = 0;
-						endif;
-						$insert['photo'] = 'upload_images/'.$newFileName;
-						$this->images->insert_record($insert);
-						echo "<p>File $fn uploaded.</p>";
-						$i++;
-					endif;
-				endforeach;
-			else:
-				show_404();
-			endif;
-		endif;
-	}
-
 	function searchProperty(){
 		
 		if(!$this->input->is_ajax_request()):
@@ -670,9 +769,6 @@ class Ajax_interface extends MY_Controller{
 					$sql .= ' AND properties.type = '.$dataval['type'];
 				endif;
 				$sql .= ' ORDER BY properties.address1 ASC, properties.state ASC, properties.zip_code ASC';
-				
-				print_r($sql);exit;
-				
 				$this->load->model('properties');
 				$properties = $this->properties->query_execute($sql);
 				$zillow_result = FALSE;
@@ -694,117 +790,4 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 
-	function addToFavorite(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Access denied');
-		endif;
-		$property = $this->input->post('parameter');
-		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
-		if($property):
-			$current_owner = $this->session->userdata('current_owner');
-			if($this->user['class'] == 3):
-				$current_owner = $this->user['uid'];
-			endif;
-			$this->load->model('property_favorite');
-			$this->load->model('properties');
-			if($this->properties->record_exist('properties','id',$property) && !$this->property_favorite->record_exist($property,$current_owner)):
-				$insert['property'] = $property;
-				$insert['owner'] = $current_owner;
-				$this->property_favorite->insert_record($insert);
-				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
-			endif;
-		endif;
-		echo json_encode($json_request);
-	}
-	
-	function removeToFavorite(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Access denied');
-		endif;
-		$property = $this->input->post('parameter');
-		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
-		if($property):
-			$current_owner = $this->session->userdata('current_owner');
-			if($this->user['class'] == 3):
-				$current_owner = $this->user['uid'];
-			endif;
-			$this->load->model('property_favorite');
-			$this->load->model('properties');
-			$favoriteID = $this->property_favorite->record_exist($property,$current_owner);
-			if($favoriteID):
-				$this->property_favorite->delete_record($favoriteID,'property_favorite');
-				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from favorite';
-			endif;
-		endif;
-		echo json_encode($json_request);
-	}
-	
-	function addToPotentialBy(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Access denied');
-		endif;
-		$property = $this->input->post('parameter');
-		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
-		if($property):
-			$current_owner = $this->session->userdata('current_owner');
-			if($this->user['class'] == 3):
-				$current_owner = $this->user['uid'];
-			endif;
-			$this->load->model('property_potentialby');
-			$this->load->model('properties');
-			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($property,$current_owner)):
-				$insert['property'] = $property;
-				$insert['owner'] = $current_owner;
-				$result = $this->property_potentialby->insert_record($insert);
-				if($result):
-					$this->load->model('property_favorite');
-					$favoriteID = $this->property_favorite->record_exist($property,$current_owner);
-					if($favoriteID):
-						$this->property_favorite->delete_record($favoriteID,'property_favorite');
-					endif;
-				endif;
-				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
-			endif;
-		endif;
-		echo json_encode($json_request);
-	}
-	
-	function removeToPotentialBy(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Access denied');
-		endif;
-		$property = $this->input->post('parameter');
-		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
-		if($property):
-			$current_owner = $this->session->userdata('current_owner');
-			if($this->user['class'] == 3):
-				$current_owner = $this->user['uid'];
-			endif;
-			$this->load->model('property_potentialby');
-			$this->load->model('properties');
-			$favoriteID = $this->property_potentialby->record_exist($property,$current_owner);
-			if($favoriteID):
-				$this->property_potentialby->delete_record($favoriteID,'property_potentialby');
-				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from potential by';
-			endif;
-		endif;
-		echo json_encode($json_request);
-	}
-	
-	function setCurrentOwner(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Access denied');
-		endif;
-		$owner = $this->input->post('parameter');
-		if($owner):
-			$this->session->set_userdata('current_owner',$owner);
-		endif;
-		echo json_encode(array('redirect'=>site_url($this->session->userdata('backpath'))));
-	}
-	
 }

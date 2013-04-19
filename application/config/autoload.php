@@ -4,4 +4,4 @@ $autoload['libraries'] = array('database','form_validation','session');
 $autoload['helper'] = array('url','form');
 $autoload['config'] = array();
 $autoload['language'] = array();
-$autoload['model'] = array('users');
+$autoload['model'] = array('users','pages');

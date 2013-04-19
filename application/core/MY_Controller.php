@@ -2,43 +2,123 @@
 
 class MY_Controller extends CI_Controller{
 	
-	var $user = array('uid'=>0,'name'=>'','email'=>'','class'=>0,'class_name'=>'','user_id'=>0,'class_translit'=>'');
+	var $account = array('id'=>0,'group'=>0);
+	var $profile = '';
 	var $loginstatus = FALSE;
 	
 	function __construct(){
 		
 		parent::__construct();
 		
-		$this->load->model('pages');
-		
-		$cookieuid = $this->session->userdata('logon');
-		if(isset($cookieuid) and !empty($cookieuid)):
-			$this->user['uid'] = $this->session->userdata('userid');
-			if(isset($this->user['uid']) && !is_null($this->user['uid'])):
-				$userinfo = $this->users->read_record($this->user['uid'],'users');
-				if($userinfo):
-					//получаем информацию о пользователе
-					$this->load->model('usersclass');
-					$this->user['class_name'] = $this->usersclass->read_field($userinfo['class'],'users_class','title');
-					$this->user['email'] = $userinfo['email'];
-					$this->user['class'] = $userinfo['class'];
-					$this->user['user_id'] = $userinfo['user_id'];
-					$this->user['class_translit'] = $this->usersclass->read_field($this->user['class'],'users_class','translit');
-					switch($this->user['class']):
-						case 1: $this->user['name'] = 'Administrator'; break;
-						case 2: $this->load->model('brokers');$this->user['name'] = $this->brokers->read_name($userinfo['user_id'],'brokers'); break;
-						case 3: $this->load->model('owners');$this->user['name'] = $this->owners->read_name($userinfo['user_id'],'owners'); break;
+		$sessionLogon = $this->session->userdata('logon');
+		if($sessionLogon):
+			$this->account = json_decode($this->session->userdata('account'),TRUE);
+			if($this->account):
+				if(empty($this->profile)):
+					$profile = FALSE;
+					switch($this->account['group']):
+						case 1: $profile = $this->users->read_record($this->account['id'],'users');break;
+						case 2: 
+							$this->load->model('accounts_brokers');
+							$profile =$this->accounts_brokers->read_record($this->account['id'],'accounts_brokers');
+							break;
+						case 3:
+							$this->load->model('accounts_owners');
+							$profile =$this->accounts_owners->read_record($this->account['id'],'accounts_owners');
+							break;
 					endswitch;
-					$this->loginstatus = TRUE;
+					if($profile && ($sessionLogon == md5($profile['email']))):
+						$this->profile = json_encode($profile);
+						$this->session->set_userdata('profile',json_encode($this->profile));
+						$this->loginstatus = TRUE;
+					endif;
+				else:
+					$this->profile = json_decode($this->session->userdata('profile'),TRUE);
 				endif;
-			endif;
-			if($this->session->userdata('logon') != md5($userinfo['email'])):
-				$this->loginstatus = FALSE;
-				$this->user = array();
 			endif;
 		endif;
 	}
 	
+	function jsonAccount($field = FALSE){
+		
+		$account = '';
+		if($this->loginstatus):
+			if($this->profile):
+				$account = json_decode($this->profile,TRUE);
+				if($field):
+					return $account[$field];
+				endif;
+			endif;
+		endif;
+		return $account;
+	}
+	
+	/*************************************************************************************************************/
+	
+	public function zillowApi($address,$zip){
+		
+		$this->load->library('zillow_api');
+//		$zws_id = 'X1-ZWz1dj3m0o5c7f_6bk45';
+//		$zws_id = 'X1-ZWz1djlx0zrnyj_9d4gz';
+//		$zws_id = 'X1-ZWz1djm0z1zrwr_9fxlx';
+		$zws_id = 'X1-ZWz1bgwfzdn5l7_9hc6e';
+		$zillow_api = new Zillow_Api($zws_id);
+		$search_result = $zillow_api->GetDeepSearchResults(array('address'=>$address,'citystatezip'=>$zip));
+		$code = (int)$search_result->message->code;
+		if(!$code):
+			$tax = (float)$search_result->response->results->result->taxAssessment;
+			if($tax):
+				$tax = substr($tax, 0, strlen($tax)-2);
+			endif;
+			$result = array(
+				'page-content'=>(string)$search_result->response->results->result->links->homedetails,
+				'property-fname' => '',
+				'property-lname' => '',
+				'login-email' => '',
+				'property-city' => (string)$search_result->response->results->result->address->city,
+				'property-state' => (string)$search_result->response->results->result->address->state,
+				'property-address1' => (string)$search_result->response->results->result->address->street,
+				'property-zipcode' => (string)$search_result->response->results->result->address->zipcode,
+				'property-type' => (string)$search_result->response->results->result->useCode,
+				'property-bathrooms' => (int)$search_result->response->results->result->bathrooms,
+				'property-bedrooms' => (int)$search_result->response->results->result->bedrooms,
+				'property-sqf' => (int)$search_result->response->results->result->finishedSqFt,
+				'property-lot-size' => (int)$search_result->response->results->result->lotSizeSqFt,
+				'property-price' => 0,
+				'property-tax' => $tax,
+				'property-year' => (int)$search_result->response->results->result->yearBuilt,
+				'property-last-sold-date' => (string)$search_result->response->results->result->lastSoldDate,
+				'property-last-sold-price' => (int)$search_result->response->results->result->lastSoldPrice,
+				'property-bank-price' => 0,
+				'property-mls' => '',
+				'property-discription' => ''
+			);
+			return $result;
+		else:
+			return FALSE;
+		endif;
+	}
+
+	public function arrayImagesFromPage($siteURL){
+		
+		$images = array();
+		if(!empty($siteURL)):
+			$content = file_get_contents($siteURL);
+			preg_match_all("/<img.*?class=\"hip-photo\".*?(http:\/\/(.*?))\">/",$content,$matches,PREG_SET_ORDER);
+			foreach($matches as $key => $value):
+				if(isset($value[1])):
+					$images[] = $value[1];
+				endif;
+			endforeach;
+		endif;
+		if($images):
+			return $images;
+		else:
+			return FALSE;
+		endif;
+	}
+	
+	/*************************************************************************************************************/
 	public function pagination($url,$uri_segment,$total_rows,$per_page){
 		
 		$this->load->library('pagination');
@@ -221,61 +301,5 @@ class MY_Controller extends CI_Controller{
 		endswitch;
 	}
 	
-	public function zillowApi($address,$zip){
-		
-		$this->load->library('zillow_api');
-		$zws_id = 'X1-ZWz1dj3m0o5c7f_6bk45';
-		$zillow_api = new Zillow_Api($zws_id);
-		$search_result = $zillow_api->GetDeepSearchResults(array('address'=>$address,'citystatezip'=>$zip));
-		$code = (int)$search_result->message->code;
-		if(!$code):
-			$tax = (float)$search_result->response->results->result->taxAssessment;
-			if($tax):
-				$tax = substr($tax, 0, strlen($tax)-2);
-			endif;
-			$result = array(
-				'page-content'=>(string)$search_result->response->results->result->links->homedetails,
-				'property-fname' => '',
-				'property-lname' => '',
-				'login-email' => '',
-				'property-city' => (string)$search_result->response->results->result->address->city,
-				'property-state' => (string)$search_result->response->results->result->address->state,
-				'property-address1' => (string)$search_result->response->results->result->address->street,
-				'property-zipcode' => (string)$search_result->response->results->result->address->zipcode,
-				'property-type' => (string)$search_result->response->results->result->useCode,
-				'property-bathrooms' => (int)$search_result->response->results->result->bathrooms,
-				'property-bedrooms' => (int)$search_result->response->results->result->bedrooms,
-				'property-sqf' => (int)$search_result->response->results->result->finishedSqFt,
-				'property-price' => 0,
-				'property-tax' => $tax,
-				'property-year' => (int)$search_result->response->results->result->yearBuilt,
-				'property-last-sold-date' => (string)$search_result->response->results->result->lastSoldDate,
-				'property-last-sold-price' => (int)$search_result->response->results->result->lastSoldPrice,
-				'property-mls' => '',
-				'property-discription' => ''
-			);
-			return $result;
-		else:
-			return FALSE;
-		endif;
-	}
-
-	public function arrayImagesFromPage($siteURL){
-		
-		$images = array();
-		if(!empty($siteURL)):
-			$content = file_get_contents($siteURL);
-			preg_match_all("/<img.*?class=\"hip-photo\".*?(http:\/\/(.*?))\">/",$content,$matches,PREG_SET_ORDER);
-			foreach($matches as $key => $value):
-				if(isset($value[1])):
-					$images[] = $value[1];
-				endif;
-			endforeach;
-		endif;
-		if($images):
-			return $images;
-		else:
-			return FALSE;
-		endif;
-	}
+	
 }

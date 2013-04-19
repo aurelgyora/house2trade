@@ -22,7 +22,7 @@
 				</div>
 				<div class="clear"></div>
 				<div id="div-account-properties" class="hidden">
-					<?php $this->load->view('forms/account-properties');?>
+					<?php $this->load->view('forms/card-property');?>
 				</div>
 				<div class="clear"></div>
 				<div id="div-insert-photo-properties" class="hidden">

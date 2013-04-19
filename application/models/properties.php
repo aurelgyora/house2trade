@@ -2,10 +2,9 @@
 
 class Properties extends MY_Model{
 	
-	var $id = 0;var $listing_id = 0;var $owner_id = 0;var $broker_id = 0;
-	var $zip_code = 0;var $bathrooms = 0;var $bedrooms = 0;var $tax = 0;var $mls = 0;
-	var $address1 = '';var $address2 = '';var $city = '';var $state = '';var $type = '';var $sqf = '';var $description = '';
-	var $price = 0.00;
+	var $id = 0; var $broker = 0; var $owner = 0; var $zip_code = 0; var $bathrooms = 0; var $bedrooms = 0; var $tax = 0; var $mls = 0;
+	var $address1 = ''; var $address2 = ''; var $city = ''; var $state = ''; var $type = ''; var $sqf = ''; var $description = ''; var $lotsize = '';
+	var $price = 0.00; var $bank_price = 0.00;
 	
 	function __construct(){
 		parent::__construct();
@@ -13,24 +12,26 @@ class Properties extends MY_Model{
 	
 	function insert_record($data){
 		
-		if($this->loginstatus):
-			$this->broker_id = $this->user['uid'];
+		if($this->loginstatus && ($this->account['group'] == 2)):
+			$this->broker = $this->account['id'];
 		endif;
-		$this->owner_id = $data['user_id'];
+		$this->owner = $data['user_id'];
 		if(isset($data['state']) && isset($data['zip_code'])):
-			$this->zip_code = $data['zip_code'];
-			$this->bathrooms = $data['bathrooms'];
-			$this->bedrooms = $data['bedrooms'];
-			$this->tax = $data['tax'];
-			$this->mls = $data['mls'];
-			$this->address1 = $data['address1'];
-			$this->address2 = $data['address2'];
-			$this->city = $data['city'];
-			$this->state = $data['state'];
-			$this->type = $data['type'];
-			$this->sqf = $data['sqf'];
+			$this->zip_code = trim($data['zip_code']);
+			$this->bathrooms = trim($data['bathrooms']);
+			$this->bedrooms = trim($data['bedrooms']);
+			$this->tax = trim($data['tax']);
+			$this->mls = trim($data['mls']);
+			$this->address1 = trim($data['address1']);
+			$this->address2 = trim($data['address2']);
+			$this->city = trim($data['city']);
+			$this->state = trim($data['state']);
+			$this->type = trim($data['type']);
+			$this->sqf = trim($data['sqf']);
 			$this->description = $data['description'];
 			$this->price = $data['price'];
+			$this->lotsize = $data['lotsize'];
+			$this->bank_price = $data['bank_price'];
 		endif;
 		$this->db->insert('properties',$this);
 		return $this->db->insert_id();
@@ -51,6 +52,8 @@ class Properties extends MY_Model{
 		$this->db->set('sqf',$data['sqf']);
 		$this->db->set('description',$data['description']);
 		$this->db->set('price',$data['price']);
+		$this->db->set('lotsize',$data['lotsize']);
+		$this->db->set('bank_price',$data['bank_price']);
 		
 		$this->db->where('id',$id);
 		$this->db->update('properties');
@@ -59,7 +62,7 @@ class Properties extends MY_Model{
 	
 	function read_records($owner){
 		
-		$this->db->where('owner_id',$owner);
+		$this->db->where('owner',$owner);
 		$this->db->where('status <',17);
 		$query = $this->db->get('properties');
 		$data = $query->result_array();
@@ -77,15 +80,24 @@ class Properties extends MY_Model{
 		return FALSE;
 	}
 	
-	function csvPropertiesExits($where){
+	function csvPropertiesExits($address,$state,$zip_code){
 		
-		$this->db->where('address1',$where['address']);
-		$this->db->where('state',$where['state']);
-		$this->db->where('zip_code',$where['zip_code']);
+		$this->db->where('address1',trim($address));
+		$this->db->where('state',trim($state));
+		$this->db->where('zip_code',trim($zip_code));
 		$query = $this->db->get('properties',1);
 		$data = $query->result_array();
 		if($data) return $data[0]['id'];
 		return FALSE;
 	}
 	
+	function countRecords($group){
+		
+		switch($group):
+			case 2: $this->db->where('broker',$this->account['id']); break;
+			case 3: $this->db->where('owner',$this->account['id']); break;
+		endswitch;
+		$this->db->from('properties');
+		return $this->db->count_all_results();
+	}
 }
