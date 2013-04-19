@@ -6,7 +6,7 @@
 			<ul class="auth">
 				<!-- <li><?=$this->user['name'];?></li> -->
 			<?php $cabinetLink = '';
-			switch($this->user['class']):
+			switch($this->account['group']):
 				case 1: $cabinetLink = ADM_START_PAGE; break;
 				case 2: $cabinetLink = BROKER_START_PAGE; break;
 				case 3: $cabinetLink = OWNER_START_PAGE; break;

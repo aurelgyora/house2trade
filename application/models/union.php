@@ -26,9 +26,9 @@ class Union extends CI_Model{
 		return NULL;
 	}
 	
-	function potentialByList($owner,$count,$from){
+	function potentialByList($seller,$count,$from){
 		
-		$query = "SELECT users.id AS uid,users.email,users.status,owners.id AS oid,owners.fname,owners.lname,properties.*,property_potentialby.id AS pbid FROM 	users,owners,properties,property_potentialby WHERE users.user_id = owners.id AND users.id = properties.owner_id AND properties.id = property_potentialby.property AND property_potentialby.owner = $owner ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
+		$query = "SELECT properties.*,property_potentialby.id AS pbid FROM properties,property_potentialby WHERE properties.id = property_potentialby.buyer_id AND property_potentialby.seller_id = $seller ORDER BY properties.address1,properties.state,properties.zip_code LIMIT $from,$count";
 		$query = $this->db->query($query);
 		$data = $query->result_array();
 		if($data) return $data;

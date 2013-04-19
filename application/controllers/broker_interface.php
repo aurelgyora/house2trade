@@ -204,6 +204,9 @@ class Broker_interface extends MY_Controller{
 		$this->load->model('property_favorite');
 		$this->load->model('union');
 		$from = (int)$this->uri->segment(4);
+		if(!$this->session->userdata('current_property')):
+			$this->session->set_userdata('current_property',0);
+		endif;
 		$pagevar = array(
 			'select' => $this->union->selectBrokerProperties($this->account['id']),
 			'properties' => $this->union->favoriteList($this->session->userdata('current_property'),7,$from),
@@ -245,15 +248,14 @@ class Broker_interface extends MY_Controller{
 		
 		$this->load->model('property_potentialby');
 		$this->load->model('union');
-		$this->load->model('images');
 		$from = (int)$this->uri->segment(4);
-		if(!$this->session->userdata('current_owner')):
-			$this->session->set_userdata('current_owner',0);
+		if(!$this->session->userdata('current_property')):
+			$this->session->set_userdata('current_property',0);
 		endif;
 		$pagevar = array(
-			'owners' => $this->union->ownersList($this->user['uid']),
-			'properties' => $this->union->potentialByList($this->session->userdata('current_owner'),7,$from),
-			'pages' => $this->pagination('broker/potential-by',4,$this->property_potentialby->count_records('property_potentialby','owner',$this->session->userdata('current_owner')),7)
+			'select' => $this->union->selectBrokerProperties($this->account['id']),
+			'properties' => $this->union->potentialByList($this->session->userdata('current_property'),7,$from),
+			'pages' => $this->pagination('broker/favorite',4,$this->property_potentialby->count_records('property_potentialby','seller_id',$this->session->userdata('current_property')),7)
 		);
 		$ids = array();
 		for($i=0;$i<count($pagevar['properties']);$i++):
@@ -284,7 +286,7 @@ class Broker_interface extends MY_Controller{
 			endfor;
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
-		$this->load->view("broker_interface/pages/list-properties",$pagevar);
+		$this->load->view("broker_interface/properties/potentialby",$pagevar);
 	}
 	
 	public function instantTrade(){
@@ -323,7 +325,7 @@ class Broker_interface extends MY_Controller{
 		$this->load->model('properties');
 		$this->load->model('images');
 		if(!$this->session->userdata('current_property')):
-			$this->session->set_userdata('current_property',0);
+			redirect(BROKER_START_PAGE.'/full-list');
 		endif;
 		$pagevar = array(
 			'select' => $this->union->selectBrokerProperties($this->account['id']),

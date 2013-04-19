@@ -68,6 +68,10 @@
 		var parameter = $(this).val();
 		$.post(mt.baseURL+"set-current-property",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
 	});
+	$("#input-select-favorite").change(function(){
+		var parameter = $(this).val();
+		$.post(mt.baseURL+"set-current-favorite",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
+	});
 	
 	
 	$("#seller-register-properties").click(function(event){

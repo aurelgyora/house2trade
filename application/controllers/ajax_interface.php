@@ -224,6 +224,18 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode(array('redirect'=>site_url(BROKER_START_PAGE.'/information')));
 	}
 	
+	function setCurrentFavorite(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$property = $this->input->post('parameter');
+		if($property):
+			$this->session->set_userdata('current_property',$property);
+		endif;
+		echo json_encode(array('redirect'=>site_url($this->session->userdata('backpath'))));
+	}
+	
 	/************************************** favorite & potential by **********************************************/
 	
 	function addToFavorite(){
@@ -273,19 +285,15 @@ class Ajax_interface extends MY_Controller{
 		$property = $this->input->post('parameter');
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
 		if($property):
-			$current_owner = $this->session->userdata('current_owner');
-			if($this->user['class'] == 3):
-				$current_owner = $this->user['uid'];
-			endif;
 			$this->load->model('property_potentialby');
 			$this->load->model('properties');
-			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($property,$current_owner)):
-				$insert['property'] = $property;
-				$insert['owner'] = $current_owner;
+			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($this->session->userdata('current_property'),$property)):
+				$insert['seller_id'] = $this->session->userdata('current_property');
+				$insert['buyer_id'] = $property;
 				$result = $this->property_potentialby->insert_record($insert);
 				if($result):
 					$this->load->model('property_favorite');
-					$favoriteID = $this->property_favorite->record_exist($property,$current_owner);
+					$favoriteID = $this->property_favorite->record_exist($this->session->userdata('current_property'),$property);
 					if($favoriteID):
 						$this->property_favorite->delete_record($favoriteID,'property_favorite');
 					endif;
@@ -304,13 +312,9 @@ class Ajax_interface extends MY_Controller{
 		$property = $this->input->post('parameter');
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
 		if($property):
-			$current_owner = $this->session->userdata('current_owner');
-			if($this->user['class'] == 3):
-				$current_owner = $this->user['uid'];
-			endif;
 			$this->load->model('property_potentialby');
 			$this->load->model('properties');
-			$favoriteID = $this->property_potentialby->record_exist($property,$current_owner);
+			$favoriteID = $this->property_potentialby->record_exist($this->session->userdata('current_property'),$property);
 			if($favoriteID):
 				$this->property_potentialby->delete_record($favoriteID,'property_potentialby');
 				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from potential by';

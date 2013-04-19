@@ -26,6 +26,7 @@ $route['save-profile']			= "ajax_interface/saveProfile";
 
 $route['set-active-property'] = "ajax_interface/setActiveProperty";
 $route['set-current-property'] = "ajax_interface/setCurrentProperty";
+$route['set-current-favorite'] = "ajax_interface/setCurrentFavorite";
 
 $route['text-load/:any/from/:num']	= "ajax_interface/text_load";
 $route[BROKER_START_PAGE.'/delete']	= "ajax_interface/deleteProperty";
