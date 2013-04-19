@@ -11,11 +11,11 @@
 			<?php $this->load->view("broker_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-				<?php $this->load->view("forms/select-active-owner");?>
+				<?php $this->load->view("broker_interface/forms/setect-property");?>
 				</div>
 				<div class="clear"></div>
-			<?php if(!$properties):?>
-				<p>Instant trade list is empty or homeowner is not selected</p>
+			<?php if(!$this->session->userdata('current_property') || !$matches):?>
+				<p>Instant trade is missing or is not selected current seller</p>
 			<?php endif;?>
 			</div>
 		</div>

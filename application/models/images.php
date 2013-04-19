@@ -74,4 +74,12 @@ class Images extends MY_Model{
 		if($data) return TRUE;
 		return FALSE;
 	}
+	
+	function delete_records($property){
+	
+		$this->db->where('property',$property);
+		$this->db->delete('images');
+		return $this->db->affected_rows();
+	}
+	
 }

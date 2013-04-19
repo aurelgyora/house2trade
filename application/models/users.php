@@ -10,10 +10,10 @@ class Users extends MY_Model{
 		parent::__construct();
 	}
 	
-	function read_record($id,$table){
+	function read_record($id){
 		
-		$this->db->select('id,class,user_id,email,status,signdate');
-		$query = $this->db->get_where('users',array('id'=>$id),1,0);
+		$this->db->select('id,group,account,email,status,signdate');
+		$query = $this->db->get_where('users',array('id'=>$id),1);
 		$data = $query->result_array();
 		if($data) return $data[0];
 		return FALSE;

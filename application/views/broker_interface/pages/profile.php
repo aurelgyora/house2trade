@@ -49,7 +49,7 @@
 				</div>
 				<div class="clear"></div>
 				<div id="div-edit-account-broker" class="hidden">
-					<?php $this->load->view('forms/edit-account-broker')?>
+					<?php $this->load->view('broker_interface/forms/edit-account')?>
 				</div>
 			</div>
 		</div>

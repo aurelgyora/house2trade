@@ -189,7 +189,6 @@ class Ajax_interface extends MY_Controller{
 			$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$fn);
 			file_put_contents($dirPath.'/'.$newFileName,file_get_contents('php://input'));
 			$insert['photo'] = 'upload_images/'.$zipcode.'/'.$newFileName;
-			$insert['photo'] = 'upload_images/'.$newFileName;
 			$this->images->insert_record($insert);
 			echo "$fn uploaded";
 			return TRUE;
@@ -234,6 +233,91 @@ class Ajax_interface extends MY_Controller{
 			$this->session->set_userdata('current_property',$property);
 		endif;
 		echo json_encode(array('redirect'=>site_url($this->session->userdata('backpath'))));
+	}
+	
+	function deletePropertyImages(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$json_request = array('status'=>FALSE,'message'=>'Images deleted');
+		$data = trim($this->input->post('postdata'));
+		if($data):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$dataval[$i] = trim($dataid[1]);
+			endfor;
+			if($dataval):
+				$this->load->model('properties');
+				$broker = $this->properties->read_field($this->session->userdata('property_id'),'properties','broker');
+				$this->load->model('images');
+				$mainPhotoDeleted = FALSE;
+				for($i=0;$i<count($dataval);$i++):
+					$image = $this->images->read_record($dataval[$i],'images');
+					if($image['main']):
+						$mainPhotoDeleted = TRUE;
+					endif;
+					$this->filedelete($image['photo']);
+					$this->images->delete_record($image['id'],'images');
+				endfor;
+				if($mainPhotoDeleted):
+					$images = $this->images->read_records($this->session->userdata('property_id'));
+					if(isset($images[0]['id'])):
+						$this->images->update_field($images[0]['id'],'main',1,'images');
+					endif;
+				endif;
+				$json_request['status'] = TRUE;
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function save_property_info(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$json_request = array('status'=>FALSE,'message'=>'Property saved','redirect'=>'');
+		$data = trim($this->input->post('postdata'));
+		if($data):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$dataval[$dataid[0]] = trim($dataid[1]);
+			endfor;
+			if($dataval):
+				$dataval['password'] = $dataval['confirm'] = '';
+				$this->load->model('owners');
+				$this->load->model('properties');
+				if($this->account['group'] == 2):
+					$broker = $this->properties->read_field($this->session->userdata('property_id'),'properties','broker');
+					if($broker != $this->account['id']):
+						exit;
+					endif;
+				endif;
+				if($dataval['password'] != $dataval['confirm']):
+					$json_request['message'] = 'Passwords do not match';
+				else:
+					$json_request['status'] = TRUE;
+					if(!isset($dataval['setpswd'])):
+						if($this->account['group'] == 2):
+							$owner = $this->properties->read_field($this->session->userdata('property_id'),'properties','owner');
+							$this->owners->update_record($owner,$dataval);
+						endif;
+						$this->properties->update_record($this->session->userdata('property_id'),$dataval);
+					endif;
+					switch($this->account['group']):
+						case 2: $json_request['redirect'] = site_url(BROKER_START_PAGE); break;
+						case 3: $json_request['redirect'] = site_url(OWNER_START_PAGE); break;
+					endswitch;
+					if(($this->account['group'] != 2) && !empty($dataval['password'])):
+						$this->users->update_field($this->account['id'],'password',md5($dataval['password']),'users');
+					endif;
+				endif;
+			endif;
+		endif;
+		echo json_encode($json_request);
 	}
 	
 	/************************************** favorite & potential by **********************************************/
@@ -466,54 +550,6 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 	
-	function save_property_info(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Аccess denied');
-		endif;
-		$json_request = array('status'=>FALSE,'message'=>'Property saved','redirect'=>'');
-		$data = trim($this->input->post('postdata'));
-		if($data):
-			$data = preg_split("/&/",$data);
-			for($i=0;$i<count($data);$i++):
-				$dataid = preg_split("/=/",$data[$i]);
-				$dataval[$dataid[0]] = trim($dataid[1]);
-			endfor;
-			if($dataval):
-				$dataval['password'] = $dataval['confirm'] = ''; //это пока не решат нужно ли управлять брокер паролем владельца
-				$this->load->model('owners');
-				$this->load->model('properties');
-				if($this->user['class'] == 2):
-					$broker = $this->properties->read_field($this->session->userdata('property_id'),'properties','broker_id');
-					if($broker != $this->user['uid']):
-						exit;
-					endif;
-				endif;
-				if($dataval['password'] != $dataval['confirm']):
-					$json_request['message'] = 'Passwords do not match';
-				else:
-					$json_request['status'] = TRUE;
-					if(!isset($dataval['setpswd'])):
-						if($this->user['class'] == 2):
-							$this->owners->update_record($this->session->userdata('current_owner'),$dataval);
-						endif;
-						$this->properties->update_record($this->session->userdata('property_id'),$dataval);
-					endif;
-					switch($this->user['class']):
-						case 2:	$json_request['redirect'] = site_url(BROKER_START_PAGE);
-								break;
-						case 3:	$json_request['redirect'] = site_url(OWNER_START_PAGE);
-								break;
-					endswitch;
-					if(($this->user['class'] != 2) && !empty($dataval['password'])):
-						$this->users->update_field($this->user['uid'],'password',md5($dataval['password']),'users');
-					endif;
-				endif;
-			endif;
-		endif;
-		echo json_encode($json_request);
-	}
-	
 	function saveProfile(){
 		
 		if(!$this->input->is_ajax_request()):
@@ -533,25 +569,20 @@ class Ajax_interface extends MY_Controller{
 				else:
 					$json_request['status'] = TRUE;
 					if(!isset($dataval['setpswd'])):
-						switch($this->user['class']):
-							case 2: $this->load->model('brokers');
-									$dataval['id'] = $this->users->read_field($this->user['uid'],'users','user_id');
-									$this->brokers->update_record($dataval);
-									break;
-							case 3: $this->load->model('owners');
-									$owner = $this->users->read_field($this->user['uid'],'users','user_id');
-									$this->owners->update_record($owner,$dataval);
-									break;
+						$dataval['id'] = $this->users->read_field($this->account['id'],'users','account');
+						switch($this->account['group']):
+							case 2: $this->load->model('brokers');$this->brokers->update_record($dataval);break;
+							case 3: $this->load->model('owners');$this->owners->update_record($dataval);break;
 						endswitch;
 					endif;
-					switch($this->user['class']):
+					switch($this->account['group']):
 						case 2: $json_request['redirect'] = site_url(BROKER_START_PAGE);
 								break;
 						case 3: $json_request['redirect'] = site_url(OWNER_START_PAGE);
 								break;
 					endswitch;
 					if(!empty($dataval['password'])):
-						$this->users->update_field($this->user['uid'],'password',md5($dataval['password']),'users');
+						$this->users->update_field($this->account['id'],'password',md5($dataval['password']),'users');
 					endif;
 					unset($dataval['password']);unset($dataval['confirm']);unset($dataval['subcribe']);unset($dataval['id']);
 					if(isset($dataval['company'])):
@@ -576,25 +607,23 @@ class Ajax_interface extends MY_Controller{
 			$this->load->model('images');
 			$this->load->model('properties');
 			$this->load->model('owners');
-			if($this->user['class'] == 2):
+			if($this->account['group'] == 2):
 				$json_request['redirect'] = site_url(BROKER_START_PAGE);
-				$current_owner = $this->session->userdata('current_owner');
 			else:
 				$json_request['redirect'] = site_url(OWNER_START_PAGE);
-				$current_owner = $this->user['uid'];
 			endif;
-			$images = $this->images->read_records($property,$current_owner);
+			$images = $this->images->read_records($property);
 			for($i=0;$i<count($images);$i++):
 				$this->filedelete($images[$i]['photo']);
 			endfor;
-			$this->images->delete_records($property,$this->user['uid']);
-			$owner = $this->properties->read_field($property,'properties','owner_id');
-			$ownerID = $this->users->read_field($owner,'users','user_id');
+			$this->images->delete_records($property);
+			$owner = $this->properties->read_field($property,'properties','owner');
+			$ownerID = $this->users->read_field($owner,'users','account');
 			$this->properties->delete_record($property,'properties');
 			$this->users->delete_record($owner,'users');
 			$this->owners->delete_record($ownerID,'owners');
 			$json_request['status'] = TRUE;
-			$this->session->unset_userdata(array('current_owner'=>'','property_id'=>''));
+			$this->session->unset_userdata(array('current_property'=>'','property_id'=>''));
 			$this->session->set_userdata('msgs','<img src="'.site_url('img/check.png').'" alt="" /> Property deleted');
 		else:
 			$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error deleting<hr/>';
@@ -623,53 +652,6 @@ class Ajax_interface extends MY_Controller{
 			$this->session->set_userdata('msgs','<img src="'.site_url('img/check.png').'" alt="" /> Property deleted');
 		else:
 			$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error deleting<hr/>';
-		endif;
-		echo json_encode($json_request);
-	}
-	
-	function deletePropertyImages(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Аccess denied');
-		endif;
-		$json_request = array('status'=>FALSE,'message'=>'Images deleted');
-		$data = trim($this->input->post('postdata'));
-		if($data):
-			$data = preg_split("/&/",$data);
-			for($i=0;$i<count($data);$i++):
-				$dataid = preg_split("/=/",$data[$i]);
-				$dataval[$i] = trim($dataid[1]);
-			endfor;
-			if($dataval):
-				$current_owner = $this->session->userdata('current_owner');
-				if($this->user['class'] == 3):
-					$current_owner = $this->user['uid'];
-				endif;
-				if($this->user['class'] == 2):
-					$this->load->model('properties');
-					$broker = $this->properties->read_field($this->session->userdata('property_id'),'properties','broker_id');
-					if($broker != $this->user['uid']):
-						exit;
-					endif;
-				endif;
-				$this->load->model('images');
-				$mainPhotoDeleted = FALSE;
-				for($i=0;$i<count($dataval);$i++):
-					$image = $this->images->read_record($dataval[$i],'images');
-					if($image['main']):
-						$mainPhotoDeleted = TRUE;
-					endif;
-					$this->filedelete($image['photo']);
-					$this->images->delete_record($image['id'],'images');
-				endfor;
-				if($mainPhotoDeleted):
-					$images = $this->images->read_records($this->session->userdata('property_id'),$current_owner);
-					if(isset($images[0]['id'])):
-						$this->images->update_field($images[0]['id'],'main',1,'images');
-					endif;
-				endif;
-				$json_request['status'] = TRUE;
-			endif;
 		endif;
 		echo json_encode($json_request);
 	}

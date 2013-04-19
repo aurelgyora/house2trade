@@ -20,7 +20,7 @@ class Owners extends MY_Model{
 		return $this->db->insert_id();
 	}
 	
-	function update_record($id,$data){
+	function update_record($data){
 		
 		if(isset($data['fname'])):
 			$this->db->set('fname',$data['fname']);
@@ -34,7 +34,7 @@ class Owners extends MY_Model{
 		if(isset($data['phone'])):
 			$this->db->set('phone',$data['phone']);
 		endif;
-		$this->db->where('id',$id);
+		$this->db->where('id',$data['id']);
 		$this->db->update('owners');
 		return $this->db->affected_rows();
 	}

@@ -38,10 +38,10 @@ class Broker_interface extends MY_Controller{
 		$this->load->model('brokers');
 		$this->load->model('company');
 		$pagevar = array(
-			'profile' => $this->users->read_record($this->user['uid'],'users'),
+			'profile' => $this->users->read_record($this->account['id']),
 			'companies' => $this->company->companyTitles()
 		);
-		$pagevar['profile']['info'] = $this->brokers->read_record($pagevar['profile']['user_id'],'brokers');
+		$pagevar['profile']['info'] = $this->brokers->read_record($pagevar['profile']['account'],'brokers');
 		$pagevar['profile']['company'] = $this->company->read_field($pagevar['profile']['info']['company'],'company','title');
 		$this->load->view("broker_interface/pages/profile",$pagevar);
 	}
@@ -60,7 +60,7 @@ class Broker_interface extends MY_Controller{
 		$pagevar = array(
 			'zillow' => array(),
 			'zillow_exist_id' => FALSE,
-			'owners' => $this->union->ownersList($this->user['uid']),
+			'owners' => $this->union->ownersList($this->account['id']),
 			'property_type'=>$this->property_type->read_records('property_type'),
 			'properties' => array(),
 			'pages' => array(),
@@ -289,32 +289,26 @@ class Broker_interface extends MY_Controller{
 		$this->load->view("broker_interface/properties/potentialby",$pagevar);
 	}
 	
-	public function instantTrade(){
-		
-		if(!$this->session->userdata('current_owner')):
-			$this->session->set_userdata('current_owner',0);
-		endif;
-		$this->load->model('union');
-		$pagevar = array(
-			'owners' => $this->union->ownersList($this->user['uid']),
-			'properties' => array()
-		);
-		$this->session->set_userdata('backpath',uri_string());
-		$this->load->view("broker_interface/pages/instant-trade",$pagevar);
-	}
-	
 	public function match(){
 		
-		if(!$this->session->userdata('current_owner')):
-			$this->session->set_userdata('current_owner',0);
-		endif;
 		$this->load->model('union');
 		$pagevar = array(
-			'owners' => $this->union->ownersList($this->user['uid']),
-			'properties' => array()
+			'select' => $this->union->selectBrokerProperties($this->account['id']),
+			'matches' => array()
 		);
 		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("broker_interface/pages/match",$pagevar);
+	}
+	
+	public function instantTrade(){
+		
+		$this->load->model('union');
+		$pagevar = array(
+			'select' => $this->union->selectBrokerProperties($this->account['id']),
+			'matches' => array()
+		);
+		$this->session->set_userdata('backpath',uri_string());
+		$this->load->view("broker_interface/pages/instant-trade",$pagevar);
 	}
 	
 	/********************************************* properties ********************************************************/
@@ -435,7 +429,7 @@ class Broker_interface extends MY_Controller{
 		$this->load->view("broker_interface/properties/property-detail",$pagevar);
 	}
 	
-	public function edit_property(){
+	public function editProperty(){
 
 		$current_property = $this->session->userdata('property_id');
 		if($this->uri->total_segments() == 4):
@@ -449,15 +443,14 @@ class Broker_interface extends MY_Controller{
 		$this->load->model('property_type');
 		$pagevar = array(
 			'property' => $this->properties->read_record($current_property,'properties'),
-			'images' => $this->images->read_records($current_property,$this->session->userdata('current_owner')),
+			'images' => $this->images->read_records($current_property),
 			'property_type'=>$this->property_type->read_records('property_type')
 		);
-		if($pagevar['property']['broker_id'] != $this->user['uid']):
+		if($pagevar['property']['broker'] != $this->account['id']):
 			show_error('Access Denied!');
 		endif;
-		$this->load->model('owners');
-		$user_id = $this->users->read_field($this->session->userdata('current_owner'),'users','user_id');
-		$pagevar['property']['owner'] = $this->owners->read_record($user_id,'owners');
-		$this->load->view("broker_interface/pages/property-card",$pagevar);
+		$this->load->model('accounts_owners');
+		$pagevar['property']['owner'] = $this->accounts_owners->read_record($pagevar['property']['owner'],'accounts_owners');
+		$this->load->view("broker_interface/properties/property-card",$pagevar);
 	}
 }

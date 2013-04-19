@@ -75,15 +75,19 @@ $route['broker/:any/information'] = "broker_interface/propertyDetail";
 $route['broker/:any/information/:num'] = "broker_interface/propertyDetail";
 
 $route['broker/register-properties'] = "broker_interface/register_properties";
-$route[BROKER_START_PAGE.'/edit'] = "broker_interface/edit_property";
-$route[BROKER_START_PAGE.'/edit/:num'] = "broker_interface/edit_property";
+
+$route[BROKER_START_PAGE.'/edit'] = "broker_interface/editProperty";
+$route[BROKER_START_PAGE.'/edit/:num'] = "broker_interface/editProperty";
+
 $route['broker/search'] = "broker_interface/searchProperty";
 $route['broker/search/result'] = "broker_interface/searchProperty";
 $route['broker/search/result/from'] = "broker_interface/searchProperty";
 $route['broker/search/result/from/:num'] = "broker_interface/searchProperty";
+
 $route['broker/favorite'] = "broker_interface/favoriteProperty";
 $route['broker/favorite/from'] = "broker_interface/favoriteProperty";
 $route['broker/favorite/from/:num'] = "broker_interface/favoriteProperty";
+
 $route['broker/potential-by'] = "broker_interface/potentialByProperty";
 $route['broker/potential-by/from'] = "broker_interface/potentialByProperty";
 $route['broker/potential-by/from/:num'] = "broker_interface/potentialByProperty";

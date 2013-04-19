@@ -13,20 +13,18 @@
 			<div class="span9">
 				<div class="navbar">
 					<div class="navbar-inner">
-						<?=anchor($this->session->userdata('backpath'),'Back');?>
+						<?=anchor('broker/properties/information/'.$this->session->userdata('property_id'),'Back');?>
 					</div>
 				</div>
-				<div class="clear"></div>
-				<div id="div-choise-metod">
-				<?php $this->load->view('forms/metod-properties-register');?>
-				</div>
-				<div class="clear"></div>
-				<div id="div-account-properties" class="hidden">
-					<?php $this->load->view('forms/insert-property');?>
+				<div id="div-property-information">
+				<?php $this->load->view('forms/edit-properties');?>
 				</div>
 				<div class="clear"></div>
 				<div id="div-insert-photo-properties" class="hidden">
 					<?php $this->load->view('forms/insert-photos-properties');?>
+				</div>
+				<div id="div-remove-photo-properties" class="hidden">
+					<?php $this->load->view('forms/photos-properties');?>
 				</div>
 			</div>
 		</div>
