@@ -512,12 +512,12 @@ class Ajax_interface extends MY_Controller{
 				$dataval[$dataid[0]] = trim($dataid[1]);
 			endfor;
 			$this->load->model('owners');
-			if($dataval && $this->owners->read_field($this->user['user_id'],'owners','seller')):
+			if($dataval && $this->owners->read_field($this->profile['account'],'owners','seller')):
 				$this->load->model('properties');
 				if(!$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
-					$dataval['user_id'] = $this->user['uid'];
+					$dataval['user_id'] = $this->account['id'];
 					$property_id = $this->properties->insert_record($dataval);
-					$status = $this->users->read_field($this->user['uid'],'users','status');
+					$status = $this->users->read_field($this->account['id'],'users','status');
 					$this->properties->update_field($property_id,'status',$status,'properties');
 					$json_request['status'] = TRUE;
 					$this->session->set_userdata('property_id',$property_id);
@@ -641,11 +641,11 @@ class Ajax_interface extends MY_Controller{
 		if($property):
 			$this->load->model('images');
 			$this->load->model('properties');
-			$images = $this->images->read_records($property,$this->user['uid']);
+			$images = $this->images->read_records($property,$this->account['id']);
 			for($i=0;$i<count($images);$i++):
 				$this->filedelete($images[$i]['photo']);
 			endfor;
-			$this->images->delete_records($property,$this->user['uid']);
+			$this->images->delete_records($property,$this->account['id']);
 			$this->properties->delete_record($property,'properties');
 			$json_request['status'] = TRUE;
 			$this->session->unset_userdata('property_id');
@@ -724,12 +724,10 @@ class Ajax_interface extends MY_Controller{
 				$dataval[$dataid[0]] = trim($dataid[1]);
 			endfor;
 			if($dataval):
-				if($this->user['class'] == 3):
+				if($this->account['group'] == 3):
 					$json_request['redirect'] = site_url('homeowner/search/result');
 				endif;
-				$sql = 'SELECT users.id AS uid,users.email,users.status,owners.id AS oid,owners.fname,owners.lname,properties.*';
-				$sql .= ' FROM users INNER JOIN owners ON users.user_id = owners.id INNER JOIN properties ON users.id = properties.owner_id';
-				$sql .= ' WHERE TRUE';
+				$sql = 'SELECT properties.* FROM properties WHERE TRUE';
 				if(!empty($dataval['property_address'])):
 					$sql .= ' AND properties.address1 LIKE "%'.$dataval['property_address'].'%"';
 				endif;

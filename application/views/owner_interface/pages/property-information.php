@@ -45,7 +45,7 @@
 					Cell: <?=$property['cell'];?><br/>
 					Email: <a href="mailto:<?=$property['email'];?>"><?=$property['email'];?></a>
 				</p>
-			<?php if($property['owner_id'] == $this->user['uid']):?>
+			<?php if($property['owner'] == $this->account['id']):?>
 					<a href="<?=site_url(OWNER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>
 				<?php if($this->owner['seller']):?>
 					<a class="btn btn-mini btn-link link-operation-account" href="#confirm-user" data-toggle="modal" data-src="<?=$property['id'];?>" data-url="<?=site_url(OWNER_START_PAGE.'/delete/seller');?>">Delete property</a>

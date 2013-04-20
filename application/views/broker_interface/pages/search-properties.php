@@ -11,7 +11,7 @@
 			<?php $this->load->view("broker_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-					<?php $this->load->view("forms/select-active-owner");?>
+					<?php $this->load->view("broker_interface/forms/setect-property");?>
 				</div>
 				<div class="clear"></div>
 				<div id="div-search-property" <?=($this->session->userdata('search_sql'))?'class="hidden"':'';?>>

@@ -5,7 +5,7 @@ class Admin_interface extends MY_Controller{
 	function __construct(){
 		
 		parent::__construct();
-		if(!$this->loginstatus || ($this->user['class'] != 1)):
+		if(!$this->loginstatus || ($this->account['group'] != 1)):
 			redirect('');
 		endif;
 	}

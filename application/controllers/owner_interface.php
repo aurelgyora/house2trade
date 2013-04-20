@@ -7,13 +7,13 @@ class Owner_interface extends MY_Controller{
 	function __construct(){
 		
 		parent::__construct();
-		if(!$this->loginstatus || ($this->user['class'] != 3)):
+		if(!$this->loginstatus || ($this->account['group'] != 3)):
 			redirect('login');
 		else:
 			$this->load->model('owners');
-			$this->owner['seller'] = $this->owners->read_field($this->user['user_id'],'owners','seller');
+			$this->owner['seller'] = $this->owners->read_field($this->profile['account'],'owners','seller');
 		endif;
-		$password = $this->users->read_field($this->user['uid'],'users','password');
+		$password = $this->users->read_field($this->account['id'],'users','password');
 		if(empty($password) && ($this->uri->segment(2) != 'set-password')):
 			redirect('homeowner/set-password');
 		endif;
@@ -23,7 +23,7 @@ class Owner_interface extends MY_Controller{
 	
 	public function setPassword(){
 		
-		$password = $this->users->read_field($this->user['uid'],'users','password');
+		$password = $this->users->read_field($this->account['id'],'users','password');
 		if(!empty($password)):
 			redirect(OWNER_START_PAGE);
 		endif;
@@ -44,7 +44,7 @@ class Owner_interface extends MY_Controller{
 	public function profile(){
 		
 		$this->load->model('owners');
-		$pagevar = array('profile' => $this->users->read_record($this->user['uid'],'users'));
+		$pagevar = array('profile' => $this->users->read_record($this->account['id'],'users'));
 		$pagevar['profile']['info'] = $this->owners->read_record($pagevar['profile']['user_id'],'owners');
 		$this->load->view("owner_interface/pages/profile",$pagevar);
 	}
@@ -80,8 +80,8 @@ class Owner_interface extends MY_Controller{
 			$this->load->model('property_potentialby');
 			if($ids):
 				$mainPhotos = $this->images->mainPhotos($ids);
-				$favorite = $this->property_favorite->record_exists($ids,$this->user['uid']);
-				$potentialby = $this->property_potentialby->record_exists($ids,$this->user['uid']);
+				$favorite = $this->property_favorite->record_exists($ids,$this->account['id']);
+				$potentialby = $this->property_potentialby->record_exists($ids,$this->account['id']);
 				for($i=0;$i<count($pagevar['properties']);$i++):
 					$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
 					if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
@@ -200,9 +200,9 @@ class Owner_interface extends MY_Controller{
 		$this->load->model('images');
 		$from = (int)$this->uri->segment(4);
 		$pagevar = array(
-			'owners' => $this->union->ownersList($this->user['uid']),
-			'properties' => $this->union->favoriteList($this->user['uid'],7,$from),
-			'pages' => $this->pagination('broker/favorite',4,$this->property_favorite->count_records('property_favorite','owner',$this->user['uid']),7)
+			'owners' => $this->union->ownersList($this->account['id']),
+			'properties' => $this->union->favoriteList($this->account['id'],7,$from),
+			'pages' => $this->pagination('broker/favorite',4,$this->property_favorite->count_records('property_favorite','owner',$this->account['id']),7)
 		);
 		$ids = array();
 		for($i=0;$i<count($pagevar['properties']);$i++):
@@ -213,8 +213,8 @@ class Owner_interface extends MY_Controller{
 			$this->load->model('property_favorite');
 			$this->load->model('property_potentialby');
 			$mainPhotos = $this->images->mainPhotos($ids);
-			$favorite = $this->property_favorite->record_exists($ids,$this->user['uid']);
-			$potentialby = $this->property_potentialby->record_exists($ids,$this->user['uid']);
+			$favorite = $this->property_favorite->record_exists($ids,$this->account['id']);
+			$potentialby = $this->property_potentialby->record_exists($ids,$this->account['id']);
 			$this->load->model('property_type');
 			$property_type = $this->property_type->read_records('property_type');
 			for($i=0;$i<count($pagevar['properties']);$i++):
@@ -249,9 +249,9 @@ class Owner_interface extends MY_Controller{
 		$this->load->model('images');
 		$from = (int)$this->uri->segment(4);
 		$pagevar = array(
-			'owners' => $this->union->ownersList($this->user['uid']),
-			'properties' => $this->union->potentialByList($this->user['uid'],7,$from),
-			'pages' => $this->pagination('broker/potential-by',4,$this->property_potentialby->count_records('property_potentialby','owner',$this->user['uid']),7)
+			'owners' => $this->union->ownersList($this->account['id']),
+			'properties' => $this->union->potentialByList($this->account['id'],7,$from),
+			'pages' => $this->pagination('broker/potential-by',4,$this->property_potentialby->count_records('property_potentialby','owner',$this->account['id']),7)
 		);
 		$ids = array();
 		for($i=0;$i<count($pagevar['properties']);$i++):
@@ -261,7 +261,7 @@ class Owner_interface extends MY_Controller{
 			$this->load->model('images');
 			$this->load->model('property_potentialby');
 			$mainPhotos = $this->images->mainPhotos($ids);
-			$potentialby = $this->property_potentialby->record_exists($ids,$this->user['uid']);
+			$potentialby = $this->property_potentialby->record_exists($ids,$this->account['id']);
 			$this->load->model('property_type');
 			$property_type = $this->property_type->read_records('property_type');
 			for($i=0;$i<count($pagevar['properties']);$i++):
@@ -293,7 +293,7 @@ class Owner_interface extends MY_Controller{
 		$this->load->model('union');
 		$this->load->model('images');
 		$pagevar = array(
-			'properties' => $this->properties->read_records($this->user['uid'])
+			'properties' => $this->properties->read_records($this->account['id'])
 		);
 		if($pagevar['properties']):
 			$ids = array();
@@ -335,7 +335,7 @@ class Owner_interface extends MY_Controller{
 		$this->load->model('images');
 		$pagevar = array(
 			'property' => $this->union->propertyInformation($current_property),
-			'images' => $this->images->read_records($current_property,$this->user['uid'])
+			'images' => $this->images->read_records($current_property,$this->account['id'])
 		);
 		if(!$pagevar['property']):
 			show_error('Property missing');
@@ -343,10 +343,10 @@ class Owner_interface extends MY_Controller{
 		$this->load->model('property_potentialby');
 		$pagevar['property']['favorite'] = FALSE;
 		$pagevar['property']['potentialby'] = FALSE;
-		$pagevar['property']['potentialby'] = $this->property_potentialby->record_exist($current_property,$this->user['uid']);
+		$pagevar['property']['potentialby'] = $this->property_potentialby->record_exist($current_property,$this->account['id']);
 		if(!$pagevar['property']['potentialby']):
 			$this->load->model('property_favorite');
-			$pagevar['property']['favorite'] = $this->property_favorite->record_exist($current_property,$this->user['uid']);
+			$pagevar['property']['favorite'] = $this->property_favorite->record_exist($current_property,$this->account['id']);
 		endif;
 		$this->load->model('property_type');
 		$property_type = $this->property_type->read_records('property_type');
@@ -373,14 +373,14 @@ class Owner_interface extends MY_Controller{
 		$this->load->model('property_type');
 		$pagevar = array(
 			'property' => $this->properties->read_record($current_property,'properties'),
-			'images' => $this->images->read_records($current_property,$this->user['uid']),
+			'images' => $this->images->read_records($current_property,$this->account['id']),
 			'property_type'=>$this->property_type->read_records('property_type')
 		);
-		if($pagevar['property']['owner_id'] != $this->user['uid']):
+		if($pagevar['property']['owner_id'] != $this->account['id']):
 			show_error('Access Denied!');
 		endif;
 		$this->load->model('owners');
-		$pagevar['property']['owner'] = $this->owners->read_record($this->user['uid'],'owners');
+		$pagevar['property']['owner'] = $this->owners->read_record($this->account['id'],'owners');
 		$this->load->view("owner_interface/pages/property-card",$pagevar);
 	}
 

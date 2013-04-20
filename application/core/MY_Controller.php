@@ -14,7 +14,7 @@ class MY_Controller extends CI_Controller{
 		if($sessionLogon):
 			$this->account = json_decode($this->session->userdata('account'),TRUE);
 			if($this->account):
-				if(empty($this->profile)):
+				if(!$this->session->userdata('profile')):
 					$profile = FALSE;
 					switch($this->account['group']):
 						case 1: $profile = $this->users->read_record($this->account['id'],'users');break;
@@ -28,12 +28,13 @@ class MY_Controller extends CI_Controller{
 							break;
 					endswitch;
 					if($profile && ($sessionLogon == md5($profile['email']))):
-						$this->profile = json_encode($profile);
+						$this->profile = $profile;
 						$this->session->set_userdata('profile',json_encode($this->profile));
 						$this->loginstatus = TRUE;
 					endif;
 				else:
 					$this->profile = json_decode($this->session->userdata('profile'),TRUE);
+					$this->loginstatus = TRUE;
 				endif;
 			endif;
 		endif;

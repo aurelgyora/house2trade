@@ -60,7 +60,7 @@ class Broker_interface extends MY_Controller{
 		$pagevar = array(
 			'zillow' => array(),
 			'zillow_exist_id' => FALSE,
-			'owners' => $this->union->ownersList($this->account['id']),
+			'select' => $this->union->selectBrokerProperties($this->account['id']),
 			'property_type'=>$this->property_type->read_records('property_type'),
 			'properties' => array(),
 			'pages' => array(),

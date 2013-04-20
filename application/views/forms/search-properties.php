@@ -1,6 +1,6 @@
 <?=form_open('search-properties',array('class'=>'form-horizontal','id'=>'search-properties')); ?>
 	<input id="community_id" name="community_id" type="hidden" value="372" />
-	<input id="user_username" name="username" type="hidden" value="<?=$this->user['name'];?>" />
+	<input id="user_username" name="username" type="hidden" value="<?=$this->profile['fname'].' '.$this->profile['lname'];?>" />
 	<input id="user_identity_url" name="identity_url" type="hidden" />
 	<!--
 	<ul class="form-selector">

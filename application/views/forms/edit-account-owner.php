@@ -25,7 +25,7 @@
 		</fieldset>
 	</div>
 	<div class="clear"></div>
-<?php if($profile['id'] == $this->user['uid']):?>
+<?php if($profile['id'] == $this->account['id']):?>
 	<legend>Change password</legend>
 	<div class="span4">
 		<fieldset>

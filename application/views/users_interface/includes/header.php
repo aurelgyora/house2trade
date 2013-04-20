@@ -4,7 +4,7 @@
 		<nav class="grid_8">
 		<?php if($this->loginstatus):?>
 			<ul class="auth">
-				<!-- <li><?=$this->user['name'];?></li> -->
+				<!-- <li><?=$this->profile['fname'].' '.$this->profile['lname'];?></li> -->
 			<?php $cabinetLink = '';
 			switch($this->account['group']):
 				case 1: $cabinetLink = ADM_START_PAGE; break;
