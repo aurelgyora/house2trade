@@ -45,7 +45,7 @@ class Owner_interface extends MY_Controller{
 		
 		$this->load->model('owners');
 		$pagevar = array('profile' => $this->users->read_record($this->account['id'],'users'));
-		$pagevar['profile']['info'] = $this->owners->read_record($pagevar['profile']['user_id'],'owners');
+		$pagevar['profile']['info'] = $this->owners->read_record($pagevar['profile']['account'],'owners');
 		$this->load->view("owner_interface/pages/profile",$pagevar);
 	}
 	
@@ -59,6 +59,7 @@ class Owner_interface extends MY_Controller{
 		$this->load->model('union');
 		$this->load->model('property_type');
 		$from = (int)$this->uri->segment(5);
+		$potentialby = $favorite = FALSE;
 		$pagevar = array(
 			'zillow' => array(),
 			'zillow_exist_id' => FALSE,
@@ -80,8 +81,8 @@ class Owner_interface extends MY_Controller{
 			$this->load->model('property_potentialby');
 			if($ids):
 				$mainPhotos = $this->images->mainPhotos($ids);
-				$favorite = $this->property_favorite->record_exists($ids,$this->account['id']);
-				$potentialby = $this->property_potentialby->record_exists($ids,$this->account['id']);
+				$favorite = $this->property_favorite->record_exists($ids,$this->session->userdata('current_owner'));
+				$potentialby = $this->property_potentialby->record_exists($ids,$this->session->userdata('current_owner'));
 				for($i=0;$i<count($pagevar['properties']);$i++):
 					$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
 					if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
@@ -116,9 +117,7 @@ class Owner_interface extends MY_Controller{
 				if($zillow_result):
 					$zillow_exist = $this->properties->properties_exits($zillow_result['property-state'],$zillow_result['property-zipcode']);
 					if($zillow_exist):
-						$sql = 'SELECT users.id AS uid,users.email,users.status,owners.id AS oid,owners.fname,owners.lname,properties.*';
-						$sql .= ' FROM users INNER JOIN owners ON users.user_id = owners.id INNER JOIN properties ON users.id = properties.owner_id';
-						$sql .= ' WHERE properties.state = "'.$zillow_result['property-state'].'" AND properties.zip_code = "'.$zillow_result['property-zipcode'] .'"';
+						$sql = 'SELECT properties.* FROM properties WHERE properties.state = "'.$zillow_result['property-state'].'" AND properties.zip_code = "'.$zillow_result['property-zipcode'] .'"';
 						if($pagevar['parameters']):
 							if(!empty($pagevar['parameters']->beds_num)):
 								$sql .= ' AND properties.bedrooms = '.$pagevar['parameters']->beds_num;
@@ -183,7 +182,14 @@ class Owner_interface extends MY_Controller{
 						if($pagevar['zillow']):
 							$pagevar['zillow']['favorite'] = FALSE;
 							$pagevar['zillow']['potentialby'] = FALSE;
-							$pagevar['zillow']['photo'] = 'img/thumb.png';
+							$pagevar['zillow']['photo'] = site_url('img/thumb.png');
+							$images = $this->arrayImagesFromPage($zillow_result['page-content']);
+							if($images):
+								$random = array_rand($images);
+								if(isset($random) && $random):
+									$pagevar['zillow']['photo'] = $images[$random];
+								endif;
+							endif;
 						endif;
 					endif;
 				endif;
@@ -197,12 +203,13 @@ class Owner_interface extends MY_Controller{
 		
 		$this->load->model('property_favorite');
 		$this->load->model('union');
-		$this->load->model('images');
 		$from = (int)$this->uri->segment(4);
+		if(!$this->session->userdata('current_property')):
+			$this->session->set_userdata('current_property',0);
+		endif;
 		$pagevar = array(
-			'owners' => $this->union->ownersList($this->account['id']),
-			'properties' => $this->union->favoriteList($this->account['id'],7,$from),
-			'pages' => $this->pagination('broker/favorite',4,$this->property_favorite->count_records('property_favorite','owner',$this->account['id']),7)
+			'properties' => $this->union->favoriteList($this->session->userdata('current_property'),7,$from),
+			'pages' => $this->pagination('homeowner/favorite',4,$this->property_favorite->count_records('property_favorite','seller_id',$this->session->userdata('current_property')),7)
 		);
 		$ids = array();
 		for($i=0;$i<count($pagevar['properties']);$i++):
@@ -210,21 +217,15 @@ class Owner_interface extends MY_Controller{
 		endfor;
 		if($ids):
 			$this->load->model('images');
-			$this->load->model('property_favorite');
 			$this->load->model('property_potentialby');
 			$mainPhotos = $this->images->mainPhotos($ids);
-			$favorite = $this->property_favorite->record_exists($ids,$this->account['id']);
-			$potentialby = $this->property_potentialby->record_exists($ids,$this->account['id']);
+			$potentialby = $this->property_potentialby->record_exists($ids,$this->session->userdata('current_property'));
 			$this->load->model('property_type');
 			$property_type = $this->property_type->read_records('property_type');
 			for($i=0;$i<count($pagevar['properties']);$i++):
 				$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
 				if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
 					$pagevar['properties'][$i]['photo'] = $mainPhotos[$pagevar['properties'][$i]['id']];
-				endif;
-				$pagevar['properties'][$i]['favorite'] = FALSE;
-				if($favorite && array_key_exists($pagevar['properties'][$i]['id'],$favorite)):
-					$pagevar['properties'][$i]['favorite'] = TRUE;
 				endif;
 				$pagevar['properties'][$i]['potentialby'] = FALSE;
 				if($potentialby && array_key_exists($pagevar['properties'][$i]['id'],$potentialby)):
@@ -246,12 +247,13 @@ class Owner_interface extends MY_Controller{
 		
 		$this->load->model('property_potentialby');
 		$this->load->model('union');
-		$this->load->model('images');
 		$from = (int)$this->uri->segment(4);
+		if(!$this->session->userdata('current_property')):
+			$this->session->set_userdata('current_property',0);
+		endif;
 		$pagevar = array(
-			'owners' => $this->union->ownersList($this->account['id']),
-			'properties' => $this->union->potentialByList($this->account['id'],7,$from),
-			'pages' => $this->pagination('broker/potential-by',4,$this->property_potentialby->count_records('property_potentialby','owner',$this->account['id']),7)
+			'properties' => $this->union->potentialByList($this->session->userdata('current_property'),7,$from),
+			'pages' => $this->pagination('homeowner/potential-by',4,$this->property_potentialby->count_records('property_potentialby','seller_id',$this->session->userdata('current_property')),7)
 		);
 		$ids = array();
 		for($i=0;$i<count($pagevar['properties']);$i++):
@@ -261,7 +263,7 @@ class Owner_interface extends MY_Controller{
 			$this->load->model('images');
 			$this->load->model('property_potentialby');
 			$mainPhotos = $this->images->mainPhotos($ids);
-			$potentialby = $this->property_potentialby->record_exists($ids,$this->account['id']);
+			$potentialby = $this->property_potentialby->record_exists($ids,$this->session->userdata('current_owner'));
 			$this->load->model('property_type');
 			$property_type = $this->property_type->read_records('property_type');
 			for($i=0;$i<count($pagevar['properties']);$i++):

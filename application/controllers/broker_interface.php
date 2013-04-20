@@ -115,9 +115,7 @@ class Broker_interface extends MY_Controller{
 				if($zillow_result):
 					$zillow_exist = $this->properties->properties_exits($zillow_result['property-state'],$zillow_result['property-zipcode']);
 					if($zillow_exist):
-						$sql = 'SELECT users.id AS uid,users.email,users.status,owners.id AS oid,owners.fname,owners.lname,properties.*';
-						$sql .= ' FROM users INNER JOIN owners ON users.user_id = owners.id INNER JOIN properties ON users.id = properties.owner_id';
-						$sql .= ' WHERE properties.state = "'.$zillow_result['property-state'].'" AND properties.zip_code = "'.$zillow_result['property-zipcode'] .'"';
+						$sql = 'SELECT properties.* FROM properties WHERE properties.state = "'.$zillow_result['property-state'].'" AND properties.zip_code = "'.$zillow_result['property-zipcode'] .'"';
 						if($pagevar['parameters']):
 							if(!empty($pagevar['parameters']->beds_num)):
 								$sql .= ' AND properties.bedrooms = '.$pagevar['parameters']->beds_num;
