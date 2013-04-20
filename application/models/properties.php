@@ -91,6 +91,21 @@ class Properties extends MY_Model{
 		return FALSE;
 	}
 	
+	function read_limit_records($count,$from){
+		
+		if($this->account['group'] == 2):
+			$this->db->where('broker',$this->account['id']);
+		elseif($this->account['group'] == 2):
+			$this->db->where('owner',$this->account['id']);
+		endif;
+		$this->db->order_by('address1,state,zip_code');
+		$this->db->limit($count,$from);
+		$query = $this->db->get('properties');
+		$data = $query->result_array();
+		if(count($data)) return $data;
+		return NULL;
+	}
+	
 	function countRecords($group){
 		
 		switch($group):
