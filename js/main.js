@@ -14,7 +14,7 @@ mt.isValidPhone = function(phoneNumber){
 	var pattern = new RegExp(/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/i);
 	return pattern.test(phoneNumber);
 };
-mt.textLineFilter = function(string){return string.replace(/[&,=]/,' ');}
+mt.textLineFilter = function(string){if(string != null){return string.replace(/[&,=]/,' ')}else{return '';}}
 mt.setJsonRequest = function(request,functionName){$.each(request,function(index,value){$("#"+index)[functionName](value);});}
 mt.formSerialize = function(objects){
 	var data = '';
