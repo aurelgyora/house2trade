@@ -21,6 +21,7 @@ class Users extends MY_Model{
 	
 	function insert_record($data){
 
+		$this->signdate = date("Y-m-d H:i:s");
 		$this->email = $data['email'];
 		if(isset($data['password']) && !empty($data['password'])):
 			$this->password = md5($data['password']);
@@ -67,12 +68,12 @@ class Users extends MY_Model{
 		return FALSE;
 	}
 	
-	function classListByPages($class,$count,$from){
+	function classListByPages($group,$count,$from){
 		
-		if($class == 2):
-			$query = "SELECT users.id AS uid,users.user_id,users.email,users.signdate,users.status,brokers.* FROM users INNER JOIN brokers ON users.user_id = brokers.id WHERE users.class = $class ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
+		if($group == 2):
+			$query = "SELECT users.id AS uid,users.account,users.email,users.signdate,users.status,brokers.* FROM users INNER JOIN brokers ON users.account = brokers.id WHERE users.group = $group ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
 		else:
-			$query = "SELECT users.id AS uid,users.user_id,users.email,users.signdate,users.status,owners.* FROM users INNER JOIN owners ON users.user_id = owners.id WHERE users.class = $class ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
+			$query = "SELECT users.id AS uid,users.account,users.email,users.signdate,users.status,owners.* FROM users INNER JOIN owners ON users.account = owners.id WHERE users.group = $group ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
 		endif;
 		$query = $this->db->query($query);
 		$data = $query->result_array();
@@ -80,9 +81,9 @@ class Users extends MY_Model{
 		return FALSE;
 	}
 
-	function countClassList($class){
+	function countClassList($group){
 		
-		$this->db->where('class',$class);
+		$this->db->where('group',$group);
 		$count = $this->db->count_all_results('users');
 		if($count) return $count;
 		return 0;

@@ -22,7 +22,7 @@
 				</div>
 				<div class="clear"></div>
 				<?php if($profile['group'] == 2):
-					$this->load->view('forms/edit-account-broker');
+					$this->load->view('broker_interface/forms/edit-account');
 				elseif($profile['group'] == 3):
 					$this->load->view('forms/edit-account-owner');
 				endif;?>

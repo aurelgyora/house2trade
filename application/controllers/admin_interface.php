@@ -149,11 +149,11 @@ class Admin_interface extends MY_Controller{
 		
 		$from = intval($this->uri->segment(5));
 		$per_page = 10;
-		$this->load->model('usersclass');
-		$class = $this->usersclass->getClassID($this->uri->segment(2));
+		$this->load->model('users_group');
+		$group = $this->users_group->getClassID($this->uri->segment(2));
 		$pagevar = array(
-			'users' => $this->users->classListByPages($class,$per_page,$from),
-			'pages' => $this->pagination('administrator/'.$this->uri->segment(2).'/accounts',5,$this->users->countClassList($class),$per_page),
+			'users' => $this->users->classListByPages($group,$per_page,$from),
+			'pages' => $this->pagination('administrator/'.$this->uri->segment(2).'/accounts',5,$this->users->countClassList($group),$per_page),
 			'msgs' => $this->session->userdata('msgs'),
 			'msgr' => $this->session->userdata('msgr')
 		);
