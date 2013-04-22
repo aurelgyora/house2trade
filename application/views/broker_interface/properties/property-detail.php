@@ -23,7 +23,7 @@
 					<?php endif;?>
 					</div>
 				</div>
-		<?php if($property):?>
+	<?php if($property):?>
 				<?php $this->load->view("broker_interface/forms/set-current-property");?>
 			<?php if($images):?>
 				<div class="fotorama" data-width="499" data-height="333">
@@ -57,10 +57,13 @@
 				</p>
 			<?php endif;?>
 			<?php if($property['broker'] == $this->account['id']):?>
-					<a href="<?=site_url(BROKER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>
-					<a class="btn btn-mini btn-link link-operation-account" href="#confirm-user" data-toggle="modal" data-src="<?=$property['id'];?>" data-url="<?=site_url(BROKER_START_PAGE.'/delete');?>">Delete property</a>
+				<a href="<?=site_url(BROKER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>
+				<a class="btn btn-mini btn-link link-operation-account" href="#confirm-user" data-toggle="modal" data-src="<?=$property['id'];?>" data-url="<?=site_url(BROKER_START_PAGE.'/delete');?>">Delete property</a>
 			<?php endif;?>
-			<?php if($this->session->userdata('current_property') && ($property['id'] != $this->session->userdata('current_property'))):?>
+			
+			
+		<?php if(($property['id'] != $this->session->userdata('current_property'))):?>
+			<?php if(!$property['potentialby']):?>
 				<?php if(!$property['favorite']):?>
 					<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$property['id'];?>">Add to favorite</button>
 					<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$property['id'];?>">Remove from favorite</button>
@@ -68,15 +71,15 @@
 					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="null" data-src="<?=$property['id'];?>">Remove from favorite</button>
 					<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$property['id'];?>">Add to favorite</button>
 				<?php endif;?>
-				<?php if($property['potentialby']):?>
+			<?php else:?>
 					<h3>Already added to potential by</h3>
 				<?php endif;?>
-			<?php else:?>
-				<button class="btn btn-mini btn-link disabled" disabled="disabled">Add to favorite</button>
-			<?php endif;?>
 		<?php else:?>
-				<h3>Information is missing</h3>
+				<button class="btn btn-mini btn-link disabled" disabled="disabled">Add to favorite</button>
 		<?php endif;?>
+	<?php else:?>
+				<h3>Information is missing</h3>
+	<?php endif;?>
 			</div>
 		</div>
 		<?php $this->load->view("modal/confirm-user");?>

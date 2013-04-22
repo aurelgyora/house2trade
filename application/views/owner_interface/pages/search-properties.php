@@ -89,7 +89,8 @@
 								Tax: $<?= $properties[$i]['tax']; ?>
 							</p>
 						</div>
-				<?php if(!$properties[$i]['potentialby'] && ($properties[$i]['owner'] != $this->account['id'])):?>
+			<?php if($properties[$i]['owner'] != $this->account['id']):?>
+				<?php if(!$properties[$i]['potentialby']):?>
 					<?php if(!$properties[$i]['favorite']):?>
 						<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
 						<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
@@ -97,7 +98,10 @@
 						<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
 						<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
 					<?php endif;?>
+				<?php else:?>
+						<h4>Already added to potential by</h4>
 				<?php endif;?>
+			<?php endif;?>
 					</div>
 				<?php endfor;?>
 				</div>

@@ -35,12 +35,8 @@
 						</p>
 					</div>
 					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
-				<?php if(!$properties[$i]['potentialby']):?>
 					<button class="btn btn-mini btn-link btn-property-add-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
 					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
-				<?php elseif($properties[$i]['potentialby']):?>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
-				<?php endif;?>
 				</div>
 			<?php endfor;?>
 			<?php if(!$this->session->userdata('current_property') || !$properties):?>

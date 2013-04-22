@@ -50,7 +50,7 @@ class Users_interface extends MY_Controller{
 	
 	public function clearSession(){
 		
-		$this->session->unset_userdata(array('current_owner'=>'','search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
+		$this->session->unset_userdata(array('current_property'=>'','property_id'=>'','search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
 	}
 	
 	//***************************************************************************************************** footer pages
@@ -124,7 +124,7 @@ class Users_interface extends MY_Controller{
 	
 	public function logout(){
 		
-		$this->session->unset_userdata(array('logon'=>'','account'=>'','backpath'=>'','profile'=>''));
+		$this->session->unset_userdata(array('logon'=>'','account'=>'','backpath'=>'','profile'=>'','current_property'=>'','property_id'=>'','search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
 		if(isset($_SERVER['HTTP_REFERER'])):
 			redirect($_SERVER['HTTP_REFERER']);
 		else:

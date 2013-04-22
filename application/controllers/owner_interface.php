@@ -53,9 +53,9 @@ class Owner_interface extends MY_Controller{
 	
 	public function searchProperty(){
 		
-		if($this->uri->total_segments() < 3):
+		/*if($this->uri->total_segments() < 3):
 			$this->session->unset_userdata(array('search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
-		endif;
+		endif;*/
 		$this->load->model('union');
 		$this->load->model('property_type');
 		$from = (int)$this->uri->segment(5);
@@ -73,7 +73,6 @@ class Owner_interface extends MY_Controller{
 			$sql = $this->session->userdata('search_sql')." LIMIT $from,7";
 			$this->load->model('properties');
 			$pagevar['properties'] = $this->properties->query_execute($sql);
-			
 			$ids = array();
 			for($i=0;$i<count($pagevar['properties']);$i++):
 				$ids[] = $pagevar['properties'][$i]['id'];
@@ -83,8 +82,10 @@ class Owner_interface extends MY_Controller{
 			$this->load->model('property_potentialby');
 			if($ids):
 				$mainPhotos = $this->images->mainPhotos($ids);
-				$favorite = $this->property_favorite->record_exists($this->session->userdata('current_property'),$ids);
-				$potentialby = $this->property_potentialby->record_exists($this->session->userdata('current_property'),$ids);
+				if($this->session->userdata('current_property')):
+					$favorite = $this->property_favorite->record_exists($this->session->userdata('current_property'),$ids);
+					$potentialby = $this->property_potentialby->record_exists($this->session->userdata('current_property'),$ids);
+				endif;
 				for($i=0;$i<count($pagevar['properties']);$i++):
 					$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
 					if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
@@ -330,7 +331,7 @@ class Owner_interface extends MY_Controller{
 			endfor;
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
-		$this->session->unset_userdata(array('property_id'=>'','current_property'=>''));
+		$this->session->unset_userdata(array('property_id'=>'','search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
 		$this->load->view("owner_interface/properties/multi-property",$pagevar);
 	}
 	
@@ -357,13 +358,19 @@ class Owner_interface extends MY_Controller{
 		$pagevar['property']['phone'] = $this->profile['phone'];
 		$pagevar['property']['cell'] = $this->profile['cell'];
 		$pagevar['property']['email'] = $this->profile['email'];
-		$this->load->model('property_potentialby');
+		
+		if($pagevar['property']['owner'] == $this->account['id']):
+			$this->session->set_userdata('current_property',$current_property);
+		endif;
 		$pagevar['property']['favorite'] = FALSE;
 		$pagevar['property']['potentialby'] = FALSE;
-		$pagevar['property']['potentialby'] = $this->property_potentialby->record_exist($this->session->userdata('current_property'),$current_property);
-		if(!$pagevar['property']['potentialby']):
-			$this->load->model('property_favorite');
-			$pagevar['property']['favorite'] = $this->property_favorite->record_exist($this->session->userdata('current_property'),$current_property);
+		if($this->session->userdata('current_property')):
+			$this->load->model('property_potentialby');
+			$pagevar['property']['potentialby'] = $this->property_potentialby->record_exist($this->session->userdata('current_property'),$current_property);
+			if(!$pagevar['property']['potentialby']):
+				$this->load->model('property_favorite');
+				$pagevar['property']['favorite'] = $this->property_favorite->record_exist($this->session->userdata('current_property'),$current_property);
+			endif;
 		endif;
 		$this->load->model('property_type');
 		$property_type = $this->property_type->read_records('property_type');
@@ -373,9 +380,6 @@ class Owner_interface extends MY_Controller{
 				break;
 			endif;
 		endfor;
-		if($pagevar['property']['owner'] == $this->account['id']):
-			$this->session->set_userdata('current_property',$current_property);
-		endif;
 		$this->load->view("owner_interface/properties/property-detail",$pagevar);
 	}
 	
