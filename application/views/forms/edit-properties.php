@@ -44,31 +44,31 @@
 			</div>
 			<div class="control-group">
 				<label for="zip_code">Zip code*: </label>
-				<input class="span2 digital valid-required FieldSend" readonly="readonly" name="zip_code" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['zip_code'];?>">
+				<input id="property-zip" class="span2 digital valid-required FieldSend" readonly="readonly" name="zip_code" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['zip_code'];?>">
 			</div>
 			<div class="control-group">
 				<label for="bathrooms">Bathrooms*: </label>
-				<input class="span2 digital valid-required FieldSend" name="bathrooms" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['bathrooms'];?>">
+				<input id="property-bathrooms" class="span2 digital valid-required FieldSend" name="bathrooms" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['bathrooms'];?>">
 			</div>
 			<div class="control-group">
 				<label for="bedrooms">Bedrooms*: </label>
-				<input class="span2 digital valid-required FieldSend" name="bedrooms" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['bedrooms'];?>">
+				<input id="property-bedrooms" class="span2 digital valid-required FieldSend" name="bedrooms" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['bedrooms'];?>">
 			</div>
 			<div class="control-group">
 				<label for="sqf">Square Feed*: </label>
 				<input class="span2 valid-required FieldSend" name="sqf" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['sqf'];?>">
 			</div>
 			<div class="control-group">
-				<label for="sqf">Loot Size*: </label>
+				<label for="property-lot-size">Loot Size*: </label>
 				<input id="property-lot-size" class="span2 valid-required FieldSend" name="lotsize" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['lotsize'];?>">
 			</div>
 			<div class="control-group">
-				<label for="price">Price*: </label>
-				<input class="span2 numeric-float valid-required FieldSend" name="price" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['price'];?>">
+				<label for="property-price">Price*: </label>
+				<input id="property-price" class="span2 numeric-float valid-required FieldSend" name="price" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['price'];?>">
 			</div>
 			<div class="control-group">
 				<label for="tax">Tax: </label>
-				<input class="span2 digital valid-required FieldSend" name="tax" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['tax'];?>">
+				<input id="property-tax" class="span2 digital valid-required FieldSend" name="tax" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['tax'];?>">
 			</div>
 			<div class="control-group">
 				<label for="mls">Bank price: </label>
@@ -76,7 +76,7 @@
 			</div>
 			<div class="control-group">
 				<label for="mls">MLS: </label>
-				<input class="span2 digital FieldSend" name="mls" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['mls'];?>">
+				<input id="property-mls" class="span2 digital FieldSend" name="mls" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=$property['mls'];?>">
 			</div>
 			<div class="control-group">
 				<label for="description">Description*: </label>

@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php $this->load->view("broker_interface/includes/head");?>
+<?php $this->load->view("owner_interface/includes/head");?>
 <link rel="stylesheet" href="<?=site_url('css/fotorama.css');?>" />
 </head>
 <body>
-	<?php $this->load->view("broker_interface/includes/header");?>
+	<?php $this->load->view("owner_interface/includes/header");?>
 	<div class="container">
 		<div class="row">
 			<hr/>
-			<?php $this->load->view("broker_interface/includes/rightbar");?>
+			<?php $this->load->view("owner_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
 					<div class="navbar-inner">
 					<?php if($this->session->userdata('search_sql')):?>
-						<?=anchor('broker/search/result','Back to search result','class="btn btn-link"');?>
-						<?php if($this->session->userdata('backpath') == BROKER_START_PAGE):?>
-							<?=anchor('broker/search/result','Back to my properties','class="btn btn-link"');?>
+						<?=anchor('homeowner/search/result','Back to search result','class="btn btn-link"');?>
+						<?php if($this->session->userdata('backpath') == OWNER_START_PAGE):?>
+							<?=anchor('homeowner/search/result','Back to my properties','class="btn btn-link"');?>
 						<?php endif;?>
 					<?php else:?>
 						<?=anchor($this->session->userdata('backpath'),'Back','class="btn btn-link"');?>
@@ -24,7 +24,7 @@
 					</div>
 				</div>
 		<?php if($property):?>
-				<?php $this->load->view("broker_interface/forms/set-current-property");?>
+				<?php $this->load->view("owner_interface/forms/set-current-property");?>
 			<?php if($images):?>
 				<div class="fotorama" data-width="499" data-height="333">
 				<?php for($i=0;$i<count($images);$i++):?>
@@ -56,9 +56,9 @@
 					Email: <a href="mailto:<?=$property['email'];?>"><?=$property['email'];?></a>
 				</p>
 			<?php endif;?>
-			<?php if($property['broker'] == $this->account['id']):?>
-					<a href="<?=site_url(BROKER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>
-					<a class="btn btn-mini btn-link link-operation-account" href="#confirm-user" data-toggle="modal" data-src="<?=$property['id'];?>" data-url="<?=site_url(BROKER_START_PAGE.'/delete');?>">Delete property</a>
+			<?php if($property['owner'] == $this->account['id']):?>
+					<a href="<?=site_url(OWNER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>
+					<a class="btn btn-mini btn-link link-operation-account" href="#confirm-user" data-toggle="modal" data-src="<?=$property['id'];?>" data-url="<?=site_url(OWNER_START_PAGE.'/delete/seller');?>">Delete property</a>
 			<?php endif;?>
 			<?php if($this->session->userdata('current_property') && ($property['id'] != $this->session->userdata('current_property'))):?>
 				<?php if(!$property['favorite']):?>
@@ -81,8 +81,8 @@
 		</div>
 		<?php $this->load->view("modal/confirm-user");?>
 	</div>
-	<?php $this->load->view("broker_interface/includes/footer");?>
-	<?php $this->load->view("broker_interface/includes/scripts");?>
+	<?php $this->load->view("owner_interface/includes/footer");?>
+	<?php $this->load->view("owner_interface/includes/scripts");?>
 	<script type="text/javascript" src="<?=site_url('js/vendor/fotorama.js');?>"></script>
 </body>
 </html>

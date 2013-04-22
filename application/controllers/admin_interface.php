@@ -171,7 +171,7 @@ class Admin_interface extends MY_Controller{
 			'msgr' => $this->session->userdata('msgr')
 		);
 		$this->session->unset_userdata(array('msgr'=>'','msgs'=>''));
-		$pagevar['profile']['info'] = $this->account_information($pagevar['profile']['user_id'],$pagevar['profile']['class']);
+		$pagevar['profile']['info'] = $this->account_information($pagevar['profile']['account'],$pagevar['profile']['group']);
 		$this->load->view("admin_interface/pages/account-profile",$pagevar);
 	}
 	

@@ -11,7 +11,7 @@
 			<?php $this->load->view("owner_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-					
+					<?php $this->load->view("owner_interface/forms/setect-property");?>
 				</div>
 				<div class="clear"></div>
 				<div id="div-search-property" <?=($this->session->userdata('search_sql'))?'class="hidden"':'';?>>
@@ -26,7 +26,7 @@
 					<?php if(isset($zillow) && $zillow):?>
 						<div class="media">
 							<a class="none pull-left" href="#">
-								<img class="img-polaroid media-object" src="<?=site_url($zillow['photo']);?>" alt="">
+								<img class="img-polaroid media-object" src="<?=$zillow['photo'];?>" alt="">
 							</a>
 							<div class="media-body">
 								<h4 class="media-heading">

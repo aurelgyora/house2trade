@@ -124,7 +124,7 @@ class Users_interface extends MY_Controller{
 	
 	public function logout(){
 		
-		$this->session->unset_userdata(array('logon'=>'','userid'=>'','backpath'=>''));
+		$this->session->unset_userdata(array('logon'=>'','account'=>'','backpath'=>'','profile'=>''));
 		if(isset($_SERVER['HTTP_REFERER'])):
 			redirect($_SERVER['HTTP_REFERER']);
 		else:
@@ -148,10 +148,11 @@ class Users_interface extends MY_Controller{
 		$user_id = $this->users->user_exist('temporary_code',$this->uri->segment(4));
 		if($user_id):
 			$this->users->update_field($user_id,'temporary_code','','users');
+			$this->users->update_field($user_id,'active',1,'users');
 			$user = $this->users->read_record($user_id,'users');
-			switch($user['class']):
-				case 2: $this->load->model('brokers');$user['name'] = $this->brokers->read_name($user['user_id'],'brokers'); break;
-				case 3: $this->load->model('owners');$user['name'] = $this->owners->read_name($user['user_id'],'owners'); break;
+			switch($user['group']):
+				case 2: $this->load->model('brokers');$user['name'] = $this->brokers->read_name($user['account'],'brokers'); break;
+				case 3: $this->load->model('owners');$user['name'] = $this->owners->read_name($user['account'],'owners'); break;
 			endswitch;
 			$this->load->library('parser');
 			$this->load->model('mails');
@@ -162,7 +163,8 @@ class Users_interface extends MY_Controller{
 			);
 			$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
 			$this->send_mail($user['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
-			$this->session->set_userdata(array('logon'=>md5($this->users->read_field($user_id,'users','email')),'userid'=>$user_id));
+			$account = json_encode(array('id'=>$user['id'],'group'=>$user['group']));
+			$this->session->set_userdata(array('logon'=>md5($user['email']),'account'=>$account));
 			redirect($cabinetLink);
 		else:
 			redirect('signup');
@@ -176,12 +178,14 @@ class Users_interface extends MY_Controller{
 			case 'homeowner': $cabinetLink = OWNER_START_PAGE; break;
 			default: show_404(); break;
 		endswitch;
-		$user_id = $this->users->user_exist('temporary_code',$this->uri->segment(4));
-		if($user_id):
-			$this->users->update_field($user_id,'password','','users');
-			$this->users->update_field($user_id,'temporary_code','','users');
-			$user = $this->users->read_record($user_id,'users');
-			$this->session->set_userdata(array('logon'=>md5($this->users->read_field($user_id,'users','email')),'userid'=>$user_id));
+		$userID = $this->users->user_exist('temporary_code',$this->uri->segment(4));
+		if($userID):
+			$this->users->update_field($userID,'password','','users');
+			$this->users->update_field($userID,'active',1,'users');
+			$this->users->update_field($userID,'temporary_code','','users');
+			$user = $this->users->read_record($userID,'users');
+			$account = json_encode(array('id'=>$user['id'],'group'=>$user['group']));
+			$this->session->set_userdata(array('logon'=>md5($user['email']),'account'=>$account));
 			redirect($cabinetLink);
 		else:
 			redirect('');

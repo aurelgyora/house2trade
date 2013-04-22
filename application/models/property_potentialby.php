@@ -32,7 +32,7 @@ class Property_potentialby extends MY_Model{
 	
 	function record_exists($seller_id,$buyer_id){
 		
-		$this->db->select('id');
+		$this->db->select('buyer_id');
 		$this->db->where_in('seller_id',$seller_id);
 		$this->db->where_in('buyer_id',$buyer_id);
 		$query = $this->db->get('property_potentialby');

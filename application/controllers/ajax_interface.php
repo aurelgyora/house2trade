@@ -42,6 +42,40 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 	
+	function getPropertyImages($dataval,$property_id){
+		
+		$zillow_result = $this->zillowApi($dataval['address1'],$dataval['zip_code']);
+		if($zillow_result):
+			$this->load->model('images');
+			$randomNumber = mt_rand(1,1000);
+			$nextPropertyID = $this->images->nextID('images');
+			$insert = array('main'=>0,'property_id'=>$property_id,'photo'=>'','owner_id'=>$dataval['user_id']);
+			$images = $this->arrayImagesFromPage($zillow_result['page-content']);
+			if($images):
+				$dirPath = getcwd().'/upload_images/'.$dataval['zip_code'];
+				if(!file_exists($dirPath) && !is_dir($dirPath)):
+					mkdir($dirPath,0777);
+				endif;
+				$insert['main'] = 1;
+				$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[0]);
+				file_put_contents($dirPath.'/'.$newFileName,file_get_contents($images[0]));
+				$insert['photo'] = 'upload_images/'.$dataval['zip_code'].'/'.$newFileName;
+				$this->images->insert_record($insert);
+				$insert['main'] = 0;
+				for($i=1;$i<count($images);$i++):
+					if(isset($images[$i])):
+						$nextPropertyID = $this->images->nextID('images');
+						$randomNumber = mt_rand(1,1000);
+						$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[$i]);
+						file_put_contents($dirPath.'/'.$newFileName,file_get_contents($images[$i]));
+						$insert['photo'] = 'upload_images/'.$dataval['zip_code'].'/'.$newFileName;
+						$this->images->insert_record($insert);
+					endif;
+				endfor;
+			endif;
+		endif;
+	}
+	
 	/******************************************** company *******************************************************/
 	
 	function saveCompany(){
@@ -92,7 +126,13 @@ class Ajax_interface extends MY_Controller{
 			$data = preg_split("/&/",$data);
 			for($i=0;$i<count($data);$i++):
 				$dataid = preg_split("/=/",$data[$i]);
-				$dataval[$dataid[0]] = trim($dataid[1]);
+				if(!isset($dataid[0]) || !isset($dataid[1])):
+					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> An error while retrieving the data. try again';
+					echo json_encode($json_request);
+					exit();
+				else:
+					$dataval[trim($dataid[0])] = trim(htmlspecialchars($dataid[1]));
+				endif;
 			endfor;
 			if($dataval):
 				$this->load->model('properties');
@@ -106,36 +146,7 @@ class Ajax_interface extends MY_Controller{
 							$ownerID = $this->owners->insert_record($dataval);
 							$property_id = $this->properties->insert_record($dataval);
 							if($property_id):
-								$zillow_result = $this->zillowApi($dataval['address1'],$dataval['zip_code']);
-								if($zillow_result):
-									$this->load->model('images');
-									$randomNumber = mt_rand(1,1000);
-									$nextPropertyID = $this->images->nextID('images');
-									$insert = array('main'=>0,'property_id'=>$property_id,'photo'=>'','owner_id'=>$dataval['user_id']);
-									$images = $this->arrayImagesFromPage($zillow_result['page-content']);
-									if($images):
-										$dirPath = getcwd().'/upload_images/'.$dataval['zip_code'];
-										if(!file_exists($dirPath) && !is_dir($dirPath)):
-											mkdir($dirPath,0777);
-										endif;
-										$insert['main'] = 1;
-										$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[0]);
-										file_put_contents($dirPath.'/'.$newFileName,file_get_contents($images[0]));
-										$insert['photo'] = 'upload_images/'.$dataval['zip_code'].'/'.$newFileName;
-										$this->images->insert_record($insert);
-										$insert['main'] = 0;
-										for($i=1;$i<count($images);$i++):
-											if(isset($images[$i])):
-												$nextPropertyID = $this->images->nextID('images');
-												$randomNumber = mt_rand(1,1000);
-												$newFileName = preg_replace('/.+(.)(\.)+/','property_'.$nextPropertyID.'_'.$randomNumber."\$2",$images[$i]);
-												file_put_contents($dirPath.'/'.$newFileName,file_get_contents($images[$i]));
-												$insert['photo'] = 'upload_images/'.$dataval['zip_code'].'/'.$newFileName;
-												$this->images->insert_record($insert);
-											endif;
-										endfor;
-									endif;
-								endif;
+								$this->getPropertyImages($dataval,$property_id);
 							endif;
 							$this->users->update_field($dataval['user_id'],'account',$ownerID,'users');
 							$this->users->update_field($dataval['user_id'],'group',3,'users');
@@ -162,6 +173,47 @@ class Ajax_interface extends MY_Controller{
 					endif;
 				else:
 					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Homeowner already exist';
+				endif;
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function seller_signup_properties(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$json_request = array('status'=>FALSE,'message'=>'Signup is impossible');
+		$data = trim($this->input->post('postdata'));
+		if($data):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				if(!isset($dataid[0]) || !isset($dataid[1])):
+					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> An error while retrieving the data. try again';
+					echo json_encode($json_request);
+					exit();
+				else:
+					$dataval[trim($dataid[0])] = trim(htmlspecialchars($dataid[1]));
+				endif;
+			endfor;
+			$this->load->model('owners');
+			if($dataval && $this->owners->read_field($this->profile['account'],'owners','seller')):
+				$this->load->model('properties');
+				if(!$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
+					$dataval['user_id'] = $this->account['id'];
+					$property_id = $this->properties->insert_record($dataval);
+					if($property_id):
+						$this->getPropertyImages($dataval,$property_id);
+					endif;
+					$status = $this->users->read_field($this->account['id'],'users','status');
+					$this->properties->update_field($property_id,'status',$status,'properties');
+					$json_request['status'] = TRUE;
+					$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> Property added successfully';
+					$this->session->set_userdata('property_id',$property_id);
+				else:
+					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
 				endif;
 			endif;
 		endif;
@@ -220,7 +272,17 @@ class Ajax_interface extends MY_Controller{
 		if($property):
 			$this->session->set_userdata('current_property',$property);
 		endif;
-		echo json_encode(array('redirect'=>site_url(BROKER_START_PAGE.'/information')));
+		switch($this->account['group']):
+			case 2: echo json_encode(array('redirect'=>site_url(BROKER_START_PAGE.'/information')));
+				break;
+			case 3: 
+				if(!$this->session->userdata('search_sql')):
+					$this->session->set_userdata('property_id',$property);
+				endif;
+				echo json_encode(array('redirect'=>site_url(OWNER_START_PAGE.'/information')));
+				break;
+			default: echo json_encode(array('redirect'=>site_url()));
+		endswitch;
 	}
 	
 	function setCurrentFavorite(){
@@ -328,15 +390,20 @@ class Ajax_interface extends MY_Controller{
 			show_error('Access denied');
 		endif;
 		$property = $this->input->post('parameter');
+		$json_request['status'] = FALSE;
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
 		if($property):
 			$this->load->model('property_favorite');
 			$this->load->model('properties');
 			if($this->properties->record_exist('properties','id',$property) && !$this->property_favorite->record_exist($this->session->userdata('current_property'),$property)):
-				$insert['seller_id'] = $this->session->userdata('current_property');
-				$insert['buyer_id'] = $property;
-				$this->property_favorite->insert_record($insert);
-				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
+				$this->load->model('property_potentialby');
+				if(!$this->property_potentialby->record_exist($this->session->userdata('current_property'),$property)):
+					$insert['seller_id'] = $this->session->userdata('current_property');
+					$insert['buyer_id'] = $property;
+					$this->property_favorite->insert_record($insert);
+					$json_request['status'] = TRUE;
+					$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
+				endif;
 			endif;
 		endif;
 		echo json_encode($json_request);
@@ -348,6 +415,7 @@ class Ajax_interface extends MY_Controller{
 			show_error('Access denied');
 		endif;
 		$property = $this->input->post('parameter');
+		$json_request['status'] = FALSE;
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
 		if($property):
 			$this->load->model('property_favorite');
@@ -355,6 +423,7 @@ class Ajax_interface extends MY_Controller{
 			$favoriteID = $this->property_favorite->record_exist($this->session->userdata('current_property'),$property);
 			if($favoriteID):
 				$this->property_favorite->delete_record($favoriteID,'property_favorite');
+				$json_request['status'] = TRUE;
 				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from favorite';
 			endif;
 		endif;
@@ -463,7 +532,7 @@ class Ajax_interface extends MY_Controller{
 							case 2:
 								$this->load->model('brokers');
 								$brokerID = $this->brokers->insert_record($dataval);
-								$this->users->update_field($dataval['user_id'],'user_id',$brokerID,'users');
+								$this->users->update_field($dataval['user_id'],'account',$brokerID,'users');
 								$this->users->update_field($dataval['user_id'],'temporary_code',$activate_code,'users');
 								$user_class = 'broker';
 								break;
@@ -471,8 +540,8 @@ class Ajax_interface extends MY_Controller{
 								$this->load->model('owners');
 								$this->load->model('properties');
 								$ownerID = $this->owners->insert_record($dataval);
-								$this->users->update_field($dataval['user_id'],'user_id',$ownerID,'users');
-								$this->users->update_field($dataval['user_id'],'class',3,'users');
+								$this->users->update_field($dataval['user_id'],'account',$ownerID,'users');
+								$this->users->update_field($dataval['user_id'],'group',3,'users');
 								$this->users->update_field($dataval['user_id'],'temporary_code',$activate_code,'users');
 								$user_class = 'homeowner';
 								break;
@@ -498,37 +567,6 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 
-	function seller_signup_properties(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Аccess denied');
-		endif;
-		$json_request = array('status'=>FALSE,'message'=>'Signup is impossible');
-		$data = trim($this->input->post('postdata'));
-		if($data):
-			$data = preg_split("/&/",$data);
-			for($i=0;$i<count($data);$i++):
-				$dataid = preg_split("/=/",$data[$i]);
-				$dataval[$dataid[0]] = trim($dataid[1]);
-			endfor;
-			$this->load->model('owners');
-			if($dataval && $this->owners->read_field($this->profile['account'],'owners','seller')):
-				$this->load->model('properties');
-				if(!$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
-					$dataval['user_id'] = $this->account['id'];
-					$property_id = $this->properties->insert_record($dataval);
-					$status = $this->users->read_field($this->account['id'],'users','status');
-					$this->properties->update_field($property_id,'status',$status,'properties');
-					$json_request['status'] = TRUE;
-					$this->session->set_userdata('property_id',$property_id);
-				else:
-					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
-				endif;
-			endif;
-		endif;
-		echo json_encode($json_request);
-	}
-	
 	function change_user_status(){
 		
 		if(!$this->input->is_ajax_request()):
@@ -632,7 +670,7 @@ class Ajax_interface extends MY_Controller{
 	}
 	
 	function deletePropertySeller(){
-		
+
 		if(!$this->input->is_ajax_request()):
 			show_error('Access denied');
 		endif;
@@ -672,8 +710,8 @@ class Ajax_interface extends MY_Controller{
 			if($dataval):
 				$uid = $this->users->user_exist('email',$dataval['email']);
 				if($uid):
-					$user_id = $this->users->read_field($uid,'users','user_id');
-					$user_class = $this->users->read_field($uid,'users','class');
+					$user_id = $this->users->read_field($uid,'users','account');
+					$user_class = $this->users->read_field($uid,'users','group');
 					$this->load->helper('string');
 					$activate_code = random_string('alpha',25);
 					$this->users->update_field($uid,'temporary_code',$activate_code,'users');

@@ -95,7 +95,7 @@ class Properties extends MY_Model{
 		
 		if($this->account['group'] == 2):
 			$this->db->where('broker',$this->account['id']);
-		elseif($this->account['group'] == 2):
+		elseif($this->account['group'] == 3):
 			$this->db->where('owner',$this->account['id']);
 		endif;
 		$this->db->order_by('address1,state,zip_code');

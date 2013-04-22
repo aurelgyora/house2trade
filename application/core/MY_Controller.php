@@ -18,7 +18,7 @@ class MY_Controller extends CI_Controller{
 					$profile = FALSE;
 					switch($this->account['group']):
 						case 1: $profile = $this->users->read_record($this->account['id'],'users');break;
-						case 2: 
+						case 2:
 							$this->load->model('accounts_brokers');
 							$profile =$this->accounts_brokers->read_record($this->account['id'],'accounts_brokers');
 							break;

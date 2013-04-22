@@ -29,7 +29,6 @@
 					}else{
 						$("#form-request").html(data.message);
 					}
-					
 				},"json");
 		}
 	});
@@ -73,25 +72,28 @@
 		$.post(mt.baseURL+"set-current-favorite",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
 	});
 	
-	
 	$("#seller-register-properties").click(function(event){
 		event.preventDefault();
-		var err = false;
+		var err = false; var _this = this;
+		$("#form-request").html('');
 		var notNumerics = mt.FieldsIsNotNumeric($("#form-property-register"));
 		if(notNumerics){for(var element in notNumerics){$("#"+notNumerics[element]).attr('data-original-title','Incorrect numeric value').tooltip('show');err = true;}}
 		if(!err){
 			var postdata = mt.formSerialize($("#form-property-register .FieldSend"));
+			$(_this).addClass('disabled').attr('disabled','disabled').siblings("span.wait-request").removeClass('hidden');
 			$.post(mt.baseURL+"seller-signup-properties",{'postdata':postdata},
 				function(data){
+					$(_this).removeClass('disabled').removeAttr('disabled').siblings("span.wait-request").addClass('hidden');
 					$("input.valid-required").tooltip("destroy");
 					if(data.status){
 						$("#div-choise-metod").remove();
 						$("#div-account-properties").remove();
 						$("#div-insert-photo-properties").hide().removeClass('hidden').fadeIn('slow');
-						$("#form-property-register .FieldSend").val('');
+						$(".FieldSend").val('');
 						$("#photos-block-message").html(data.message);
+					}else{
+						$("#form-request").html(data.message);
 					}
-					$("#form-request").html(data.message);
 				},"json");
 		}
 	})
@@ -221,7 +223,6 @@
 		$("#div-insert-photo-properties").hide().addClass('hidden');
 		$("#div-remove-photo-properties").hide().removeClass('hidden').fadeIn('slow');
 	});
-	
 	$("#form-manage-company").submit(function(){
 		var err = false;
 		$(".valid-required").tooltip("destroy");
@@ -230,4 +231,58 @@
 		if(!err && !mt.isValidPhone($("#company-phone").val())){$("#login-email").attr('data-original-title','Incorrect Phone Number').tooltip('show');err = true;}
 		if(err){return false;}
 	})
+
+	$("button.btn-property-add-favorite").click(function(){
+		if($("select.input-select-property").emptyValue()){alert('At first select a property'); return false;}
+		var parameter = $(this).attr('data-src');
+		var _this = this;
+		$.post(mt.baseURL+"add-to-favorite",{'parameter':parameter},function(data){
+			if(data.status){$(_this).siblings("button.btn-property-remove-favorite").removeClass('hidden').show();$(_this).hide();
+			}else{$(_this).html('Error adding');}
+		},"json");
+	});
+	$("button.btn-property-remove-favorite").click(function(){
+		var parameter = $(this).attr('data-src');
+		var _this = this;
+		$.post(mt.baseURL+"remove-to-favorite",{'parameter':parameter},
+			function(data){
+				var target = $(_this).attr('data-target');
+				if(data.status){
+					if(target === 'remove'){$(_this).parents('div.media').remove();
+					}else{$(_this).hide();$(_this).siblings("button.btn-property-add-favorite").removeClass('hidden').show();}
+				}else{$(_this).html('Error removing');}
+			}
+		,"json");
+	});
+	$("button.btn-property-add-potential-by").click(function(){
+		var parameter = $(this).attr('data-src');
+		var _this = this;
+		$.post(mt.baseURL+"add-to-potential-by",{'parameter':parameter},
+			function(data){
+				var target = $(_this).attr('data-target');
+				if(target === 'remove'){
+					$(_this).parents('div.media').remove();
+				}else{
+					$(_this).siblings("button.btn-property-remove-potential-by").removeClass('hidden').show();
+					$(_this).hide();
+				}
+			}
+		,"json");
+	});
+	$("button.btn-property-remove-potential-by").click(function(){
+		var parameter = $(this).attr('data-src');
+		var _this = this;
+		$.post(mt.baseURL+"remove-to-potential-by",{'parameter':parameter},
+			function(data){
+				var target = $(_this).attr('data-target');
+				if(target === 'remove'){
+					$(_this).parents('div.media').remove();
+				}else{
+					$(_this).hide();
+					$(_this).siblings("button.btn-property-add-potential-by").show();
+				}
+			}
+		,"json");
+	});
+	
 })(window.jQuery);

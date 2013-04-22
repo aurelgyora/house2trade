@@ -35,18 +35,18 @@ class Union extends CI_Model{
 		return NULL;
 	}
 	
-	function ownerPropertiesList($count,$from){
+	function selectBrokerProperties($broker){
 		
-		$query = "SELECT users.id AS uid,users.email,users.status,owners.id AS oid,owners.fname,owners.lname,properties.* FROM users INNER JOIN owners ON users.user_id = owners.id INNER JOIN properties ON users.id = properties.owner_id WHERE users.class = ".$this->account['group']." AND properties.owner_id = ".$this->account['id']." ORDER BY users.signdate DESC,users.id LIMIT $from,$count";
+		$query = "select properties.id,properties.type,properties.address1,properties.city,properties.state,properties.zip_code,properties.price,users.email,owners.fname,owners.lname FROM properties,users,owners WHERE properties.broker = $broker AND properties.owner = users.id AND users.account = owners.id ORDER BY properties.zip_code,properties.state,properties.address1";
 		$query = $this->db->query($query);
 		$data = $query->result_array();
 		if($data) return $data;
 		return NULL;
 	}
 	
-	function selectBrokerProperties($broker){
+	function selectOwnerProperties($owner){
 		
-		$query = "select properties.id,properties.type,properties.address1,properties.city,properties.state,properties.zip_code,properties.price,users.email,owners.fname,owners.lname FROM properties,users,owners WHERE properties.broker = $broker AND properties.owner = users.id AND users.account = owners.id ORDER BY properties.zip_code,properties.state,properties.address1";
+		$query = "select properties.id,properties.type,properties.address1,properties.city,properties.state,properties.zip_code,properties.price,users.email,owners.fname,owners.lname FROM properties,users,owners WHERE properties.owner = $owner AND properties.owner = users.id AND users.account = owners.id ORDER BY properties.zip_code,properties.state,properties.address1";
 		$query = $this->db->query($query);
 		$data = $query->result_array();
 		if($data) return $data;

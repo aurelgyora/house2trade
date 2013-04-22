@@ -345,7 +345,7 @@ class Broker_interface extends MY_Controller{
 		$pagevar = array(
 			'select' => $this->union->selectBrokerProperties($this->account['id']),
 			'properties' => $this->properties->read_limit_records($per_page,$offset),
-			'pagination' => $this->pagination(BROKER_START_PAGE.'/full-list',5,$this->properties->countRecords(2),$per_page),
+			'pagination' => $this->pagination(BROKER_START_PAGE.'/full-list',5,$this->properties->countRecords(2),$per_page)
 		);
 		if($pagevar['properties']):
 			$ids = array();

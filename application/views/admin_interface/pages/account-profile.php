@@ -15,15 +15,15 @@
 					<div class="navbar-inner">
 						<a class="brand" href="<?=site_url(uri_string());?>">Account information</a>
 						<ul class="nav pull-right">
-							<li<?=($profile['class'] == 2)?' class="active"':''?>><a href="<?=site_url('administrator/broker/accounts');?>">Broker</a></li>
-							<li<?=($profile['class'] == 3)?' class="active"':''?>><a href="<?=site_url('administrator/homeowner/accounts');?>">HomeOwner</a></li>
+							<li<?=($profile['group'] == 2)?' class="active"':''?>><a href="<?=site_url('administrator/broker/accounts');?>">Broker</a></li>
+							<li<?=($profile['group'] == 3)?' class="active"':''?>><a href="<?=site_url('administrator/homeowner/accounts');?>">HomeOwner</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="clear"></div>
-				<?php if($profile['class'] == 2):
+				<?php if($profile['group'] == 2):
 					$this->load->view('forms/edit-account-broker');
-				elseif($profile['class'] == 3):
+				elseif($profile['group'] == 3):
 					$this->load->view('forms/edit-account-owner');
 				endif;?>
 			</div>
