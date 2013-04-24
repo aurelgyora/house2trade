@@ -150,8 +150,7 @@ class Ajax_interface extends MY_Controller{
 							endif;
 							$this->users->update_field($dataval['user_id'],'account',$ownerID,'users');
 							$this->users->update_field($dataval['user_id'],'group',3,'users');
-							$status = $this->users->read_field($this->account['id'],'users','status');
-							$this->properties->update_field($property_id,'status',$status,'properties');
+							$this->properties->update_field($property_id,'status',1,'properties');
 							$this->load->library('parser');
 							$this->load->model('mails');
 							$mail_content = $this->mails->read_record(2,'mails');
@@ -207,8 +206,7 @@ class Ajax_interface extends MY_Controller{
 					if($property_id):
 						$this->getPropertyImages($dataval,$property_id);
 					endif;
-					$status = $this->users->read_field($this->account['id'],'users','status');
-					$this->properties->update_field($property_id,'status',$status,'properties');
+					$this->properties->update_field($property_id,'status',1,'properties');
 					$json_request['status'] = TRUE;
 					$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> Property added successfully';
 					$this->session->set_userdata('property_id',$property_id);
@@ -395,14 +393,18 @@ class Ajax_interface extends MY_Controller{
 		if($property):
 			$this->load->model('property_favorite');
 			$this->load->model('properties');
-			if($this->properties->record_exist('properties','id',$property) && !$this->property_favorite->record_exist($this->session->userdata('current_property'),$property)):
-				$this->load->model('property_potentialby');
-				if(!$this->property_potentialby->record_exist($this->session->userdata('current_property'),$property)):
-					$insert['seller_id'] = $this->session->userdata('current_property');
-					$insert['buyer_id'] = $property;
-					$this->property_favorite->insert_record($insert);
-					$json_request['status'] = TRUE;
-					$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
+			$propertyID = $this->properties->record_exist('properties','id',$property);
+			if($propertyID && !$this->property_favorite->record_exist($this->session->userdata('current_property'),$property)):
+				$propertyStatus = $this->properties->read_field($propertyID,'properties','status');
+				if($propertyStatus != 17):
+					$this->load->model('property_potentialby');
+					if(!$this->property_potentialby->record_exist($this->session->userdata('current_property'),$property)):
+						$insert['seller_id'] = $this->session->userdata('current_property');
+						$insert['buyer_id'] = $property;
+						$this->property_favorite->insert_record($insert);
+						$json_request['status'] = TRUE;
+						$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
+					endif;
 				endif;
 			endif;
 		endif;
@@ -443,15 +445,19 @@ class Ajax_interface extends MY_Controller{
 			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($this->session->userdata('current_property'),$property)):
 				$insert['seller_id'] = $this->session->userdata('current_property');
 				$insert['buyer_id'] = $property;
-				$result = $this->property_potentialby->insert_record($insert);
-				if($result):
-					$this->load->model('property_favorite');
-					$favoriteID = $this->property_favorite->record_exist($this->session->userdata('current_property'),$property);
-					if($favoriteID):
-						$this->property_favorite->delete_record($favoriteID,'property_favorite');
+				$propertyStatus = $this->properties->read_field($insert['buyer_id'],'properties','status');
+				if($propertyStatus != 17):
+					$result = $this->property_potentialby->insert_record($insert);
+					if($result):
+						$this->load->model('property_favorite');
+						$favoriteID = $this->property_favorite->record_exist($this->session->userdata('current_property'),$property);
+						if($favoriteID):
+							$this->property_favorite->delete_record($favoriteID,'property_favorite');
+						endif;
+						$this->changePropertiesStatus($insert['seller_id'],$insert['buyer_id']);	//СМЕНА СТАТУСОВ
 					endif;
+					$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
 				endif;
-				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
 			endif;
 		endif;
 		echo json_encode($json_request);
@@ -466,7 +472,6 @@ class Ajax_interface extends MY_Controller{
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
 		if($property):
 			$this->load->model('property_potentialby');
-			$this->load->model('properties');
 			$favoriteID = $this->property_potentialby->record_exist($this->session->userdata('current_property'),$property);
 			if($favoriteID):
 				$this->property_potentialby->delete_record($favoriteID,'property_potentialby');

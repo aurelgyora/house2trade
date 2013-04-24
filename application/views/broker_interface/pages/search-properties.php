@@ -79,6 +79,9 @@
 							<h4 class="media-heading">
 								<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'].', '.$properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code'];?></a>
 							</h4>
+						<?php if($properties[$i]['status'] == 17):?>
+							<p class="text-info">Not from our listing</p>
+						<?php endif;?>
 							<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 							<p>
 								For Sale: $<?=$properties[$i]['price'];?> <br/>
@@ -89,7 +92,7 @@
 								Tax: $<?= $properties[$i]['tax']; ?>
 							</p>
 						</div>
-			<?php if($properties[$i]['id'] != $this->session->userdata('current_property')):?>
+			<?php if($properties[$i]['id'] != $this->session->userdata('current_property') && ($properties[$i]['status'] != 17)):?>
 				<?php if(!$properties[$i]['potentialby']):?>
 					<?php if(!$properties[$i]['favorite']):?>
 						<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>

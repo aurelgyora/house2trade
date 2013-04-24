@@ -60,8 +60,7 @@
 				<a href="<?=site_url(BROKER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>
 				<a class="btn btn-mini btn-link link-operation-account" href="#confirm-user" data-toggle="modal" data-src="<?=$property['id'];?>" data-url="<?=site_url(BROKER_START_PAGE.'/delete');?>">Delete property</a>
 			<?php endif;?>
-			
-			
+	<?php if($property['status'] != 17):?>
 		<?php if(($property['id'] != $this->session->userdata('current_property'))):?>
 			<?php if(!$property['potentialby']):?>
 				<?php if(!$property['favorite']):?>
@@ -77,6 +76,7 @@
 		<?php else:?>
 				<button class="btn btn-mini btn-link disabled" disabled="disabled">Add to favorite</button>
 		<?php endif;?>
+	<?php endif;?>
 	<?php else:?>
 				<h3>Information is missing</h3>
 	<?php endif;?>

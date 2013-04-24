@@ -120,6 +120,27 @@ class MY_Controller extends CI_Controller{
 	}
 	
 	/*************************************************************************************************************/
+	
+	function changePropertiesStatus($sellerID,$buyerID){
+		
+		$this->load->model('properties');
+		$sellerStatus = $this->properties->read_field($sellerID,'properties','status');
+		$buyerStatus = $this->properties->read_field($buyerID,'properties','status');
+		switch($sellerStatus):
+			case 1: $sellerStatus = 13; break;
+			case 14: $sellerStatus = 16; break;
+			case 15: $sellerStatus = 13; break;
+		endswitch;
+		$this->properties->update_field($sellerID,'status',$sellerStatus,'properties');
+		switch($buyerStatus):
+			case 1: $buyerStatus = 14; break;
+			case 15: $buyerStatus = 14; break;
+			case 13: $buyerStatus = 16; break;
+		endswitch;
+		$this->properties->update_field($buyerID,'status',$buyerStatus,'properties');
+	}
+	
+	/*************************************************************************************************************/
 	public function pagination($url,$uri_segment,$total_rows,$per_page){
 		
 		$this->load->library('pagination');
