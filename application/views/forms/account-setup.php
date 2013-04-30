@@ -19,7 +19,7 @@
 		<p data-class="broker">
 			<label>Company name *</label>
 			<select class="FieldSend" name="company">
-				<option value="0" selected="selected">None company</option>
+				<option value="0" selected="selected">The company is not listed</option>
 			<?php for($i=0;$i<count($companies);$i++):?>
 				<option value="<?=$companies[$i]['id'];?>"><?=$companies[$i]['title'];?></option>
 			<?php endfor;?>

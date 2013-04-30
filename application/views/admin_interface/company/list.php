@@ -42,7 +42,7 @@
 							<td><?=$company[$i]['email'].' '.$company[$i]['phone'].' '.$company[$i]['website'];?></td>
 							<td>
 								<a href="<?=site_url('administrator/companies/edit/'.$company[$i]['id']);?>" class="btn btn-mini set-operation" type="button">Edit</a>
-								<a href="<?=site_url('administrator/companies/delete/'.$company[$i]['id']);?>" class="btn btn-mini btn-danger" type="button">Delete</a>
+								<a href="<?=site_url('administrator/companies/delete/'.$company[$i]['id']);?>" class="btn btn-mini btn-danger btn-delete-company" type="button">Delete</a>
 							</td>
 						</tr>
 				<?php endfor;?>

@@ -139,8 +139,8 @@ class Admin_interface extends MY_Controller{
 		if($this->uri->segment(4)):
 			$this->load->model('company');
 			$this->company->delete_record($this->uri->segment(4),'company');
-			redirect('administrator/companies');
 		endif;
+		redirect('administrator/companies');
 	}
 	
 	/********************************************* users ********************************************************/

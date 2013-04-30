@@ -37,7 +37,7 @@
 					<div class="span4">
 						<fieldset>
 							<div class="control-group">
-								Company name: <span id="company"><?=$profile['company'];?></span>
+								Company name: <span id="company"><?=(!empty($profile['company']))?$profile['company']:'The company is not listed';?></span>
 							</div>
 						</fieldset>
 					</div>

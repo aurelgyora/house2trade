@@ -31,7 +31,7 @@
 			<div class="control-group">
 				<label for="company">Company name*: </label>
 				<select class="FieldSend" name="company">
-				<option value="0">None company</option>
+				<option value="0">The company is not listed</option>
 				<?php for($i=0;$i<count($companies);$i++):?>
 					<option value="<?=$companies[$i]['id'];?>" <?=($companies[$i]['id'] == $profile['info']['company'])?'selected="selected"':'';?>><?=$companies[$i]['title'];?></option>
 				<?php endfor;?>

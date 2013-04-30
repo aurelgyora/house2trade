@@ -58,7 +58,6 @@
 			,"json");
 		}
 	});
-	
 	$("#input-select-property").change(function(){
 		var parameter = $(this).val();
 		$.post(mt.baseURL+"set-active-property",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
@@ -71,7 +70,6 @@
 		var parameter = $(this).val();
 		$.post(mt.baseURL+"set-current-favorite",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
 	});
-	
 	$("#seller-register-properties").click(function(event){
 		event.preventDefault();
 		var err = false; var _this = this;
@@ -231,7 +229,6 @@
 		if(!err && !mt.isValidPhone($("#company-phone").val())){$("#login-email").attr('data-original-title','Incorrect Phone Number').tooltip('show');err = true;}
 		if(err){return false;}
 	})
-
 	$("button.btn-property-add-favorite").click(function(){
 		if($("select.input-select-property").emptyValue()){alert('At first select a property'); return false;}
 		var parameter = $(this).attr('data-src');
@@ -284,5 +281,5 @@
 			}
 		,"json");
 	});
-	
+	$("a.btn-delete-company").click(function(){if(confirm("Delete company?") == false) return false;})
 })(window.jQuery);

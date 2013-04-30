@@ -631,6 +631,9 @@ class Ajax_interface extends MY_Controller{
 					if(isset($dataval['company'])):
 						$this->load->model('company');
 						$dataval['company'] = $this->company->read_field($dataval['company'],'company','title');
+						if(empty($dataval['compant'])):
+							$dataval['company'] = 'The company is not listed';
+						endif;
 					endif;
 					$json_request['new_data'] = $dataval;
 				endif;
