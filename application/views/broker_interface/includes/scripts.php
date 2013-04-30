@@ -10,4 +10,7 @@
 <?php if($this->uri->segment(2) == 'properties'):?>
 	$("li[data-active='<?=$this->uri->segment(2);?>']").addClass('active');
 <?php endif;?>
+<?php if($this->uri->segment(2) == 'search'):?>
+	$("li[data-active='<?=$this->uri->segment(2);?>']").addClass('active');
+<?php endif;?>
 </script>

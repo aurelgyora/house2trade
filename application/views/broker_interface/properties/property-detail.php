@@ -15,18 +15,14 @@
 					<div class="navbar-inner">
 					<?php if($this->session->userdata('search_sql')):?>
 						<?=anchor('broker/search/result','Back to search result','class="btn btn-link"');?>
-						<?php if($this->session->userdata('backpath') == BROKER_START_PAGE):?>
-							<?=anchor('broker/search/result','Back to my properties','class="btn btn-link"');?>
-						<?php endif;?>
 					<?php else:?>
-						<?=anchor($this->session->userdata('backpath'),'Back','class="btn btn-link"');?>
+						<?=anchor($this->session->userdata('backpath'),'Back to properties list','class="btn btn-link"');?>
 					<?php endif;?>
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="span6">
-				
 				<?php if($property):?>
 					<?php $this->load->view("broker_interface/forms/set-current-property");?>
 						
@@ -59,7 +55,6 @@
 							<p><img src="<?=site_url('img/thumb.png');?>"></p>
 						<?php endif;?>
 					</div>
-					
 					<div class="property-actions">
 					<?php if($property['broker'] == $this->account['id']):?>
 						<a href="<?=site_url(BROKER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>

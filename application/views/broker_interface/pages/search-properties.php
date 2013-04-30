@@ -74,12 +74,12 @@
 						<?php continue;?>
 					<?php endif;?>
 					<div class="media">
-						<a class="pull-left" href="<?=site_url(BROKER_START_PAGE.'/information/'.$properties[$i]['id']);?>">
+						<a class="pull-left" href="<?=site_url('broker/search/information/'.$properties[$i]['id']);?>">
 							<img class="img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">
 						</a>
 						<div class="media-body">
 							<h4 class="media-heading">
-								<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'];?></a>
+								<a href="<?=site_url('broker/search/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'];?></a>
 								<span><?= $properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code']; ?></span>
 							</h4>
 							<?php if($properties[$i]['status'] == 17):?>

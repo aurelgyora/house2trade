@@ -12,6 +12,11 @@ class Broker_interface extends MY_Controller{
 		if(empty($password) && ($this->uri->segment(2) != 'set-password')):
 			redirect('broker/set-password');
 		endif;
+		if($this->session->userdata('search_sql')):
+			if($this->uri->segment(2) != 'search'):
+				$this->session->unset_userdata(array('search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
+			endif;
+		endif;
 	}
 	
 	/******************************************** cabinet *******************************************************/
@@ -50,9 +55,6 @@ class Broker_interface extends MY_Controller{
 	
 	public function searchProperty(){
 		
-		/*if($this->uri->total_segments() < 3):
-			$this->session->unset_userdata(array('search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
-		endif;*/
 		$this->load->model('union');
 		$this->load->model('property_type');
 		$from = (int)$this->uri->segment(5);
@@ -107,7 +109,7 @@ class Broker_interface extends MY_Controller{
 				endfor;
 				$count = 0;
 				if($pagevar['properties']):
-					$count = count($this->properties->query_execute($this->session->userdata('search_sql')));
+					$count = count($this->properties->query_execute($this->session->userdata(' ')));
 				endif;
 				$pagevar['pages'] = $this->pagination('broker/search/result',5,$count,7);
 			else:
@@ -374,9 +376,9 @@ class Broker_interface extends MY_Controller{
 		$current_property = $this->session->userdata('property_id');
 		if($this->uri->total_segments() == 4):
 			$this->session->set_userdata('property_id',$this->uri->segment(4));
-			redirect(BROKER_START_PAGE.'/information');
+			redirect('broker/'.$this->uri->segment(2).'/information');
 		elseif(!$current_property && $this->uri->total_segments() == 3):
-			redirect(BROKER_START_PAGE);
+			redirect('broker/'.$this->uri->segment(2));
 		endif;
 		$this->load->model('properties');
 		$this->load->model('images');

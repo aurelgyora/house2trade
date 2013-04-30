@@ -15,11 +15,8 @@
 					<div class="navbar-inner">
 					<?php if($this->session->userdata('search_sql')):?>
 						<?=anchor('homeowner/search/result','Back to search result','class="btn btn-link"');?>
-						<?php if($this->session->userdata('backpath') == OWNER_START_PAGE):?>
-							<?=anchor('homeowner/search/result','Back to my properties','class="btn btn-link"');?>
-						<?php endif;?>
 					<?php else:?>
-						<?=anchor($this->session->userdata('backpath'),'Back','class="btn btn-link"');?>
+						<?=anchor($this->session->userdata('backpath'),'Back to my properties','class="btn btn-link"');?>
 					<?php endif;?>
 					</div>
 				</div>

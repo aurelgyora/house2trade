@@ -17,6 +17,11 @@ class Owner_interface extends MY_Controller{
 		if(empty($password) && ($this->uri->segment(2) != 'set-password')):
 			redirect('homeowner/set-password');
 		endif;
+		if($this->session->userdata('search_sql')):
+			if($this->uri->segment(2) != 'search'):
+				$this->session->unset_userdata(array('search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
+			endif;
+		endif;
 	}
 	
 	/******************************************** cabinet *******************************************************/
@@ -53,9 +58,6 @@ class Owner_interface extends MY_Controller{
 	
 	public function searchProperty(){
 		
-		/*if($this->uri->total_segments() < 3):
-			$this->session->unset_userdata(array('search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
-		endif;*/
 		$this->load->model('union');
 		$this->load->model('property_type');
 		$from = (int)$this->uri->segment(5);
@@ -340,9 +342,9 @@ class Owner_interface extends MY_Controller{
 		$current_property = $this->session->userdata('property_id');
 		if($this->uri->total_segments() == 4):
 			$this->session->set_userdata('property_id',$this->uri->segment(4));
-			redirect(OWNER_START_PAGE.'/information');
+			redirect('owner/'.$this->uri->segment(2).'/information');
 		elseif(!$current_property && $this->uri->total_segments() == 3):
-			redirect(OWNER_START_PAGE);
+			redirect('owner/'.$this->uri->segment(2));
 		endif;
 		$this->load->model('properties');
 		$this->load->model('images');
