@@ -10,7 +10,7 @@
 			</div>
 			<div class="control-group">
 				<label for="fname">Logo*: </label>
-				<input class="valid-required" name="logo" <?=TOOLTIP_FIELD_BLANK;?> type="file" />
+				<input class="" name="logo" type="file" />
 			</div>
 			
 			<div class="control-group">

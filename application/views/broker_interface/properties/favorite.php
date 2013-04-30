@@ -42,6 +42,7 @@
 			<?php if(!$this->session->userdata('current_property') || !$properties):?>
 				<p>Favorite properties is missing or is not selected current seller</p>
 			<?php endif;?>
+			<?=$pages;?>
 			</div>
 		</div>
 	</div>
