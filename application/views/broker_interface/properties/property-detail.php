@@ -44,7 +44,7 @@
 						</div>
 						
 						<div class="tab-pane" id="panorama">
-    						<div id="pano" style="width: 450px; height: 300px;"></div>
+							<div id="pano" style="width: 450px; height: 300px;"></div>
 						</div>
 						
 						<?php if($images): ?>
@@ -96,16 +96,16 @@
 						<strong>Tax:</strong> $<?= $property['tax']; ?>
 					</p>
 					<h2 class="pp">Description</h2>
-					<p>
-						<?=$property['description'];?>
-					</p>
-				<?php if($property['status'] < 17):?>
+					<p><?=$property['description'];?></p>
+				<?php if($property['status'] < 17 && isset($property['email'])):?>
 					<h2 class="pp">Contacts</h2>
 					<p>
 						<strong>Phone:</strong> <?=$property['phone'];?><br/>
 						<strong>Cell:</strong> <?=$property['cell'];?><br/>
 						<strong>Email:</strong> <?=$property['email'];?>
 					</p>
+				<?php else:?>
+					<p>Not from our listing</p>
 				<?php endif;?>
 				<?php else:?>
 					<h3>Information is missing</h3>
