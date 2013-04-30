@@ -2,7 +2,7 @@
 	<input type="hidden" value="<?=$page['id'];?>" name="id" />
 	<fieldset>
 		<div class="control-group">
-			<textarea rows="14" class="span9 ckeditor" name="content"><?=$page['content'];?></textarea>
+			<textarea rows="14" class="span9 redactor" name="content"><?=$page['content'];?></textarea>
 		</div>
 		<div class="form-actions">
 			<button class="btn btn-info" id="saveItem" type="submit" name="submit" value="submit">Save</button>

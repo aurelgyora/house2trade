@@ -29,5 +29,9 @@
 	<?php $this->load->view("admin_interface/includes/footer");?>
 	<?php $this->load->view("admin_interface/includes/scripts");?>
 	<script type="text/javascript" src="<?=site_url('ckeditor/ckeditor.js');?>"></script>
+	<script type="text/javascript" src="<?=site_url('ckeditor/adapters/jquery.js');?>" ></script>
+	<script type="text/javascript" src="<?=site_url('ckfinder/ckfinder.js');?>"></script>
+	<script type="text/javascript" src="<?=site_url('js/redactor-config.js');?>"></script>
+	
 </body>
 </html>
