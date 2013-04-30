@@ -342,9 +342,9 @@ class Owner_interface extends MY_Controller{
 		$current_property = $this->session->userdata('property_id');
 		if($this->uri->total_segments() == 4):
 			$this->session->set_userdata('property_id',$this->uri->segment(4));
-			redirect('owner/'.$this->uri->segment(2).'/information');
+			redirect('homeowner/'.$this->uri->segment(2).'/information');
 		elseif(!$current_property && $this->uri->total_segments() == 3):
-			redirect('owner/'.$this->uri->segment(2));
+			redirect('homeowner/'.$this->uri->segment(2));
 		endif;
 		$this->load->model('properties');
 		$this->load->model('images');

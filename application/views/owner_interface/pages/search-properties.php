@@ -31,7 +31,7 @@
 							<div class="media-body">
 								<h4 class="media-heading">
 								<?php if($zillow_exist_id):?>
-									<a href="<?=site_url(OWNER_START_PAGE.'/information/'.$zillow['id']);?>"><?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?></a>
+									<a href="<?=site_url('homeowner/search/information/'.$zillow['id']);?>"><?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?></a>
 								<?php else:?>
 									<?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?> <br/>
 									<small>Property is not in our listing</small>
@@ -72,12 +72,12 @@
 						<?php continue;?>
 					<?php endif;?>
 					<div class="media">
-						<a class="none pull-left" href="#">
+						<a class="pull-left" href="<?=site_url('homeowner/search/information/'.$properties[$i]['id']);?>">
 							<img class="img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">
 						</a>
 						<div class="media-body">
 							<h4 class="media-heading">
-								<a href="<?=site_url(OWNER_START_PAGE.'/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'].', '.$properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code'];?></a>
+								<a href="<?=site_url('homeowner/search/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'].', '.$properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code'];?></a>
 							</h4>
 							<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 							<p>

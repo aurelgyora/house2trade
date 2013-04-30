@@ -108,7 +108,7 @@ $route['homeowner/search/result/from/:num'] = "owner_interface/searchProperty";
 
 $route[OWNER_START_PAGE] = "owner_interface/properties";
 $route['homeowner/:any/information'] = "owner_interface/propertyDetail";
-$route['homeowner/properties/information/:num'] = "owner_interface/propertyDetail";
+$route['homeowner/:any/information/:num'] = "owner_interface/propertyDetail";
 $route[OWNER_START_PAGE.'/edit'] = "owner_interface/edit_property";
 $route[OWNER_START_PAGE.'/edit/:num'] = "owner_interface/edit_property";
 
