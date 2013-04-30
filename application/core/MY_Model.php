@@ -100,15 +100,15 @@ class MY_Model extends CI_Model{
 		return $this->db->affected_rows();
 	}
 
-	function count_records($table,$field = '',$value = FALSE){
+	function count_records($table,$field = NULL,$value = NULL){
 		
-		if($value):
+		if(!is_null($value) && !is_null($field)):
 			$this->db->select('COUNT(*) AS cnt');
 			$this->db->where($field,$value);
 			$query = $this->db->get($table,1);
 			$data = $query->result_array();
 			if($data) return $data[0]['cnt'];
-			return 0;
+			return FALSE;
 		else:
 			return $this->db->count_all($table);
 		endif;

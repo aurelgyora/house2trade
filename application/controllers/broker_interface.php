@@ -252,7 +252,7 @@ class Broker_interface extends MY_Controller{
 		$pagevar = array(
 			'select' => $this->union->selectBrokerProperties($this->account['id']),
 			'properties' => $this->union->potentialByList($this->session->userdata('current_property'),7,$from),
-			'pages' => $this->pagination('broker/favorite',4,$this->property_potentialby->count_records('property_potentialby','seller_id',$this->session->userdata('current_property')),7)
+			'pages' => $this->pagination('broker/potential-by',4,$this->property_potentialby->count_records('property_potentialby','seller_id',$this->session->userdata('current_property')),7)
 		);
 		$ids = array();
 		for($i=0;$i<count($pagevar['properties']);$i++):
