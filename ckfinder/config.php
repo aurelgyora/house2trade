@@ -32,64 +32,17 @@ function CheckAuthentication()
 
 	return true;
 }
+define('BASEPATH',TRUE);
+require_once('../../../../application/config/config.php');
 
-// LicenseKey : Paste your license key here. If left blank, CKFinder will be
-// fully functional, in demo mode.
+$baseUrl = $config['ckfinder_base_url'];
+$baseDir = $config['ckfinder_base_dir'];
+
+$config = array();
+
 $config['LicenseName'] = '';
 $config['LicenseKey'] = '';
 
-/*
- Uncomment lines below to enable PHP error reporting and displaying PHP errors.
- Do not do this on a production server. Might be helpful when debugging why CKFinder does not work as expected.
-*/
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
-
-/*
-To make it easy to configure CKFinder, the $baseUrl and $baseDir can be used.
-Those are helper variables used later in this config file.
-*/
-
-/*
-$baseUrl : the base path used to build the final URL for the resources handled
-in CKFinder. If empty, the default value (/userfiles/) is used.
-
-Examples:
-	$baseUrl = 'http://example.com/ckfinder/files/';
-	$baseUrl = '/userfiles/';
-
-ATTENTION: The trailing slash is required.
-*/
-$baseUrl = 'http://house2trade/download/';
-
-/*
-$baseDir : the path to the local directory (in the server) which points to the
-above $baseUrl URL. This is the path used by CKFinder to handle the files in
-the server. Full write permissions must be granted to this directory.
-
-Examples:
-	// You may point it to a directory directly:
-	$baseDir = '/home/login/public_html/ckfinder/files/';
-	$baseDir = 'C:/SiteDir/CKFinder/userfiles/';
-
-	// Or you may let CKFinder discover the path, based on $baseUrl.
-	// WARNING: resolveUrl() *will not work* if $baseUrl does not start with a slash ("/"),
-	// for example if $baseDir is set to  http://example.com/ckfinder/files/
-	$baseDir = resolveUrl($baseUrl);
-
-ATTENTION: The trailing slash is required.
-*/
-//$baseDir = resolveUrl($baseUrl);
-$baseDir = 'S:/home/house2trade/www/download/';
-
-/*
- * ### Advanced Settings
- */
-
-/*
-Thumbnails : thumbnails settings. All thumbnails will end up in the same
-directory, no matter the resource type.
-*/
 $config['Thumbnails'] = Array(
 		'url' => $baseUrl . '_thumbs',
 		'directory' => $baseDir . '_thumbs',

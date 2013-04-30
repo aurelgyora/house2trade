@@ -1,6 +1,8 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
 $config['base_url'] 			= "http://house2trade/";
+$config['ckfinder_base_url']	= 'http://house2trade/download/';
+$config['ckfinder_base_dir']	= 's:/home/house2trade/www/download/';
 $config['index_page'] 			= '';
 $config['uri_protocol']			= 'AUTO';
 $config['url_suffix'] 			= '';
