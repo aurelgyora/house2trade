@@ -5,9 +5,9 @@
 <script type="text/javascript" src="<?=site_url('js/logined.js');?>"></script>
 <script type="text/javascript">
 <?php if($this->uri->total_segments() == 2):?>
-	$("li[data-active='<?=$this->uri->segment(2);?>']").addClass('none active');
+	$("li[data-active='<?=$this->uri->segment(2);?>']").addClass('active');
 <?php endif;?>
 <?php if($this->uri->segment(2) == 'properties'):?>
-	$("li[data-active='<?=$this->uri->segment(2);?>']").addClass('none active');
+	$("li[data-active='<?=$this->uri->segment(2);?>']").addClass('active');
 <?php endif;?>
 </script>

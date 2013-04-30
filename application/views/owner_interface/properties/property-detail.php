@@ -48,7 +48,7 @@
 				<p>
 					<?=$property['description'];?>
 				</p>
-			<?php if($property['status'] < 17):?>
+			<?php if($property['status'] < 17 && isset($property['email'])):?>
 				<h2 class="pp">Contacts</h2>
 				<p>
 					Phone: <?=$property['phone'];?><br/>
