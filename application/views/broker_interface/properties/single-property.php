@@ -25,8 +25,18 @@
 					</a>
 					<div class="media-body">
 						<h4 class="media-heading">
-							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$property['id']);?>"><?= $property['address1'].', '.$property['city'].', '.$property['state'].' '.$property['zip_code'];?></a>
+							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$property['id']);?>"><?= $property['address1'];?></a>
+							<span><?= $property['city'].', '.$property['state'].' '.$property['zip_code']; ?></span>
 						</h4>
+						<p>
+							$<?=$property['price'];?> <span class="separator">|</span> 
+							<?=$property['bedrooms'];?> Bd <span class="separator">|</span> 
+							<?=$property['bathrooms'];?> Ba <span class="separator">|</span> 
+							<?=$property['sqf'];?> Sq Ft <span class="separator">|</span> 
+							<?=$property['lotsize'];?> Acres <br/>
+							<?= ucfirst($property['type']); ?> Home
+						</p>
+						<!-- 
 						<p><em><?=word_limiter($property['description'],50);?></em></p>
 						<p>
 							For Sale: $<?=$property['price'];?> <br/>
@@ -36,6 +46,7 @@
 							Lot: <?= $property['sqf'];?> sq ft <br/>
 							Tax: $<?= $property['tax']; ?>
 						</p>
+						-->
 					</div>
 				</div>
 			<?php else:?>

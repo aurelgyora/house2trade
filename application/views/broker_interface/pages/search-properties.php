@@ -14,6 +14,7 @@
 					<?php $this->load->view("broker_interface/forms/setect-property");?>
 				</div>
 				<div class="clear"></div>
+				<p>See foreclosures in your area - for free!</p>
 				<div id="div-search-property" <?=($this->session->userdata('search_sql'))?'class="hidden"':'';?>>
 					<?php $this->load->view('forms/search-properties');?>
 				</div>
@@ -30,30 +31,31 @@
 							</a>
 							<div class="media-body">
 								<h4 class="media-heading">
-								<?php if($zillow_exist_id):?>
-									<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$zillow['id']);?>"><?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?></a>
-								<?php else:?>
-									<?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?> <br/>
-									<small>Property is not in our listing</small>
-								<?php endif;?>
+									<?php if($zillow_exist_id):?>
+										<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$property['id']);?>"><?= $property['address1'];?></a>
+										<span><?= $property['city'].', '.$property['state'].' '.$property['zip_code']; ?></span>
+									<?php else:?>
+										<a href="#"><?= $property['address1'];?></a>
+										<span><?= $property['city'].', '.$property['state'].' '.$property['zip_code']; ?></span>
+										<small>Property is not in our listing</small>
+									<?php endif; ?>
 								</h4>
-								<p><em><?=word_limiter($zillow['description'],100);?></em></p>
 								<p>
-									For Sale: $<?=($zillow['price'])?$zillow['price']:' &mdash;';?><br/>
-									Bedrooms: <?=($zillow['bedrooms'])?$zillow['bedrooms'].' beds':'&mdash;';?><br/>
-									Bathrooms: <?=($zillow['bathrooms'])?$zillow['bathrooms'].' beds':'&mdash;';?><br/>
-									<?= ucfirst($zillow['type']); ?>: <?=$zillow['sqf'];?> sq ft<br/>
-									Lot: <?= $zillow['sqf'];?> sq ft <br/>
-									Tax: $<?=$zillow['tax'];?>
-								<?php if(isset($zillow['year']) && $zillow['year']):?>
-									<br/>Year Built: <?= $zillow['year'];?><br/>
-								<?php endif;?>
-								<?php if(isset($zillow['last-sold-date']) && $zillow['last-sold-date']):?>
-									Last Sold: <?= date("M Y",strtotime($zillow['last-sold-date']));?>
-								<?php endif;?>
-								<?php if(isset($zillow['last-sold-price']) && $zillow['last-sold-price']):?>
-									 for $<?= $zillow['last-sold-price'];?>
-								<?php endif;?>
+									$<?=$property['price'];?> <span class="separator">|</span> 
+									<?=$property['bedrooms'];?> Bd <span class="separator">|</span> 
+									<?=$property['bathrooms'];?> Ba <span class="separator">|</span> 
+									<?=$property['sqf'];?> Sq Ft <span class="separator">|</span> 
+									<?=$property['lotsize'];?> Acres <br/>
+									<?= ucfirst($property['type']); ?> Home
+									<?php if(isset($zillow['year']) && $zillow['year']):?>
+									<span class="separator">|</span> Built <?= $zillow['year'];?>
+									<?php endif;?>
+									<?php if(isset($zillow['last-sold-date']) && $zillow['last-sold-date']):?>
+									<span class="separator">|</span>Last Sold in <?= date("M Y",strtotime($zillow['last-sold-date']));?>
+									<?php endif;?>
+									<?php if(isset($zillow['last-sold-price']) && $zillow['last-sold-price']):?>
+										 for $<?= $zillow['last-sold-price'];?>
+									<?php endif;?>
 								</p>
 							</div>
 					<?php if($zillow_exist_id && !$zillow['potentialby']):?>
@@ -72,24 +74,25 @@
 						<?php continue;?>
 					<?php endif;?>
 					<div class="media">
-						<a class="none pull-left" href="#">
+						<a class="pull-left" href="<?=site_url(BROKER_START_PAGE.'/information/'.$properties[$i]['id']);?>">
 							<img class="img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">
 						</a>
 						<div class="media-body">
 							<h4 class="media-heading">
-								<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'].', '.$properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code'];?></a>
+								<a href="<?=site_url(BROKER_START_PAGE.'/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'];?></a>
+								<span><?= $properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code']; ?></span>
 							</h4>
-						<?php if($properties[$i]['status'] == 17):?>
-							<p class="text-info">Not from our listing</p>
-						<?php endif;?>
+							<?php if($properties[$i]['status'] == 17):?>
+								<p class="text-info">Not from our listing</p>
+							<?php endif;?>
 							<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 							<p>
-								For Sale: $<?=$properties[$i]['price'];?> <br/>
-								Bedrooms: <?=($properties[$i]['bedrooms'])?$properties[$i]['bedrooms'].' beds':'&mdash;';?><br/>
-								Bathrooms: <?=($properties[$i]['bathrooms'])?$properties[$i]['bathrooms'].' baths':'&mdash;';?><br/>
-								<?= ucfirst($properties[$i]['type']); ?>: <?=$properties[$i]['sqf'];?> sq ft<br/>
-								Lot: <?= $properties[$i]['sqf'];?> sq ft <br/>
-								Tax: $<?= $properties[$i]['tax']; ?>
+								$<?=$properties[$i]['price'];?> <span class="separator">|</span> 
+								<?=$properties[$i]['bedrooms'];?> Bd <span class="separator">|</span> 
+								<?=$properties[$i]['bathrooms'];?> Ba <span class="separator">|</span> 
+								<?=$properties[$i]['sqf'];?> Sq Ft <span class="separator">|</span> 
+								<?=$properties[$i]['lotsize'];?> Acres <br/>
+								<?= ucfirst($properties[$i]['type']); ?> Home
 							</p>
 						</div>
 			<?php if($properties[$i]['id'] != $this->session->userdata('current_property') && ($properties[$i]['status'] != 17)):?>

@@ -16,7 +16,7 @@
 						<a class="brand" href="<?=site_url(uri_string());?>">Company</a>
 					</div>
 				</div>
-				<a class="btn btn-primary" href="<?=site_url('administrator/companies/insert');?>">Insert Company</a>
+				<a class="btn" href="<?=site_url('administrator/companies/insert');?>">Add new company</a>
 				<div class="clear"></div>
 			<?php if($company):?>
 				<table class="table table-hover">
