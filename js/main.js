@@ -3,7 +3,7 @@
  */
  
 var mt = mt || {};
-mt.baseURL = 'http://'+window.location.hostname+'/';
+mt.baseURL = 'http://'+window.location.hostname+'/dev/';
 mt.currentURL = window.location.href;
 mt.currentElement = 0;
 mt.isValidEmailAddress = function(emailAddress){

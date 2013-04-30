@@ -10,10 +10,15 @@
 	</ul>
 	-->
 	<p>
-		<label>Address</label>
-		<input id="property_mls" value="<?=(isset($parameters->property_address) && $parameters->property_address)?$parameters->property_address:'';?>" name="property_address" size="" type="text" placeholder="Enter property address">
-		<label>City, State, ZIP</label>
-		<input id="property_zip" value="<?=(isset($parameters->property_zip) && $parameters->property_zip)?$parameters->property_zip:'';?>" name="property_zip" size="15" type="text" placeholder="City, State and/or ZIP code">
+		<div class="span3">
+			<label>Address</label>
+			<input id="property_mls" value="<?=(isset($parameters->property_address) && $parameters->property_address)?$parameters->property_address:'';?>" name="property_address" size="" type="text" placeholder="Enter property address">
+		</div>
+		<div class="span3">
+			<label>City, State, ZIP</label>
+			<input id="property_zip" value="<?=(isset($parameters->property_zip) && $parameters->property_zip)?$parameters->property_zip:'';?>" name="property_zip" size="15" type="text" placeholder="City, State and/or ZIP code">
+		</div>
+		<div class="clear"> </div>
 		<label>Price range</label>
 		<input id="property_min_price" value="<?=(isset($parameters->property_min_price) && $parameters->property_min_price)?$parameters->property_min_price:'';?>" name="property_min_price" size="30" type="text" placeholder="$ Min"> <span class="decision">to</span>
 		<input id="property_max_price" value="<?=(isset($parameters->property_max_price) && $parameters->property_max_price)?$parameters->property_max_price:'';?>" name="property_max_price" size="30" type="text" placeholder="$ Max">  <br/>

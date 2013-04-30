@@ -1,5 +1,5 @@
 <?=form_open($this->uri->uri_string(),array('id'=>'form-metod-property-register')); ?>
-	<legend>Get property info by MLS ID</legend>
+	<legend>Get information about your property</legend>
 	<div class="span2">
 		<fieldset>
 			<div class="control-group">
