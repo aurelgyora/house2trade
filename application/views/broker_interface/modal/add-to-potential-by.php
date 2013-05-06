@@ -4,7 +4,7 @@
 		<h3 id="myModalLabel">Add to potential by</h3>
 	</div>
 	<div class="modal-body">
-		<p>Have you seen this house?</p>
+		<p>Have you seen this property?</p>
 		<p class="hidden">
 			Attention. Another user will depend on your decision, and it is important that you do it consciously.<br/>
 			Please  specify down payment:

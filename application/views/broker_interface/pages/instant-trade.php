@@ -17,7 +17,7 @@
 	<?php if($this->session->userdata('current_property') == FALSE || empty($levels['level2'])):?>
 				<p>Instant trade is missing or is not selected current seller</p>
 	<?php else:?>
-				<h2>Уровень 1</h2>
+				<h2>Level 1</h2>
 				<div class="media">
 					<a class="none pull-left" href="#">
 						<img class="img-polaroid media-object" src="<?=site_url($levels['level1']['photo']);?>" alt="">
@@ -38,7 +38,7 @@
 					</div>
 				</div>
 		<?php if(!empty($levels['level2'])):?>
-				<h2>Уровень 2</h2>
+				<h2>Level 2</h2>
 			<?php for($i=0;$i<count($levels['level2']);$i++):?>
 				<div class="media">
 					<a class="none pull-left" href="#">
@@ -62,7 +62,7 @@
 				</div>
 			<?php endfor;?>
 			<?php if(!empty($levels['level3'])):?>
-				<h2>Уровень 3</h2>
+				<h2>Level 3</h2>
 				<?php for($i=0;$i<count($levels['level3']);$i++):?>
 				<div class="media">
 					<a class="none pull-left" href="#">
@@ -87,7 +87,7 @@
 				<?php endfor;?>
 			<?php endif;?>
 			<?php if(!empty($levels['level4'])):?>
-				<h2>Уровень 4</h2>
+				<h2>Level 4</h2>
 				<?php for($i=0;$i<count($levels['level4']);$i++):?>
 				<div class="media">
 					<a class="none pull-left" href="#">
@@ -112,7 +112,7 @@
 				<?php endfor;?>
 			<?php endif;?>
 			<?php if(!empty($levels['level5'])):?>
-				<h2>Уровень 5</h2>
+				<h2>Level 5</h2>
 				<?php for($i=0;$i<count($levels['level5']);$i++):?>
 				<div class="media">
 					<a class="none pull-left" href="#">
@@ -137,7 +137,7 @@
 				<?php endfor;?>
 			<?php endif;?>
 			<?php if(!empty($levels['level6'])):?>
-				<h2>Уровень 6</h2>
+				<h2>Level 6</h2>
 				<?php for($i=0;$i<count($levels['level6']);$i++):?>
 				<div class="media">
 					<a class="none pull-left" href="#">

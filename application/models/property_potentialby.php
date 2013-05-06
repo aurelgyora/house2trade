@@ -56,6 +56,7 @@ class Property_potentialby extends MY_Model{
 	function instantTradeLeveL2($currentProperty){
 		
 		$this->db->select('properties.*');
+		$this->db->distinct();
 		$this->db->from('property_potentialby');
 		$this->db->join('properties','properties.id = property_potentialby.buyer_id');
 		$this->db->where('property_potentialby.seller_id',$currentProperty);
@@ -69,6 +70,7 @@ class Property_potentialby extends MY_Model{
 	function instantTradeLeveLs($propertiesID){
 		
 		$this->db->select('properties.*');
+		$this->db->distinct();
 		$this->db->from('property_potentialby');
 		$this->db->join('properties','properties.id = property_potentialby.buyer_id');
 		$this->db->where_in('property_potentialby.seller_id',$propertiesID);
@@ -78,6 +80,4 @@ class Property_potentialby extends MY_Model{
 		if($data) return $data;
 		return NULL;
 	}
-	
-	
 }
