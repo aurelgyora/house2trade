@@ -437,8 +437,8 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Access denied');
 		endif;
-		$property = $this->input->post('parameter');
-		$down_payment = $this->input->post('down_payment');
+		$property = (int)$this->input->post('parameter');
+		$down_payment = (int)$this->input->post('down_payment');
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
 		if($property):
 			$this->load->model('property_potentialby');
@@ -446,6 +446,9 @@ class Ajax_interface extends MY_Controller{
 			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($this->session->userdata('current_property'),$property)):
 				$insert['seller_id'] = $this->session->userdata('current_property');
 				$insert['buyer_id'] = $property;
+				if(!empty($down_payment) && $down_payment > 100):
+					$down_payment = 100;
+				endif;
 				$insert['down_payment'] = (!empty($down_payment))?$down_payment:0;
 				$propertyStatus = $this->properties->read_field($insert['buyer_id'],'properties','status');
 				if($propertyStatus != 17):
