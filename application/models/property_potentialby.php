@@ -30,11 +30,15 @@ class Property_potentialby extends MY_Model{
 		return FALSE;
 	}
 	
-	function record_exists($seller_id,$buyer_id){
+	function record_exists($seller_id = NULL,$buyer_id = NULL){
 		
 		$this->db->select('buyer_id');
-		$this->db->where_in('seller_id',$seller_id);
-		$this->db->where_in('buyer_id',$buyer_id);
+		if(!is_null($seller_id)):
+			$this->db->where_in('seller_id',$seller_id);
+		endif;
+		if(!is_null($buyer_id)):
+			$this->db->where_in('buyer_id',$buyer_id);
+		endif;
 		$query = $this->db->get('property_potentialby');
 		$result = array();
 		foreach($query->result() as $row):

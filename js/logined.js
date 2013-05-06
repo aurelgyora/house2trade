@@ -251,21 +251,7 @@
 			}
 		,"json");
 	});
-	$("button.btn-property-add-potential-by").click(function(){
-		var parameter = $(this).attr('data-src');
-		var _this = this;
-		$.post(mt.baseURL+"add-to-potential-by",{'parameter':parameter},
-			function(data){
-				var target = $(_this).attr('data-target');
-				if(target === 'remove'){
-					$(_this).parents('div.media').remove();
-				}else{
-					$(_this).siblings("button.btn-property-remove-potential-by").removeClass('hidden').show();
-					$(_this).hide();
-				}
-			}
-		,"json");
-	});
+	$("button.btn-property-add-potential-by").click(function(){addPotentialBy(this);});
 	$("button.btn-property-remove-potential-by").click(function(){
 		var parameter = $(this).attr('data-src');
 		var _this = this;
@@ -281,5 +267,34 @@
 			}
 		,"json");
 	});
-	$("a.btn-delete-company").click(function(){if(confirm("Delete company?") == false) return false;})
+	$("a.btn-delete-company").click(function(){if(confirm("Delete company?") == false) return false;});
+	$("a.show-modal-confirm").click(function(){
+		$("button.btn-comfirm-add-potential-by").attr('data-target',$(this).attr('data-propery-target')).attr('data-src',$(this).attr('data-propery-id')).off('click').one('click',function(){setDownPayment(this);});
+	});
+	function setDownPayment(_this){
+		$("#addToPotentialBy > .modal-body > p:last").removeClass('hidden').siblings('p').addClass('hidden').siblings('div.input-prepend').removeClass('hidden').find('input').val('');
+		$(_this).html('Continue').removeClass('btn-primary').addClass('btn-success').off('click').one('click',function(){addPotentialBy(this);});
+	}
+	function addPotentialBy(_this){
+		var parameter = $(_this).attr('data-src');
+		$(_this).off('click').one('click',function(){setDownPayment(_this);})
+		var downPayment = parseInt($("#down-payment").val().trim());
+		$.post(mt.baseURL+"add-to-potential-by",{'parameter':parameter,'down_payment':downPayment},
+			function(data){
+				var target = $(_this).attr('data-target');
+				if(target === 'remove'){
+					$("a.show-modal-confirm[data-propery-id="+parameter+"]").parents('div.media').remove();
+				}else{
+					$("a.show-modal-confirm[data-propery-id="+parameter+"]").siblings("button.btn-property-remove-potential-by").removeClass('hidden').show();
+					$("a.show-modal-confirm[data-propery-id="+parameter+"]").hide();
+				}
+				$("#addToPotentialBy").modal('hide');
+			}
+		,"json");
+		
+	}
+	$("#addToPotentialBy").on('hidden',function(){
+		$("#addToPotentialBy > .modal-body > p:last").addClass('hidden').siblings('p').removeClass('hidden').siblings('div.input-prepend').addClass('hidden').find('input').val('');
+		$("button.btn-comfirm-add-potential-by").html('Yes').removeClass('btn-success').addClass('btn-primary');
+	})
 })(window.jQuery);

@@ -35,8 +35,7 @@
 						</p>
 					</div>
 					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
-					<button class="btn btn-mini btn-link btn-property-add-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+					<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="remove" data-propery-id="<?=$properties[$i]['id'];?>" data-toggle="modal">Add to potential by</a>
 				</div>
 			<?php endfor;?>
 			<?php if(!$this->session->userdata('current_property') || !$properties):?>
@@ -45,6 +44,7 @@
 			<?=$pages;?>
 			</div>
 		</div>
+		<?php $this->load->view("broker_interface/modal/add-to-potential-by");?>
 	</div>
 	<?php $this->load->view("broker_interface/includes/footer");?>
 	<?php $this->load->view("broker_interface/includes/scripts");?>

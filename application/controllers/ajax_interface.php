@@ -438,6 +438,7 @@ class Ajax_interface extends MY_Controller{
 			show_error('Access denied');
 		endif;
 		$property = $this->input->post('parameter');
+		$down_payment = $this->input->post('down_payment');
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
 		if($property):
 			$this->load->model('property_potentialby');
@@ -445,6 +446,7 @@ class Ajax_interface extends MY_Controller{
 			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($this->session->userdata('current_property'),$property)):
 				$insert['seller_id'] = $this->session->userdata('current_property');
 				$insert['buyer_id'] = $property;
+				$insert['down_payment'] = (!empty($down_payment))?$down_payment:0;
 				$propertyStatus = $this->properties->read_field($insert['buyer_id'],'properties','status');
 				if($propertyStatus != 17):
 					$result = $this->property_potentialby->insert_record($insert);
@@ -458,6 +460,8 @@ class Ajax_interface extends MY_Controller{
 					endif;
 					$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
 				endif;
+			else:
+				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property already exist';
 			endif;
 		endif;
 		echo json_encode($json_request);
@@ -472,10 +476,31 @@ class Ajax_interface extends MY_Controller{
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
 		if($property):
 			$this->load->model('property_potentialby');
-			$favoriteID = $this->property_potentialby->record_exist($this->session->userdata('current_property'),$property);
-			if($favoriteID):
-				$this->property_potentialby->delete_record($favoriteID,'property_potentialby');
+			$this->load->model('properties');
+			$potentialByID = $this->property_potentialby->record_exist($this->session->userdata('current_property'),$property);
+			if($potentialByID):
+				$this->property_potentialby->delete_record($potentialByID,'property_potentialby');
 				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from potential by';
+				$changeStatus = TRUE;
+				if($this->property_potentialby->record_exist($this->session->userdata('current_property'),NULL)):
+					$changeStatus = FALSE;
+				endif;
+				if($this->property_potentialby->record_exist(NULL,$this->session->userdata('current_property'))):
+					$changeStatus = FALSE;
+				endif;
+				if($changeStatus):
+					$this->properties->update_field($this->session->userdata('current_property'),'status',1,'properties');
+				endif;
+				$changeStatus = TRUE;
+				if($this->property_potentialby->record_exist($property,NULL)):
+					$changeStatus = FALSE;
+				endif;
+				if($this->property_potentialby->record_exist(NULL,$property)):
+					$changeStatus = FALSE;
+				endif;
+				if($changeStatus):
+					$this->properties->update_field($property,'status',1,'properties');
+				endif;
 			endif;
 		endif;
 		echo json_encode($json_request);
