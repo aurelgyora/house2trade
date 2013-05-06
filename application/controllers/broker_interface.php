@@ -226,7 +226,8 @@ class Broker_interface extends MY_Controller{
 			$mainPhotos = $this->images->mainPhotos($ids);
 			$this->load->model('property_type');
 			$property_type = $this->property_type->read_records('property_type');
-			for($i=0;$i<count($pagevar['properties']);$i++):
+			$pagevar['properties'] = $this->propertiesImagesTypes($pagevar['properties'],$mainPhotos,$property_type);
+			/*for($i=0;$i<count($pagevar['properties']);$i++):
 				$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
 				if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
 					$pagevar['properties'][$i]['photo'] = $mainPhotos[$pagevar['properties'][$i]['id']];
@@ -237,7 +238,7 @@ class Broker_interface extends MY_Controller{
 						break;
 					endif;
 				endfor;
-			endfor;
+			endfor;*/
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("broker_interface/properties/favorite",$pagevar);
@@ -266,7 +267,8 @@ class Broker_interface extends MY_Controller{
 			$mainPhotos = $this->images->mainPhotos($ids);
 			$this->load->model('property_type');
 			$property_type = $this->property_type->read_records('property_type');
-			for($i=0;$i<count($pagevar['properties']);$i++):
+			$pagevar['properties'] = $this->propertiesImagesTypes($pagevar['properties'],$mainPhotos,$property_type);
+			/*for($i=0;$i<count($pagevar['properties']);$i++):
 				$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
 				if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
 					$pagevar['properties'][$i]['photo'] = $mainPhotos[$pagevar['properties'][$i]['id']];
@@ -277,7 +279,7 @@ class Broker_interface extends MY_Controller{
 						break;
 					endif;
 				endfor;
-			endfor;
+			endfor;*/
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("broker_interface/properties/potentialby",$pagevar);
@@ -299,10 +301,92 @@ class Broker_interface extends MY_Controller{
 		$this->load->model('union');
 		$pagevar = array(
 			'select' => $this->union->selectBrokerProperties($this->account['id']),
-			'matches' => array()
+			'levels' => array('level2'=>array(),'level3'=>array(),'level4'=>array(),'level5'=>array(),'level6'=>array())
 		);
+		if($this->session->userdata('current_property') == TRUE):
+			$this->load->model('properties');
+			$this->load->model('property_potentialby');
+			$this->load->model('images');
+			$this->load->model('property_type');
+			$property_type = $this->property_type->read_records('property_type');
+			$pagevar['levels']['level1'] = $this->properties->read_record($this->session->userdata('current_property'),'properties');
+			if($pagevar['levels']['level1']):
+				$pagevar['levels']['level1']['photo'] = $this->images->mainPhoto($pagevar['levels']['level1']['id']);
+				if(!$pagevar['levels']['level1']['photo']):
+					$pagevar['levels']['level1']['photo'] = 'img/property.png';
+				endif;
+				$this->load->model('property_type');
+				$pagevar['levels']['level1']['type'] = $this->property_type->read_field($pagevar['levels']['level1']['type'],'property_type','title');
+			endif;
+			$pagevar['levels']['level2'] = $this->property_potentialby->instantTradeLeveL2($this->session->userdata('current_property'));
+			if(!empty($pagevar['levels']['level2'])):
+				$ids = array();
+				for($i=0;$i<count($pagevar['levels']['level2']);$i++):
+					$ids[] = $pagevar['levels']['level2'][$i]['id'];
+				endfor;
+				$mainPhotos = $this->images->mainPhotos($ids);
+				$pagevar['levels']['level2'] = $this->propertiesImagesTypes($pagevar['levels']['level2'],$mainPhotos,$property_type);
+				/*-----------------------------------------------------------------------------------*/
+				$pagevar['levels']['level3'] = $this->property_potentialby->instantTradeLeveLs($ids);
+				if(!empty($pagevar['levels']['level3'])):
+					$ids = array();
+					for($i=0;$i<count($pagevar['levels']['level3']);$i++):
+						$ids[] = $pagevar['levels']['level3'][$i]['id'];
+					endfor;
+					$mainPhotos = $this->images->mainPhotos($ids);
+					$pagevar['levels']['level3'] = $this->propertiesImagesTypes($pagevar['levels']['level3'],$mainPhotos,$property_type);
+					/*-----------------------------------------------------------------------------------*/
+					$pagevar['levels']['level4'] = $this->property_potentialby->instantTradeLeveLs($ids);
+					if(!empty($pagevar['levels']['level4'])):
+						$ids = array();
+						for($i=0;$i<count($pagevar['levels']['level4']);$i++):
+							$ids[] = $pagevar['levels']['level4'][$i]['id'];
+						endfor;
+						$mainPhotos = $this->images->mainPhotos($ids);
+						$pagevar['levels']['level4'] = $this->propertiesImagesTypes($pagevar['levels']['level4'],$mainPhotos,$property_type);
+						/*-----------------------------------------------------------------------------------*/
+						$pagevar['levels']['level5'] = $this->property_potentialby->instantTradeLeveLs($ids);
+						if(!empty($pagevar['levels']['level5'])):
+							$ids = array();
+							for($i=0;$i<count($pagevar['levels']['level5']);$i++):
+								$ids[] = $pagevar['levels']['level5'][$i]['id'];
+							endfor;
+							$mainPhotos = $this->images->mainPhotos($ids);
+							$pagevar['levels']['level5'] = $this->propertiesImagesTypes($pagevar['levels']['level5'],$mainPhotos,$property_type);
+							/*-----------------------------------------------------------------------------------*/
+							$pagevar['levels']['level6'] = $this->property_potentialby->instantTradeLeveLs($ids);
+							if(!empty($pagevar['levels']['level6'])):
+								$ids = array();
+								for($i=0;$i<count($pagevar['levels']['level6']);$i++):
+									$ids[] = $pagevar['levels']['level6'][$i]['id'];
+								endfor;
+								$mainPhotos = $this->images->mainPhotos($ids);
+								$pagevar['levels']['level6'] = $this->propertiesImagesTypes($pagevar['levels']['level6'],$mainPhotos,$property_type);
+							endif;
+						endif;
+					endif;
+				endif;
+			endif;
+		endif;
 		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("broker_interface/pages/instant-trade",$pagevar);
+	}
+	
+	private function propertiesImagesTypes($properties,$mainPhotos,$property_type){
+		
+		for($i=0;$i<count($properties);$i++):
+			$properties[$i]['photo'] = 'img/thumb.png';
+			if($mainPhotos && array_key_exists($properties[$i]['id'],$mainPhotos)):
+				$properties[$i]['photo'] = $mainPhotos[$properties[$i]['id']];
+			endif;
+			for($j=0;$j<count($property_type);$j++):
+				if($properties[$i]['type'] == $property_type[$j]['id']):
+					$properties[$i]['type'] = $property_type[$j]['title'];
+					break;
+				endif;
+			endfor;
+		endfor;
+		return $properties;
 	}
 	
 	/********************************************* properties ********************************************************/
