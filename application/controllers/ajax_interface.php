@@ -439,7 +439,7 @@ class Ajax_interface extends MY_Controller{
 		endif;
 		$property = (int)$this->input->post('parameter');
 		$down_payment = (int)$this->input->post('down_payment');
-		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
+		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Property not add to potential by';
 		if($property):
 			$this->load->model('property_potentialby');
 			$this->load->model('properties');
@@ -461,10 +461,8 @@ class Ajax_interface extends MY_Controller{
 						endif;
 						$this->changePropertiesStatus($insert['seller_id'],$insert['buyer_id']);	//СМЕНА СТАТУСОВ
 					endif;
-					$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
+					$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added to potential by<br/><br/>At the moment you have selected the prefered property and you also have potential buyer. So you can wait for a match. As soon as the match will be ready you will get email notification.';
 				endif;
-			else:
-				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property already exist';
 			endif;
 		endif;
 		echo json_encode($json_request);

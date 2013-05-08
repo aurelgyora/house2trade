@@ -9,9 +9,18 @@
 			Attention. Another user will depend on your decision, and it is important that you do it consciously.<br/>
 			Please  specify down payment:
 		</p>
-		<div class="input-prepend input-append hidden">
-			<input class="input-mini valid-numeric valid-max-value" data-max-value="100" id="down-payment" placeholder="Down Payment" type="text">
-			<span class="add-on">%</span>
+		<div id="hidden-block" class="hidden">
+			<div class="input-prepend input-append">
+				<input class="input-mini valid-numeric valid-max-value" data-max-value="100" id="down-payment" placeholder="Down Payment" type="text">
+				<span class="add-on">%</span>
+				
+			</div>
+			<div class="alert alert-info">
+				<p>
+					<strong>Attention.</strong> The down payment is not required, but the value of the down payment is very important for sales. 
+					All participants in the transaction are dependent on this payment and can not agree if the payment is too small.
+				</p>
+			</div>
 		</div>
 	</div>
 	<div class="modal-footer">
