@@ -60,22 +60,37 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+.arrow {
+	position: absolute;
+	display: inline-block;
+	top: 50%;
+	margin-top: -10px;
+	right: 20px;
+	width: 14px;
+	height: 20px;
+	background: url('../img/arrow.png');
+}
+
 body { font: 16px/1.4em 'Source Sans Pro', Arial, Helvetica, Geneva, sans-serif; font-weight: 400; color: #222; }
-header { background: url('../img/header_default_3.jpg') no-repeat; position: relative; box-shadow: 0 -3px 5px #555 inset; }
+header { background: url('../img/header-back.png') no-repeat; background-size: cover; position: relative; }
 header.single { background-position: center bottom; height: 100px; box-shadow: 0 4px 7px #ccc; }
 
-.main-nav { margin: 5px 0 0; padding: 0; text-align: right; }
-.main-nav li { display: inline-block; list-style: none; margin: 0 8px; }
-.main-nav li a { display: inline-block; color: #fff; height: 20px; text-decoration: none; text-shadow: 0 1px 1px #000;  }
+.white-head { background: #ffffff; height: 40px; position: relative; }
+.logo img { position: absolute; top: 50%; margin-top: -10px;}
+
+.main-nav { margin: 0; padding: 0; text-align: right; }
+.main-nav li { display: inline-block; list-style: none; margin: 0 10px;}
+.main-nav li a { display: inline-block; color: #000000; height: 40px; line-height: 40px; text-decoration: none; font-size: 0.9em;}
 
 .auth { list-style: none; margin: 10px 6px 0 0; padding: 0; text-align: right; }
 .auth li { display: inline-block; margin: 0 2px 0 0; font-style: italic; color: #E0E0E0; font-size: 0.9em; }
 .auth li a { text-shadow: #333 1px 1px 1px; color: #fff; font-size: 10px; text-transform: uppercase; font-weight: 600; text-decoration: none; font-style: normal; border-bottom: 1px solid; }
 
-h1 { font: 48px/57px 'Source Sans Pro', Arial, Helvetica, Geneva, sans-serif; margin: 0 0 0.25em; font-weight: 600; line-height: 1.25em; color: #444; }
+h1 { font: 55px/64px 'Source Sans Pro', Arial, Helvetica, Geneva, sans-serif; margin: 0 0 0.25em; font-weight: 600; line-height: 1.25em; color: #444; }
 .single h1 { text-shadow: 0 1px 0 #fff; }
-h1.slogan { color: #fff; text-shadow: 0 1px 1px #000; margin: 0.9em 0.25em 0; font-weight: 500; }
-h1.slogan span { color: #FFCC1D; }
+h1.slogan { color: #fff; margin: 0.9em 0.25em 0; font-weight: 500; }
+h1.slogan span { color: #FFCC1D; }]
+.two { color: #e18c44; }
 h2 { font-size: 25px; margin: 0.4em 0 1em; font-weight: 400; text-transform: uppercase; line-height: 1.25em; }
 h2 span { text-transform: none; display: block; color: #999; font-size: 16px; font-style: italic; }
 .h1-desc { font: 22px/1.45em 'Source Sans Pro', Arial, Helvetica, Geneva, sans-serif; color: #fff; text-shadow: 0 1px 1px #000; margin: 1.2em 0.8em; font-weight: 300; }
@@ -112,12 +127,14 @@ p.copy { font-size: 13px; float: left; margin: 0.1em 2em 0 0; }
 #main .block-separator { height: 1px; background: #e0e0e0; margin: 3em 0; }
 #main a { text-decoration: none; }
 
-.btn-submit { display: inline-block; background: #557494; text-decoration: none; border-radius: 3px; width: 200px; height: 40px; line-height: 40px; margin: 10px 0; border: none !important; text-transform: uppercase; text-align: center; background: #767676; color: #fff; font-weight: 400;  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.19); text-shadow: 0 1px 1px rgba(0, 0, 0, .2); border-radius: 100px; }
+.btn-submit { position: relative; display: inline-block; padding-right: 30px; color: #ffffff; text-transform: uppercase; font-weight: 700; background: #557494; font-size: 1.3em; text-decoration: none; width: 215px; height: 70px; line-height: 70px; margin: 10px 0; border: none !important; text-transform: uppercase; text-align: center; }
 #main a.btn-submit { color: #fff; }
 #main .steps { font-size: 24px; line-height: 130%; font-weight: 300; }
 
 .slide h1 { margin-bottom: 30px; }
-.slide .btn-submit { margin: 10px 0 30px 18px; background: #FFCC1D; color: #111; text-shadow: none; border-radius: 100px; }
+.slide .btn-submit { margin: 10px 0 30px 18px; background: #e18c44; color: #ffffff; text-shadow: none; border-radius: 0; }
+.right .btn-submit { background: #4791ec; }
+.right .btn-submit:first-child { margin-top: 125px; }
 .btn-comment { text-transform: none; font-style: italic; }
 
 .visuallyhidden { border: 0; margin: 0 -1px -1px 0; clip: rect(0 0 0 0); overflow: hidden; padding: 0; width: 1px; height: 1px; position: absolute; }
@@ -141,6 +158,7 @@ input[type="radio"] { margin: 7px 5px; }
 #property_mls { width: 580px; }
 select.tall { width: 191px; }
 form .btn-submit { background: #FFCC1D; color: #333; text-shadow: none; font-weight: normal; font-size: 16px; padding: 0 25px; width: auto; border-radius: 3px; margin: 0; }
+.form-signup .btn-submit { background: #C7C7C7; color: #333; text-shadow: none; font-weight: normal; font-size: 16px; padding: 0 25px; width: auto; border-radius: 3px; margin: 0; }
 .form-signup .btn-group { margin: 15px 0 20px; }
 
 .how-steps { list-style: none; margin: 0; padding: 0; }
