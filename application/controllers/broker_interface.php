@@ -109,7 +109,7 @@ class Broker_interface extends MY_Controller{
 				endfor;
 				$count = 0;
 				if($pagevar['properties']):
-					$count = count($this->properties->query_execute($this->session->userdata(' ')));
+					$count = count($this->properties->query_execute($this->session->userdata('search_sql')));
 				endif;
 				$pagevar['pages'] = $this->pagination('broker/search/result',5,$count,7);
 			else:

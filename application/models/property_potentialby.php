@@ -59,7 +59,8 @@ class Property_potentialby extends MY_Model{
 		$this->db->distinct();
 		$this->db->from('property_potentialby');
 		$this->db->join('properties','properties.id = property_potentialby.buyer_id');
-		$this->db->where('property_potentialby.seller_id',$currentProperty);
+		//$this->db->where('property_potentialby.seller_id',$currentProperty);
+		$this->db->where('property_potentialby.buyer_id',$currentProperty);
 		$this->db->order_by('properties.id');
 		$query = $this->db->get();
 		$data = $query->result_array();
@@ -73,7 +74,8 @@ class Property_potentialby extends MY_Model{
 		$this->db->distinct();
 		$this->db->from('property_potentialby');
 		$this->db->join('properties','properties.id = property_potentialby.buyer_id');
-		$this->db->where_in('property_potentialby.seller_id',$propertiesID);
+		//$this->db->where_in('property_potentialby.seller_id',$propertiesID);
+		$this->db->where_in('property_potentialby.buyer_id',$propertiesID);
 		$this->db->order_by('properties.id');
 		$query = $this->db->get();
 		$data = $query->result_array();
