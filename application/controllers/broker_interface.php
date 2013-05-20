@@ -287,13 +287,56 @@ class Broker_interface extends MY_Controller{
 	
 	public function match(){
 		
-		$this->load->model('union');
+		$this->load->model(array('union','match'));
 		$pagevar = array(
 			'select' => $this->union->selectBrokerProperties($this->account['id']),
-			'matches' => array()
+			'match' => $this->match->parseMatchPropertyID($this->session->userdata('current_property')),
+			'properties' => array()
 		);
+		$matchesPropertiesIDs = $this->getMatchPropertiesIDs($pagevar['match']);
+		$pagevar['properties'] = $this->getMatchPropertiesInformationList($matchesPropertiesIDs);
 		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("broker_interface/pages/match",$pagevar);
+	}
+	
+	private function getMatchPropertiesIDs($match){
+		
+		if(!empty($match)):
+			$propertiesIDs = array();
+			for($i=1;$i<=$match['level'];$i++):
+				$propertiesIDs[] = $match['property_id'.$i];
+			endfor;
+			return array_reverse($propertiesIDs);
+		else:
+			return NULL;
+		endif;
+	}
+	
+	private function getMatchPropertiesInformationList($propertiesIDs){
+		
+		if(!is_null($propertiesIDs)):
+			$this->load->model(array('properties','property_potentialby'));
+			$propertiesInfoList = $this->properties->getPropertiesWhereIN($propertiesIDs);
+			$downPayments = $this->property_potentialby->getDownPaymentsValues($propertiesIDs);
+			for($i=0;$i<count($propertiesInfoList)-1;$i++):
+				for($j=0;$j<count($downPayments);$j++):
+					if(($downPayments[$j]['seller_id'] == $propertiesInfoList[$i]['id']) && ($downPayments[$j]['buyer_id'] == $propertiesInfoList[$i+1]['id'])):
+						$propertiesInfoList[$i]['down_payment'] = $downPayments[$j]['down_payment'];
+						break;
+					endif;
+				endfor;
+			endfor;
+			for($j=0;$j<count($downPayments);$j++):
+				if(($downPayments[$j]['seller_id'] == $propertiesInfoList[count($propertiesInfoList)-1]['id']) && ($downPayments[$j]['buyer_id'] == $propertiesInfoList[0]['id'])):
+					$propertiesInfoList[count($propertiesInfoList)-1]['down_payment'] = $downPayments[$j]['down_payment'];
+					break;
+				endif;
+			endfor;
+			return $propertiesInfoList;
+		else:
+			return NULL;
+		endif;
+		
 	}
 	
 	public function instantTrade(){
@@ -304,10 +347,7 @@ class Broker_interface extends MY_Controller{
 			'levels' => array('level2'=>array(),'level3'=>array(),'level4'=>array(),'level5'=>array(),'level6'=>array())
 		);
 		if($this->session->userdata('current_property') == TRUE):
-			$this->load->model('properties');
-			$this->load->model('property_potentialby');
-			$this->load->model('images');
-			$this->load->model('property_type');
+			$this->load->model(array('properties','property_potentialby','images','property_type'));
 			$property_type = $this->property_type->read_records('property_type');
 			$pagevar['levels']['level1'] = $this->properties->read_record($this->session->userdata('current_property'),'properties');
 			if($pagevar['levels']['level1']):

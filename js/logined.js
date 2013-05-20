@@ -253,6 +253,7 @@
 	});
 	$("button.btn-property-add-potential-by").click(function(){addPotentialBy(this);});
 	$("button.btn-property-remove-potential-by").click(function(){
+		if(confirm('Confirm remove from potential by?') == false) return false;
 		var parameter = $(this).attr('data-src');
 		var _this = this;
 		$.post(mt.baseURL+"remove-to-potential-by",{'parameter':parameter},

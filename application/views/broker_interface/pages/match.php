@@ -14,9 +14,35 @@
 				<?php $this->load->view("broker_interface/forms/setect-property");?>
 				</div>
 				<div class="clear"></div>
-			<?php if(!$this->session->userdata('current_property') || !$matches):?>
-				<p>Matches is missing or is not selected current seller</p>
-			<?php endif;?>
+		<?php if(!$this->session->userdata('current_property') || !$match):?>
+				<p>Match is missing or is not selected current seller</p>
+		<?php else:?>
+			<?php array_push($properties,$properties[0]);?>
+			<?php for($i=0;$i<count($properties);$i++):?>
+				<div class="media">
+					<a class="none pull-left" href="#">
+						<img class="img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">
+					</a>
+					<div class="media-body">
+						<h4 class="media-heading">
+							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$properties[$i]['id']);?>"><?=$properties[$i]['address1'];?></a>
+							<span><?=$properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code']; ?></span>
+						</h4>
+						<p>
+							$<?=$properties[$i]['price'];?> <span class="separator">|</span> 
+							<?=$properties[$i]['bedrooms'];?> Bd <span class="separator">|</span> 
+							<?=$properties[$i]['bathrooms'];?> Ba <span class="separator">|</span> 
+							<?=$properties[$i]['sqf'];?> Sq Ft <span class="separator">|</span> 
+							<?=$properties[$i]['lotsize'];?> Acres <br/>
+							<?= ucfirst($properties[$i]['type']); ?> Home <br/>
+						</p>
+					</div>
+				</div>
+				<?php if(($i+1) < count($properties)):?>
+					<img src="<?=site_url('img/ArrowDown.png');?>" alt="" />Dawn Payment: <?= ($properties[$i]['down_payment']); ?> %
+				<?php endif;?>
+			<?php endfor;?>
+		<?php endif;?>
 			</div>
 		</div>
 	</div>

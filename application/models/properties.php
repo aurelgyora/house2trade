@@ -115,4 +115,32 @@ class Properties extends MY_Model{
 		$this->db->from('properties');
 		return $this->db->count_all_results();
 	}
+
+	function getPropertiesWhereIN($IDs){
+		
+		$this->db->select('properties.*,property_type.title AS type,images.photo',FALSE);
+		$this->db->from('properties');
+		$this->db->join('property_type','properties.type = property_type.id','left');
+		$this->db->join('images','properties.id = images.property','left');
+		$this->db->where_in('properties.id',$IDs);
+//		$this->db->where('images.main',1);
+		$this->db->where('properties.status <',17);
+		$this->db->group_by('properties.id');
+		$query = $this->db->get();
+		$data = $query->result_array();
+		if(!empty($data)):
+			$propertiesInfoList = array();
+			for($i=0;$i<count($IDs);$i++):
+				for($j=0;$j<count($data);$j++):
+					if($IDs[$i] == $data[$j]['id']):
+						$propertiesInfoList[] = $data[$j];
+					endif;
+				endfor;
+			endfor;
+			return $propertiesInfoList;
+		else:
+			return NULL;
+		endif;
+	}
+
 }

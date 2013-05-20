@@ -41,25 +41,25 @@ $route['get-property-zillow-api'] = "ajax_interface/getPropertyZillowAPI";
 
 /*************************************************** USERS INTRERFACE ***********************************************/
 
-$route['login']				= "users_interface/login";
-$route['signup']			= "users_interface/signup";
+$route['login'] = "users_interface/login";
+$route['signup'] = "users_interface/signup";
 
-$route['search']			= "users_interface/search";
-$route['how-it-works']		= "users_interface/howItWorks";
-$route['trading-concepts'] 	= "users_interface/tradingConcepts";
-$route['about-us']			= "users_interface/aboutUs";
-$route['contacts']			= "users_interface/contacts";
+$route['search'] = "users_interface/search";
+$route['how-it-works'] = "users_interface/howItWorks";
+$route['trading-concepts'] = "users_interface/tradingConcepts";
+$route['about-us'] = "users_interface/aboutUs";
+$route['contacts'] = "users_interface/contacts";
 // ***************************************************************** footer
-$route['search-for-one']	= "users_interface/searchForOne";
-$route['advanced-search']	= "users_interface/advancedSearch";
-$route['lastest-offers']	= "users_interface/lastestOffers";
-$route['properties-for-sale']= "users_interface/propertiesForSale";
-$route['company']			= "users_interface/company";
-$route['step-by-step']		= "users_interface/stepByStep";
-$route['virtual-tour']		= "users_interface/virtualTour";
+$route['search-for-one'] = "users_interface/searchForOne";
+$route['advanced-search'] = "users_interface/advancedSearch";
+$route['lastest-offers'] = "users_interface/lastestOffers";
+$route['properties-for-sale'] = "users_interface/propertiesForSale";
+$route['company'] = "users_interface/company";
+$route['step-by-step'] = "users_interface/stepByStep";
+$route['virtual-tour'] = "users_interface/virtualTour";
 
-$route['password-recovery']	= "users_interface/pswdRecovery";
-$route['logout']			= "users_interface/logout";
+$route['password-recovery'] = "users_interface/pswdRecovery";
+$route['logout'] = "users_interface/logout";
 $route['confirm-registering/:any/activation-code/:any'] = "users_interface/confirm_registering";
 $route['password-recovery/:any/temporary-code/:any'] = "users_interface/confirm_temporary_code";
 

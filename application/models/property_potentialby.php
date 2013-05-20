@@ -82,4 +82,23 @@ class Property_potentialby extends MY_Model{
 		if($data) return $data;
 		return NULL;
 	}
+
+	function getDownPaymentsValues($IDs){
+		
+		if(!empty($IDs)):
+			for($i=0;$i<count($IDs)-1;$i++):
+				$this->db->or_where('seller_id = '.$IDs[$i].' AND buyer_id = '.$IDs[$i+1]);
+			endfor;
+			$this->db->or_where('seller_id = '.$IDs[count($IDs)-1].' AND buyer_id = '.$IDs[0]);
+		endif;
+		$query = $this->db->get('property_potentialby');
+		$data = $query->result_array();
+		if(!empty($data)):
+			return $data;
+		else:
+			return NULL;
+		endif;
+		
+	}
+	
 }
