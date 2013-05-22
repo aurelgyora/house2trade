@@ -8,16 +8,10 @@ class Match extends MY_Model{
 	
 	function parseMatchPropertyID($property){
 		
-		$this->db->where('status <',2);
-		$this->db->where('(property_id1',$property);
-		$this->db->or_where('property_id2',$property);
-		$this->db->or_where('property_id3',$property);
-		$this->db->or_where('property_id4',$property);
-		$this->db->or_where('property_id5',$property);
-		$this->db->or_where("property_id6 = $property)");
-		$query = $this->db->get('match',1);
+		$querySting = "SELECT * FROM `match` WHERE (`status` < 2) AND (`property_id1` = $property OR `property_id2` = $property OR `property_id3` = $property OR `property_id4` = $property OR`property_id5` = $property OR`property_id6` = $property) LIMIT 1";
+		$query = $this->db->query($querySting);
 		$data = $query->result_array();
-		if(count($data) > 0) return $data[0];
+		if(!empty($data)) return $data[0];
 		return NULL;
 	}
 	

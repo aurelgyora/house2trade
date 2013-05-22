@@ -295,13 +295,16 @@ class Broker_interface extends MY_Controller{
 		$this->load->model(array('union','match'));
 		$pagevar = array(
 			'select' => $this->union->selectBrokerProperties($this->account['id']),
-			'match' => $this->match->parseMatchPropertyID($this->session->userdata('current_property')),
+			'match' => array(),
 			'properties' => array(),
 		);
-		$matchesPropertiesIDs = $this->getMatchPropertiesIDs($pagevar['match']);
-		$pagevar['properties'] = $this->getMatchPropertiesInformationList($matchesPropertiesIDs);
-		if(!empty($pagevar['match'])):
-			$pagevar['match']['my_status_field'] = $this->getFieldMatchName($pagevar['match']);
+		if($this->session->userdata('current_property') > 0):
+			$pagevar['match'] = $this->match->parseMatchPropertyID($this->session->userdata('current_property'));
+			$matchesPropertiesIDs = $this->getMatchPropertiesIDs($pagevar['match']);
+			$pagevar['properties'] = $this->getMatchPropertiesInformationList($matchesPropertiesIDs);
+			if(!empty($pagevar['match'])):
+				$pagevar['match']['my_status_field'] = $this->getFieldMatchName($pagevar['match']);
+			endif;
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("broker_interface/pages/match",$pagevar);
