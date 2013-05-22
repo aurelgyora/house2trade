@@ -150,7 +150,7 @@ class Ajax_interface extends MY_Controller{
 							endif;
 							$this->users->update_field($dataval['user_id'],'account',$ownerID,'users');
 							$this->users->update_field($dataval['user_id'],'group',3,'users');
-							$this->properties->update_field($property_id,'status',1,'properties');
+							$this->properties->update_field($property_id,'status',$this->profile['status'],'properties');
 							$this->load->library('parser');
 							$this->load->model('mails');
 							$mail_content = $this->mails->read_record(2,'mails');
@@ -380,6 +380,81 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 	
+	function changePropertyStatus(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$json_request = array('status'=>FALSE);
+		$propertyID = trim($this->input->post('property'));
+		$statusValue = trim($this->input->post('status'));
+		if($statusValue >= 0 && !empty($propertyID)):
+			$isUpdate = FALSE;
+			if($this->profile['group'] == 1):
+				$isUpdate = TRUE;
+			endif;
+			if($this->profile['group'] == 2 && ($statusValue == 9 OR $statusValue == 11 OR $statusValue == 1)):
+				$isUpdate = TRUE;
+			endif;
+			if($this->profile['group'] == 3 && ($statusValue == 9 OR $statusValue == 12 OR $statusValue == 1)):
+				$isUpdate = TRUE;
+			endif;
+			if($isUpdate == TRUE):
+				$this->load->model('properties');
+				$this->properties->update_field($propertyID,'status',$statusValue,'properties');
+				$json_request['status'] = TRUE;
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+
+	function changeDownPaymentValue(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$json_request = array('status'=>FALSE);
+		$matchID = trim($this->input->post('match'));
+		$valueDP = trim($this->input->post('value'));
+		if($matchID > 0):
+			$json_request['status'] = $this->setDownPaymentValue($matchID,$valueDP);
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function changeMatchAndPropertyStatuses(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$json_request = array('status'=>FALSE,'message'=>'');
+		$matchID = trim($this->input->post('match'));
+		$status = trim($this->input->post('status'));
+		if($matchID > 0):
+			$result = $this->changeMatchStatusValue($matchID,$status);
+			if($result['status'] == TRUE):
+				$this->load->model('match');
+				$match = $this->match->read_record($matchID,'match');
+				$propertiesIDs = $this->getMatchPropertiesIDs($match);
+				if($status == 2):
+					$this->changePropertiesStatus(1,NULL,NULL,$propertiesIDs);
+				else:
+					$this->load->model('properties');
+					$backupStatusProperty = $this->properties->read_field($this->session->userdata('current_property'),'properties','status');
+					$this->session->set_userdata('backupStatusProperty',$backupStatusProperty);
+					if($result['approved_all'] == FALSE):
+						$this->changePropertiesStatus(7,NULL,NULL,array($this->session->userdata('current_property')));
+					else:
+						$this->changePropertiesStatus(8,NULL,NULL,array($this->session->userdata('current_property')));
+					endif;
+				endif;
+			endif;
+			$json_request['status'] = $result['status'];
+			$json_request['message'] = $result['message'];
+		endif;
+		echo json_encode($json_request);
+	}
+	
 	/************************************** favorite & potential by **********************************************/
 	
 	function addToFavorite(){
@@ -459,7 +534,7 @@ class Ajax_interface extends MY_Controller{
 						if($favoriteID):
 							$this->property_favorite->delete_record($favoriteID,'property_favorite');
 						endif;
-						$this->changePropertiesStatus($insert['seller_id'],$insert['buyer_id']);	//СМЕНА СТАТУСОВ
+						$this->changePropertiesStatus(0,$insert['seller_id'],$insert['buyer_id']);
 					endif;
 					$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added to potential by<br/><br/>At the moment you have selected the prefered property and you also have potential buyer. So you can wait for a match. As soon as the match will be ready you will get email notification.';
 				endif;
@@ -598,23 +673,30 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 
-	function change_user_status(){
+	function changeUserStatus(){
 		
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
+		if(!$this->loginstatus || $this->account['group'] > 1):
+			show_error('Аccess denied');
+		endif;
 		$json_request = array('status'=>FALSE);
-		$data = trim($this->input->post('postdata'));
-		if($data):
-			$currentStatus = $this->users->read_field($data,'users','status');
-			if(!$currentStatus):
-				$this->users->update_field($data,'status',1,'users');
-				$this->users->update_field($data,'temporary_code','','users');
+		$accountID = trim($this->input->post('postdata'));
+		if($accountID > 0):
+			$status = $this->users->read_field($accountID,'users','status');
+			if($status == 0):
+				$status = 1;
+				$this->users->update_field($accountID,'status',$status,'users');
+				$this->users->update_field($accountID,'temporary_code','','users');
 				$json_request['status'] = TRUE;
 			else:
-				$this->users->update_field($data,'status',0,'users');
+				$status = 0;
+				$this->users->update_field($accountID,'status',$status,'users');
 				$json_request['status'] = FALSE;
 			endif;
+			$this->load->model('properties');
+			$this->properties->changeStatusOfManyProperties($accountID,$status);
 		endif;
 		echo json_encode($json_request);
 	}

@@ -35,6 +35,7 @@
 							Lot: <?= $properties[$i]['sqf'];?> sq ft <br/>
 							Tax: $<?= $properties[$i]['tax']; ?>
 						</p>
+						<?=getPropertyStatus($properties[$i]['id'],$properties[$i]['status'],$this->profile['group']);?>
 					</div>
 				</div>
 			<?php endfor;?>

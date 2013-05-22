@@ -134,6 +134,37 @@
 				},"json");
 		
 	})
+	$("button.change-property-status").click(function(event){
+		if($(this).hasClass("active")){return false;}
+		var element = this;
+		var property = $(element).parents('div.btn-group').attr('data-property-id');
+		var status = $(element).attr('data-property-status');
+		$.post(mt.baseURL+"change-property-status",{'property':property,'status':status},
+			function(data){
+				if(data.status){$(element).siblings("button.change-property-status").removeClass('btn-success btn-info');$(element).addClass('btn-info');}
+			},
+		"json");
+		
+	})
+	$("button.btn-change-down-payment").click(function(event){
+		if($("#down-payment-value").emptyValue()){
+			return false;
+		}else if(confirm('Save dawn payment') == false){
+			return false;
+		}
+		var element = this;
+		var matchID = $(element).attr('data-match');
+		var DPValue = $("#down-payment-value").val();
+		$.post(mt.baseURL+"change-down-payment-value",{'match':matchID,'value':DPValue},
+			function(data){
+				if(data.status){
+					$("#my-down-payment-value").html(DPValue);
+					$(element).addClass('btn-success');
+				}
+			},
+		"json");
+		
+	})
 	$("input[role='tooltip']").change(function(){$(this).tooltip("destroy");});
 	$("textarea[role='tooltip']").change(function(){$(this).tooltip("destroy");});
 	$("#set-password").click(function(event){
@@ -272,6 +303,25 @@
 	$("a.show-modal-confirm").click(function(){
 		$("button.btn-comfirm-add-potential-by").attr('data-target',$(this).attr('data-propery-target')).attr('data-src',$(this).attr('data-propery-id')).off('click').one('click',function(){setDownPayment(this);});
 	});
+	$("button.btn-appoved-match").click(function(){
+		if(confirm('Do you really want appoved this match?') == false){return false;}
+		changeStatusesMatch($(this).attr('data-match-id'),1);
+	})
+	$("button.btn-break-match").click(function(){
+		if(confirm('Do you really want break this match?') == false){return false;}
+		changeStatusesMatch($(this).attr('data-match-id'),2);
+	});
+	function changeStatusesMatch(matchID,status){
+		
+		$.post(mt.baseURL+"change-match-statuses",{'match':matchID,'status':status},
+			function(data){
+				if(data.status){
+					$("div.div-match-operation").addClass('hidden');
+					$("#form-request").html(data.message);
+				}
+			}
+		,"json");
+	}
 	function setDownPayment(_this){
 		$("#addToPotentialBy > .modal-body > p:last").removeClass('hidden').siblings('p').addClass('hidden').siblings('#hidden-block').removeClass('hidden').find('input').val('');
 		$(_this).html('Continue').removeClass('btn-primary').addClass('btn-success').off('click').one('click',function(){addPotentialBy(this);});

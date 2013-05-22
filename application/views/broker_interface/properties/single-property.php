@@ -47,6 +47,7 @@
 							Tax: $<?= $property['tax']; ?>
 						</p>
 						-->
+						<?=getPropertyStatus($property['id'],$property['status'],$this->profile['group']);?>
 					</div>
 				</div>
 			<?php else:?>

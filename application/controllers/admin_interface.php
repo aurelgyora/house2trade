@@ -143,6 +143,61 @@ class Admin_interface extends MY_Controller{
 		redirect('administrator/companies');
 	}
 	
+	/******************************************* properties ******************************************************/
+	
+	public function properties(){
+		
+		$offset = intval($this->uri->segment(4));
+		$per_page = 10;
+		$this->load->model('properties');
+		$pagevar = array(
+			'properties' => $this->properties->read_limit_records($per_page,$offset),
+			'pagination' => $this->pagination(ADM_START_PAGE.'/properties',4,$this->properties->countRecords(),$per_page)
+		);
+		if($pagevar['properties']):
+			$ids = array();
+			for($i=0;$i<count($pagevar['properties']);$i++):
+				$ids[] = $pagevar['properties'][$i]['id'];
+			endfor;
+			$this->load->model('images');
+			$mainPhotos = $this->images->mainPhotos($ids);
+			$this->load->model('property_type');
+			$property_type = $this->property_type->read_records('property_type');
+			for($i=0;$i<count($pagevar['properties']);$i++):
+				$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
+				if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
+					$pagevar['properties'][$i]['photo'] = $mainPhotos[$pagevar['properties'][$i]['id']];
+				endif;
+				for($j=0;$j<count($property_type);$j++):
+					if($pagevar['properties'][$i]['type'] == $property_type[$j]['id']):
+						$pagevar['properties'][$i]['type'] = $property_type[$j]['title'];
+						break;
+					endif;
+				endfor;
+			endfor;
+		endif;
+		$this->session->set_userdata('backpath',site_url(uri_string()));
+		$this->load->view("admin_interface/pages/properties-list",$pagevar);
+	}
+	
+	public function propertyDetail(){
+		
+		$this->load->model(array('properties','images','union','accounts_owners'));
+		$pagevar = array(
+			'property' => $this->properties->read_record($this->uri->segment(4),'properties'),
+			'images' => $this->images->read_records($this->uri->segment(4))
+		);
+		if($pagevar['property']['owner']):
+			$owner = $this->accounts_owners->read_record($pagevar['property']['owner'],'accounts_owners');
+			if($owner):
+				$pagevar['property']['phone'] = $owner['phone'];
+				$pagevar['property']['cell'] = $owner['cell'];
+				$pagevar['property']['email'] = $owner['email'];
+			endif;
+		endif;
+		$this->load->view("admin_interface/pages/property-detail",$pagevar);
+	}
+	
 	/********************************************* users ********************************************************/
 	
 	public function control_accounts(){

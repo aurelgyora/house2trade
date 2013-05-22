@@ -90,15 +90,25 @@ class Property_potentialby extends MY_Model{
 				$this->db->or_where('seller_id = '.$IDs[$i].' AND buyer_id = '.$IDs[$i+1]);
 			endfor;
 			$this->db->or_where('seller_id = '.$IDs[count($IDs)-1].' AND buyer_id = '.$IDs[0]);
+			$query = $this->db->get('property_potentialby');
+			$data = $query->result_array();
+			if(!empty($data)):
+				return $data;
+			endif;
 		endif;
+		return NULL;
+	}
+	
+	function getDownPaymentValue($sellerID,$buyerID){
+		
+		$this->db->where('seller_id',$sellerID);
+		$this->db->where('buyer_id',$buyerID);
 		$query = $this->db->get('property_potentialby');
 		$data = $query->result_array();
 		if(!empty($data)):
-			return $data;
-		else:
-			return NULL;
+			return $data[0]['id'];
 		endif;
-		
+		return NULL;
 	}
 	
 }

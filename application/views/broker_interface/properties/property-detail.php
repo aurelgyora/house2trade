@@ -15,6 +15,12 @@
 					<div class="navbar-inner">
 					<?php if($this->session->userdata('search_sql')):?>
 						<?=anchor('broker/search/result','Back to search result','class="btn btn-link"');?>
+					<?php elseif($this->uri->segment(2) == 'match'):?>
+						<?=anchor($this->session->userdata('backpath'),'Back to match','class="btn btn-link"');?>
+					<?php elseif($this->uri->segment(2) == 'instant-trade'):?>
+						<?=anchor($this->session->userdata('backpath'),'Back to instant trade','class="btn btn-link"');?>
+					<?php elseif($this->uri->segment(2) == 'favorite'):?>
+						<?=anchor($this->session->userdata('backpath'),'Back to favorite list','class="btn btn-link"');?>
 					<?php else:?>
 						<?=anchor($this->session->userdata('backpath'),'Back to properties list','class="btn btn-link"');?>
 					<?php endif;?>

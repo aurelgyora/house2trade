@@ -38,7 +38,7 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 define('PATH_PAGE_VARIABLE',					getcwd().'/variables/page_variables.php');
 define('IMAGE_LOADING',							'/img/loading.gif');
 define('TOOLTIP_FIELD_BLANK',					'data-trigger="focus" data-placement="right" role="tooltip" data-original-title="This field can not be blank"');
-define('ADM_START_PAGE',						'administrator/control-panel');
+define('ADM_START_PAGE',						'administrator');
 define('BROKER_START_PAGE',						'broker/properties');
 define('OWNER_START_PAGE',						'homeowner/properties');
 

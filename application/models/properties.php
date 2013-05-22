@@ -106,12 +106,14 @@ class Properties extends MY_Model{
 		return NULL;
 	}
 	
-	function countRecords($group){
+	function countRecords($group = NULL){
 		
-		switch($group):
-			case 2: $this->db->where('broker',$this->account['id']); break;
-			case 3: $this->db->where('owner',$this->account['id']); break;
-		endswitch;
+		if(!is_null($group)):
+			switch($group):
+				case 2: $this->db->where('broker',$this->account['id']); break;
+				case 3: $this->db->where('owner',$this->account['id']); break;
+			endswitch;
+		endif;
 		$this->db->from('properties');
 		return $this->db->count_all_results();
 	}
@@ -142,5 +144,16 @@ class Properties extends MY_Model{
 			return NULL;
 		endif;
 	}
-
+	
+	function changeStatusOfManyProperties($owner = NULL,$status = 0){
+		
+		if(!is_null($owner)):
+			$this->db->where('owner',$owner);
+			$this->db->set('status',$status);
+			$this->db->update('properties');
+			return $this->db->affected_rows();
+		else:
+			FALSE;
+		endif;
+	}
 }

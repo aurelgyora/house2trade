@@ -13,25 +13,29 @@ $route['remove-images-by-zipcode'] = "scripts_interface/removeImagesByZipcode";
 
 /*************************************************** AJAX INTRERFACE ***********************************************/
 
-$route['login-in']				= "ajax_interface/login";
-$route['signup-account']		= "ajax_interface/signup_account";
-$route['signup-property']		= "ajax_interface/signupProperty";
+$route['login-in'] = "ajax_interface/login";
+$route['signup-account'] = "ajax_interface/signup_account";
+$route['signup-property'] = "ajax_interface/signupProperty";
 $route['seller-signup-properties'] = "ajax_interface/seller_signup_properties";
-$route['change-user-status']	= "ajax_interface/change_user_status";
-$route['save-property-info']	= "ajax_interface/save_property_info";
-$route['send-forgot-password']	= "ajax_interface/send_forgot_password";
-$route['multi-upload']			= "ajax_interface/multiUpload";
+$route['change-user-status'] = "ajax_interface/changeUserStatus";
+$route['change-property-status'] = "ajax_interface/changePropertyStatus";
+$route['change-down-payment-value'] = "ajax_interface/changeDownPaymentValue";
+$route['change-match-statuses'] = "ajax_interface/changeMatchAndPropertyStatuses";
+
+$route['save-property-info'] = "ajax_interface/save_property_info";
+$route['send-forgot-password'] = "ajax_interface/send_forgot_password";
+$route['multi-upload'] = "ajax_interface/multiUpload";
 $route['delete-property-images']= "ajax_interface/deletePropertyImages";
-$route['save-profile']			= "ajax_interface/saveProfile";
+$route['save-profile'] = "ajax_interface/saveProfile";
 
 $route['set-active-property'] = "ajax_interface/setActiveProperty";
 $route['set-current-property'] = "ajax_interface/setCurrentProperty";
 $route['set-current-favorite'] = "ajax_interface/setCurrentFavorite";
 $route['input-select-owner-property'] = "ajax_interface/setCurrentProperty";
 
-$route['text-load/:any/from/:num']	= "ajax_interface/text_load";
-$route[BROKER_START_PAGE.'/delete']	= "ajax_interface/deleteProperty";
-$route[OWNER_START_PAGE.'/delete/seller']	= "ajax_interface/deletePropertySeller";
+$route['text-load/:any/from/:num'] = "ajax_interface/text_load";
+$route[BROKER_START_PAGE.'/delete'] = "ajax_interface/deleteProperty";
+$route[OWNER_START_PAGE.'/delete/seller'] = "ajax_interface/deletePropertySeller";
 $route['search-properties'] = "ajax_interface/searchProperty";
 $route['add-to-favorite'] = "ajax_interface/addToFavorite";
 $route['remove-to-favorite'] = "ajax_interface/removeToFavorite";
@@ -128,23 +132,27 @@ $route['homeowner/set-password'] = "owner_interface/setPassword";
 
 /*************************************************** ADMIN INTRERFACE ***********************************************/
 
-$route['admin'] = "users_interface/login";
 $route[ADM_START_PAGE] = "admin_interface/control_panel";
 $route[ADM_START_PAGE.'/pages'] = "admin_interface/control_pages";
 $route[ADM_START_PAGE.'/pages/:any'] = "admin_interface/control_pages";
 
-$route['administrator/companies'] = "admin_interface/companies";
-$route['administrator/companies/pages'] = "admin_interface/companies";
-$route['administrator/companies/pages/:any'] = "admin_interface/companies";
-$route['administrator/companies/insert'] = "admin_interface/insertCompany";
-$route['administrator/companies/edit/:num'] = "admin_interface/editCompany";
-$route['administrator/companies/delete/:num'] = "admin_interface/deleteCompany";
+$route[ADM_START_PAGE.'/companies'] = "admin_interface/companies";
+$route[ADM_START_PAGE.'/companies/pages'] = "admin_interface/companies";
+$route[ADM_START_PAGE.'/companies/pages/:any'] = "admin_interface/companies";
+$route[ADM_START_PAGE.'/companies/insert'] = "admin_interface/insertCompany";
+$route[ADM_START_PAGE.'/companies/edit/:num'] = "admin_interface/editCompany";
+$route[ADM_START_PAGE.'/companies/delete/:num'] = "admin_interface/deleteCompany";
 
-$route['administrator/:any/accounts'] = "admin_interface/control_accounts";
-$route['administrator/:any/accounts/from'] = "admin_interface/control_accounts";
-$route['administrator/:any/accounts/from/:num'] = "admin_interface/control_accounts";
+$route[ADM_START_PAGE.'/:any/accounts'] = "admin_interface/control_accounts";
+$route[ADM_START_PAGE.'/:any/accounts/from'] = "admin_interface/control_accounts";
+$route[ADM_START_PAGE.'/:any/accounts/from/:num'] = "admin_interface/control_accounts";
 
-$route['administrator/control-panel/mails'] = "admin_interface/mailsText";
-$route['administrator/control-panel/mails/edit/:num'] = "admin_interface/mailsTextEdit";
-$route['administrator/account/:num'] = "admin_interface/account_profile";
-$route['administrator/profile'] = "admin_interface/profile";
+$route[ADM_START_PAGE.'/properties'] = "admin_interface/properties";
+$route[ADM_START_PAGE.'/properties/from'] = "admin_interface/properties";
+$route[ADM_START_PAGE.'/properties/from/:num'] = "admin_interface/properties";
+$route[ADM_START_PAGE.'/properties/information/:num'] = "admin_interface/propertyDetail";
+
+$route[ADM_START_PAGE.'/control-panel/mails'] = "admin_interface/mailsText";
+$route[ADM_START_PAGE.'/control-panel/mails/edit/:num'] = "admin_interface/mailsTextEdit";
+$route[ADM_START_PAGE.'/account/:num'] = "admin_interface/account_profile";
+$route[ADM_START_PAGE.'/profile'] = "admin_interface/profile";

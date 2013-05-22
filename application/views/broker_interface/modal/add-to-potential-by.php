@@ -13,7 +13,6 @@
 			<div class="input-prepend input-append">
 				<input class="input-mini valid-numeric valid-max-value" data-max-value="100" id="down-payment" placeholder="Down Payment" type="text">
 				<span class="add-on">%</span>
-				
 			</div>
 			<div class="alert alert-info">
 				<p>

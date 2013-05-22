@@ -121,7 +121,24 @@ class MY_Controller extends CI_Controller{
 	
 	/*************************************************************************************************************/
 	
-	function changePropertiesStatus($sellerID,$buyerID){
+	public function changePropertiesStatus($operationCode = 0,$sellerID = NULL,$buyerID = NULL,$propertiesIDs = NULL){
+		/*$operationCode = {
+			'0' => add to potential by;
+			'1' => owner or broker cancel match;
+			'7' => match approved by owner or broker;
+			'8' => match approved by All !!!;
+			other => backup value
+		}*/
+		$result = FALSE;
+		if($operationCode == 0):
+			$result = $this->changeStatusForSellerAndBuyer($sellerID,$buyerID);
+		else:
+			$result = $this->changeStatusForManyProperties($propertiesIDs,$operationCode);
+		endif;
+		return $result;
+	}
+	
+	private function changeStatusForSellerAndBuyer($sellerID,$buyerID){
 		
 		$this->load->model('properties');
 		$sellerStatus = $this->properties->read_field($sellerID,'properties','status');
@@ -131,13 +148,133 @@ class MY_Controller extends CI_Controller{
 			case 14: $sellerStatus = 16; break;
 			case 15: $sellerStatus = 13; break;
 		endswitch;
-		$this->properties->update_field($sellerID,'status',$sellerStatus,'properties');
+		$result = $this->properties->update_field($sellerID,'status',$sellerStatus,'properties');
 		switch($buyerStatus):
 			case 1: $buyerStatus = 14; break;
 			case 15: $buyerStatus = 14; break;
 			case 13: $buyerStatus = 16; break;
 		endswitch;
-		$this->properties->update_field($buyerID,'status',$buyerStatus,'properties');
+		$result = $this->properties->update_field($buyerID,'status',$buyerStatus,'properties');
+		return $result;
+	}
+	
+	private function changeStatusForManyProperties($propertiesIDs,$setStatusValue){
+		
+		$this->load->model('properties');
+		return $this->properties->updateFields('status',$setStatusValue,$propertiesIDs,'properties');
+	}
+	
+	/*************************************************************************************************************/
+	
+	public function getMatchPropertiesIDs($match){
+		
+		if(!empty($match)):
+			$propertiesIDs = array();
+			for($i=1;$i<=$match['level'];$i++):
+				$propertiesIDs[] = $match['property_id'.$i];
+			endfor;
+			return array_reverse($propertiesIDs);
+		else:
+			return NULL;
+		endif;
+	}
+	
+	public function getMatchPropertiesInformationList($propertiesIDs){
+		
+		if(!is_null($propertiesIDs)):
+			$this->load->model(array('properties','property_potentialby'));
+			$propertiesInfoList = $this->properties->getPropertiesWhereIN($propertiesIDs);
+			$downPayments = $this->property_potentialby->getDownPaymentsValues($propertiesIDs);
+			for($i=0;$i<count($propertiesInfoList)-1;$i++):
+				$propertiesInfoList[$i]['down_payment'] = $this->getDownPaymentValues($propertiesInfoList,$downPayments,$i,$i+1);
+			endfor;
+			$propertiesInfoList[count($propertiesInfoList)-1]['down_payment'] = $this->getDownPaymentValues($propertiesInfoList,$downPayments,count($propertiesInfoList)-1,0);
+			return $propertiesInfoList;
+		else:
+			return NULL;
+		endif;
+	}
+	
+	public function setDownPaymentValue($matchID,$downPaymentValue){
+		
+		$this->load->model('match');
+		$match = $this->match->read_record($matchID,'match');
+		if($nameFieldSeller = array_search($this->session->userdata('current_property'),$match)):
+			if(($nameFieldSeller[11]-1) == 0):
+				$nameFieldBuyer = 'property_id6';
+			else:
+				$nameFieldBuyer = 'property_id'.($nameFieldSeller[11]-1);
+			endif;
+			$this->load->model('property_potentialby');
+			$downPaymentID = $this->property_potentialby->getDownPaymentValue($match[$nameFieldSeller],$match[$nameFieldBuyer]);
+			return $this->property_potentialby->update_field($downPaymentID,'down_payment',$downPaymentValue,'property_potentialby');
+		else:
+			return FALSE;
+		endif;
+	}
+	
+	public function changeMatchStatusValue($matchID,$status){
+		
+		$this->load->model('match');
+		$match = $this->match->read_record($matchID,'match');
+		$result = array('status'=>FALSE,'message'=>'Error!','approved_all'=>FALSE);
+		if($nameFieldSeller = array_search($this->session->userdata('current_property'),$match)):
+			$nameFieldStatus = 'status'.($nameFieldSeller[11]);
+			$this->match->update_field($matchID,$nameFieldStatus,$status,'match');
+			$match[$nameFieldStatus] = $status;
+			$message = 'You have approved the match!';
+			if($status == 1):
+				$MainStatus = 1;
+				for($i=1;$i<=$match['level'];$i++):
+					if($match['status'.$i] == 0):
+						$MainStatus = 0;
+					endif;
+				endfor;
+				if($MainStatus == 1):
+					$this->match->update_field($matchID,'status',1,'match');
+					$message = 'The match cycle is approved by all participants!';
+					$result['approved_all'] = TRUE;
+				endif;
+			elseif($status == 2):
+				$this->match->update_field($matchID,'status',2,'match');
+				$message = 'Match is broken!';
+			endif;
+			$result['message'] = '<div class="alert alert-info">'.$message.' <a href="'.site_url('broker/match?action=cancel&match='.$matchID.'&field='.$nameFieldStatus).'">Cancel operation</a></div>';
+			$result['status'] = $status;
+		endif;
+		return $result;
+	}
+	
+	public function cancelOperationWithMatch($matchID,$field){
+		
+		$this->load->model(array('match','properties'));
+		$match = $this->match->read_record($matchID,'match');
+		$result = array('status'=>FALSE,'message'=>'Error!');
+		if($nameFieldSeller = array_search($this->session->userdata('current_property'),$match)):
+			$this->match->update_field($matchID,$field,0,'match');
+			$this->match->update_field($matchID,'status',0,'match');
+			$backupStatusProperty = $this->session->userdata('backupStatusProperty');
+			$this->changePropertiesStatus($backupStatusProperty,NULL,NULL,array($this->session->userdata('current_property')));
+			$result['status'] = TRUE;
+		endif;
+		return $result;
+	}
+	
+	private function getDownPaymentValues($properties,$downpayments,$current,$next){
+		
+		$down_payment = array('value'=>0,'my_value'=>0);
+		for($j=0;$j<count($downpayments);$j++):
+			if(($downpayments[$j]['seller_id'] == $properties[$current]['id']) && ($downpayments[$j]['buyer_id'] == $properties[$next]['id'])):
+				$down_payment['value'] = $downpayments[$j]['down_payment'];
+				if($properties[$current]['id'] == $this->session->userdata('current_property')):
+					$down_payment['my_value'] = 1;
+				else:
+					$down_payment['my_value'] = 0;
+				endif;
+				break;
+			endif;
+		endfor;
+		return $down_payment;
 	}
 	
 	/*************************************************************************************************************/

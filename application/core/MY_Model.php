@@ -93,6 +93,16 @@ class MY_Model extends CI_Model{
 		return $this->db->affected_rows();
 	}
 	
+	function updateFields($field,$value,$where = NULL,$table){
+		
+		$this->db->set($field,$value);
+		if(!is_null($where) && is_array($where)):
+			$this->db->where_in('id',$where);
+		endif;
+		$this->db->update($table);
+		return $this->db->affected_rows();
+	}
+	
 	function delete_record($id,$table){
 	
 		$this->db->where('id',$id);

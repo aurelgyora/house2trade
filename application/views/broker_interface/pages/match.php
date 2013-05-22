@@ -17,6 +17,16 @@
 		<?php if(!$this->session->userdata('current_property') || !$match):?>
 				<p>Match is missing or is not selected current seller</p>
 		<?php else:?>
+			<div id="form-request"></div>
+			<div class="div-match-operation">
+				<button class="btn btn-mini btn-link btn-appoved-match" data-match-id="<?=$match['id'];?>">Approved this match</button>
+				<button class="btn btn-mini btn-link btn-break-match" data-match-id="<?=$match['id'];?>">Break this match</button>
+				<div class="input-append">
+					<span class="add-on">%</span>
+					<input class="input-mini valid-numeric valid-max-value" data-max-value="100" id="down-payment-value" placeholder="Down Payment" type="text">
+					<button class="btn btn-change-down-payment" data-match="<?=$match['id']?>" type="button">SAVE</button>
+				</div>
+			</div>
 			<?php array_push($properties,$properties[0]);?>
 			<?php for($i=0;$i<count($properties);$i++):?>
 				<div class="media">
@@ -39,7 +49,14 @@
 					</div>
 				</div>
 				<?php if(($i+1) < count($properties)):?>
-					<img src="<?=site_url('img/ArrowDown.png');?>" alt="" />Dawn Payment: <?= ($properties[$i]['down_payment']); ?> %
+					<img src="<?=site_url('img/ArrowDown.png');?>" alt="" />
+					Down Payment: 
+					<?php if($properties[$i]['down_payment']['my_value'] == 1):?>
+						<span id="my-down-payment-value"><?=$properties[$i]['down_payment']['value']; ?></span> 
+					<?php else:?>
+						<?=$properties[$i]['down_payment']['value']; ?>
+					<?php endif?>
+					%
 				<?php endif;?>
 			<?php endfor;?>
 		<?php endif;?>
