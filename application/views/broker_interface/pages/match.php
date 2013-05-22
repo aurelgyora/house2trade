@@ -40,7 +40,7 @@
 			</div>
 		<?php endif;?>
 			<?php array_push($properties,$properties[0]);?>
-			<?php for($i=0;$i<count($properties);$i++):?>
+			<?php for($i=0,$matchIndex=$match['level'];$i<count($properties);$i++,$matchIndex--):?>
 				<div class="media">
 					<a class="none pull-left" href="#">
 						<img class="img-polaroid media-object" src="<?=site_url($properties[$i]['photo']);?>" alt="">
@@ -72,6 +72,11 @@
 						<?=$properties[$i]['down_payment']['value']; ?>
 					<?php endif?>
 					%
+					<?php if($match['status'.$matchIndex] == 1):?>
+						<p class="text-success">Approve</p>
+					<?php else:?>
+						<p class="text-info">Not approve</p>
+					<?php endif?>
 				<?php endif;?>
 			<?php endfor;?>
 		<?php endif;?>
