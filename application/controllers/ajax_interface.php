@@ -440,8 +440,6 @@ class Ajax_interface extends MY_Controller{
 					$this->changePropertiesStatus(1,NULL,NULL,$propertiesIDs);
 				else:
 					$this->load->model('properties');
-					$backupStatusProperty = $this->properties->read_field($this->session->userdata('current_property'),'properties','status');
-					$this->session->set_userdata('backupStatusProperty',$backupStatusProperty);
 					if($result['approved_all'] == FALSE):
 						$this->changePropertiesStatus(7,NULL,NULL,array($this->session->userdata('current_property')));
 					else:

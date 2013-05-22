@@ -296,10 +296,13 @@ class Broker_interface extends MY_Controller{
 		$pagevar = array(
 			'select' => $this->union->selectBrokerProperties($this->account['id']),
 			'match' => $this->match->parseMatchPropertyID($this->session->userdata('current_property')),
-			'properties' => array()
+			'properties' => array(),
 		);
 		$matchesPropertiesIDs = $this->getMatchPropertiesIDs($pagevar['match']);
 		$pagevar['properties'] = $this->getMatchPropertiesInformationList($matchesPropertiesIDs);
+		if(!empty($pagevar['match'])):
+			$pagevar['match']['my_status_field'] = $this->getFieldMatchName($pagevar['match']);
+		endif;
 		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("broker_interface/pages/match",$pagevar);
 	}

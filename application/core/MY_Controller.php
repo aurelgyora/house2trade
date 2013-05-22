@@ -218,8 +218,7 @@ class MY_Controller extends CI_Controller{
 		$this->load->model('match');
 		$match = $this->match->read_record($matchID,'match');
 		$result = array('status'=>FALSE,'message'=>'Error!','approved_all'=>FALSE);
-		if($nameFieldSeller = array_search($this->session->userdata('current_property'),$match)):
-			$nameFieldStatus = 'status'.($nameFieldSeller[11]);
+		if($nameFieldStatus = $this->getFieldMatchName($match)):
 			$this->match->update_field($matchID,$nameFieldStatus,$status,'match');
 			$match[$nameFieldStatus] = $status;
 			$message = 'You have approved the match!';
@@ -253,11 +252,19 @@ class MY_Controller extends CI_Controller{
 		if($nameFieldSeller = array_search($this->session->userdata('current_property'),$match)):
 			$this->match->update_field($matchID,$field,0,'match');
 			$this->match->update_field($matchID,'status',0,'match');
-			$backupStatusProperty = $this->session->userdata('backupStatusProperty');
-			$this->changePropertiesStatus($backupStatusProperty,NULL,NULL,array($this->session->userdata('current_property')));
+			$this->changePropertiesStatus(16,NULL,NULL,array($this->session->userdata('current_property')));
 			$result['status'] = TRUE;
 		endif;
 		return $result;
+	}
+	
+	public function getFieldMatchName($match){
+		
+		if(!empty($match) && $nameFieldSeller = array_search($this->session->userdata('current_property'),$match)):
+			return 'status'.($nameFieldSeller[11]);
+		else:
+			return FALSE;
+		endif;
 	}
 	
 	private function getDownPaymentValues($properties,$downpayments,$current,$next){

@@ -18,8 +18,9 @@
 				<p>Match is missing or is not selected current seller</p>
 		<?php else:?>
 			<div id="form-request"></div>
+		<?php if($match['status'] == 0 && $match[$match['my_status_field']] == 0):?>
 			<div class="div-match-operation">
-				<button class="btn btn-mini btn-link btn-appoved-match" data-match-id="<?=$match['id'];?>">Approved this match</button>
+				<button class="btn btn-mini btn-link btn-approved-match" data-match-id="<?=$match['id'];?>">Approve this match</button>
 				<button class="btn btn-mini btn-link btn-break-match" data-match-id="<?=$match['id'];?>">Break this match</button>
 				<div class="input-append">
 					<span class="add-on">%</span>
@@ -27,6 +28,17 @@
 					<button class="btn btn-change-down-payment" data-match="<?=$match['id']?>" type="button">SAVE</button>
 				</div>
 			</div>
+		<?php elseif($match['status'] == 0 && $match[$match['my_status_field']] == 1):?>
+			<div class="alert alert-info">
+				You have approved the match!
+				<!--<a href="<?=site_url('broker/match?action=cancel&match='.$match['id'].'&field='.$match['my_status_field']);?>">Click to restore</a>-->
+			</div>
+		<?php else:?>
+			<div class="alert alert-info">
+				The match cycle is approved by all participants!
+				<!--<a href="<?=site_url('broker/match?action=cancel&match='.$match['id'].'&field='.$match['my_status_field']);?>">Click to restore</a>-->
+			</div>
+		<?php endif;?>
 			<?php array_push($properties,$properties[0]);?>
 			<?php for($i=0;$i<count($properties);$i++):?>
 				<div class="media">
@@ -46,6 +58,9 @@
 							<?=$properties[$i]['lotsize'];?> Acres <br/>
 							<?= ucfirst($properties[$i]['type']); ?> Home <br/>
 						</p>
+						<?php if($properties[$i]['id'] == $this->session->userdata('current_property')):?>
+							<p>This is your property</p>
+						<?php endif;?>
 					</div>
 				</div>
 				<?php if(($i+1) < count($properties)):?>

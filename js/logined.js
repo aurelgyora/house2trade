@@ -147,11 +147,7 @@
 		
 	})
 	$("button.btn-change-down-payment").click(function(event){
-		if($("#down-payment-value").emptyValue()){
-			return false;
-		}else if(confirm('Save dawn payment') == false){
-			return false;
-		}
+		if($("#down-payment-value").emptyValue()){return false;}
 		var element = this;
 		var matchID = $(element).attr('data-match');
 		var DPValue = $("#down-payment-value").val();
@@ -303,14 +299,8 @@
 	$("a.show-modal-confirm").click(function(){
 		$("button.btn-comfirm-add-potential-by").attr('data-target',$(this).attr('data-propery-target')).attr('data-src',$(this).attr('data-propery-id')).off('click').one('click',function(){setDownPayment(this);});
 	});
-	$("button.btn-appoved-match").click(function(){
-		if(confirm('Do you really want appoved this match?') == false){return false;}
-		changeStatusesMatch($(this).attr('data-match-id'),1);
-	})
-	$("button.btn-break-match").click(function(){
-		if(confirm('Do you really want break this match?') == false){return false;}
-		changeStatusesMatch($(this).attr('data-match-id'),2);
-	});
+	$("button.btn-approved-match").click(function(){changeStatusesMatch($(this).attr('data-match-id'),1);})
+	$("button.btn-break-match").click(function(){changeStatusesMatch($(this).attr('data-match-id'),2);});
 	function changeStatusesMatch(matchID,status){
 		
 		$.post(mt.baseURL+"change-match-statuses",{'match':matchID,'status':status},
