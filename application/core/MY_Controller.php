@@ -133,10 +133,10 @@ class MY_Controller extends CI_Controller{
 		if($operationCode == 0):
 			$result = $this->changeStatusForSellerAndBuyer($sellerID,$buyerID);
 			if($result['sellerStatus'] == 16):
-				$this->sendMultiMailsPropertiesIDs(9,array($sellerID));
+				$this->sendMultiMailsPropertiesIDs(11,array($sellerID));
 			endif;
 			if($result['buyerStatus'] == 16):
-				$this->sendMultiMailsPropertiesIDs(9,array($buyerID));
+				$this->sendMultiMailsPropertiesIDs(11,array($buyerID));
 			endif;
 		else:
 			$result = $this->changeStatusForManyProperties($propertiesIDs,$operationCode);
