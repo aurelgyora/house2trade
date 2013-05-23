@@ -53,5 +53,49 @@ class Union extends CI_Model{
 		return NULL;
 	}
 	
+	function getOwnersAndPropertiesInformationByIDs($propertiesIDs,$multi = FALSE){
+		
+		$this->db->select('accounts_owners.id AS account,accounts_owners.email,accounts_owners.fname,accounts_owners.lname,properties.address1,properties.city,properties.state,properties.zip_code');
+		$this->db->from('accounts_owners');
+		$this->db->join('properties','accounts_owners.id = properties.owner');
+		if($multi == TRUE):
+			$this->db->where_in('properties.id',$propertiesIDs);
+		else:
+			$this->db->where('properties.id',$propertiesIDs);
+		endif;
+		$query = $this->db->get();
+		$data = $query->result_array();
+		if(!empty($data)):
+			if($multi == FALSE):
+				return $data[0];
+			else:
+				return $data;
+			endif;
+		endif;
+		return NULL;
+	}
+	
+	function getBrokersAndPropertiesInformationByIDs($propertiesIDs,$multi = FALSE){
+		
+		$this->db->select('accounts_brokers.id AS account,accounts_brokers.email,accounts_brokers.fname,accounts_brokers.lname,properties.address1,properties.city,properties.state,properties.zip_code');
+		$this->db->from('accounts_brokers');
+		$this->db->join('properties','accounts_brokers.id = properties.broker');
+		if($multi == TRUE):
+			$this->db->where_in('properties.id',$propertiesIDs);
+		else:
+			$this->db->where('properties.id',$propertiesIDs);
+		endif;
+		$query = $this->db->get();
+		$data = $query->result_array();
+		if(!empty($data)):
+			if($multi == FALSE):
+				return $data[0];
+			else:
+				return $data;
+			endif;
+		endif;
+		return NULL;
+	}
+	
 	/*****************************************************************************************************************/
 }

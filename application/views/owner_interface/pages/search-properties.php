@@ -89,7 +89,7 @@
 								Tax: $<?= $properties[$i]['tax']; ?>
 							</p>
 						</div>
-			<?php if(($properties[$i]['owner'] != $this->account['id']) && ($properties[$i]['status'] != 17)):?>
+			<?php if($properties[$i]['owner'] != $this->account['id']):?>
 				<?php if(!$properties[$i]['potentialby']):?>
 					<?php if(!$properties[$i]['favorite']):?>
 						<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>

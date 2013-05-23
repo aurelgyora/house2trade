@@ -126,6 +126,7 @@ $route['homeowner/potential-by/from'] = "owner_interface/potentialByProperty";
 $route['homeowner/potential-by/from/:num'] = "owner_interface/potentialByProperty";
 
 $route['homeowner/instant-trade'] = "owner_interface/instantTrade";
+$route['homeowner/match'] = "owner_interface/match";
 
 $route['homeowner/profile'] = "owner_interface/profile";
 $route['homeowner/set-password'] = "owner_interface/setPassword";

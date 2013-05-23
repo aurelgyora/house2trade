@@ -379,6 +379,31 @@ class Owner_interface extends MY_Controller{
 		$this->load->view("owner_interface/pages/instant-trade",$pagevar);
 	}
 	
+	public function match(){
+		
+		if($this->input->get('action') == 'cancel'):
+			if($this->cancelOperationWithMatch($this->input->get('match'),$this->input->get('field')) == TRUE):
+				redirect('homeowner/match');
+			endif;
+		endif;
+		$this->load->model(array('union','match'));
+		$pagevar = array(
+			'select' => $this->union->selectOwnerProperties($this->account['id']),
+			'match' => array(),
+			'properties' => array(),
+		);
+		if($this->session->userdata('current_property') > 0):
+			$pagevar['match'] = $this->match->parseMatchPropertyID($this->session->userdata('current_property'));
+			$matchesPropertiesIDs = $this->getMatchPropertiesIDs($pagevar['match']);
+			$pagevar['properties'] = $this->getMatchPropertiesInformationList($matchesPropertiesIDs);
+			if(!empty($pagevar['match'])):
+				$pagevar['match']['my_status_field'] = $this->getFieldMatchName($pagevar['match']);
+			endif;
+		endif;
+		$this->session->set_userdata('backpath',uri_string());
+		$this->load->view("owner_interface/pages/match",$pagevar);
+	}
+	
 	private function propertiesImagesTypes($properties,$mainPhotos,$property_type){
 		
 		for($i=0;$i<count($properties);$i++):

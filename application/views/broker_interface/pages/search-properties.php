@@ -95,7 +95,7 @@
 								<?= ucfirst($properties[$i]['type']); ?> Home
 							</p>
 						</div>
-			<?php if($properties[$i]['id'] != $this->session->userdata('current_property') && ($properties[$i]['status'] != 17)):?>
+			<?php if($properties[$i]['id'] != $this->session->userdata('current_property')):?>
 				<?php if(!$properties[$i]['potentialby']):?>
 					<?php if(!$properties[$i]['favorite']):?>
 						<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>

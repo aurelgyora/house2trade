@@ -430,15 +430,12 @@ class Ajax_interface extends MY_Controller{
 				$propertiesIDs = $this->getMatchPropertiesIDs($match);
 				if($status == 2):
 					$this->changePropertiesStatus(1,NULL,NULL,$propertiesIDs);
-					$this->sendMultiMailsPropertiesIDs(9,$propertiesIDs);
 				else:
 					$this->load->model('properties');
 					if($result['approved_all'] == FALSE):
 						$this->changePropertiesStatus(7,NULL,NULL,array($this->session->userdata('current_property')));
-						$this->sendMultiMailsPropertiesIDs(7,$propertiesIDs);
 					else:
 						$this->changePropertiesStatus(8,NULL,NULL,array($this->session->userdata('current_property')));
-						$this->sendMultiMailsPropertiesIDs(8,$propertiesIDs);
 					endif;
 				endif;
 			endif;
@@ -459,19 +456,20 @@ class Ajax_interface extends MY_Controller{
 		$json_request['status'] = FALSE;
 		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error adding';
 		if($property):
-			$this->load->model(array('property_favorite','properties'));
+			$this->load->model('property_favorite');
+			$this->load->model('properties');
 			$propertyID = $this->properties->record_exist('properties','id',$property);
 			if($propertyID && !$this->property_favorite->record_exist($this->session->userdata('current_property'),$property)):
-				$this->load->model('property_potentialby');
-				if(!$this->property_potentialby->record_exist($this->session->userdata('current_property'),$property)):
-					$insert['seller_id'] = $this->session->userdata('current_property');
-					$insert['buyer_id'] = $property;
-					$this->property_favorite->insert_record($insert);
-					if($this->properties->read_field($propertyID,'properties','status') == 17):
-						$this->sendMailBySellerAndBuyerPropertyID(6,$insert['seller_id'],$insert['buyer_id']);
+				$propertyStatus = $this->properties->read_field($propertyID,'properties','status');
+				if($propertyStatus != 17):
+					$this->load->model('property_potentialby');
+					if(!$this->property_potentialby->record_exist($this->session->userdata('current_property'),$property)):
+						$insert['seller_id'] = $this->session->userdata('current_property');
+						$insert['buyer_id'] = $property;
+						$this->property_favorite->insert_record($insert);
+						$json_request['status'] = TRUE;
+						$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
 					endif;
-					$json_request['status'] = TRUE;
-					$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added';
 				endif;
 			endif;
 		endif;
@@ -526,7 +524,8 @@ class Ajax_interface extends MY_Controller{
 							$this->property_favorite->delete_record($favoriteID,'property_favorite');
 						endif;
 						$this->changePropertiesStatus(0,$insert['seller_id'],$insert['buyer_id']);
-						$this->sendMailBySellerAndBuyerPropertyID(5,$insert['seller_id'],$insert['buyer_id']);
+						$this->sendMailBySellerAndBuyerPropertyID($insert['seller_id'],$insert['buyer_id']);
+						
 					endif;
 					$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added to potential by<br/><br/>At the moment you have selected the prefered property and you also have potential buyer. So you can wait for a match. As soon as the match will be ready you will get email notification.';
 				endif;
@@ -569,7 +568,6 @@ class Ajax_interface extends MY_Controller{
 				if($changeStatus):
 					$this->properties->update_field($property,'status',1,'properties');
 				endif;
-				$this->sendMailBySellerAndBuyerPropertyID(10,$this->session->userdata('current_property'),$property);
 			endif;
 		endif;
 		echo json_encode($json_request);

@@ -154,15 +154,7 @@ class Users_interface extends MY_Controller{
 				case 2: $this->load->model('brokers');$user['name'] = $this->brokers->read_name($user['account'],'brokers'); break;
 				case 3: $this->load->model('owners');$user['name'] = $this->owners->read_name($user['account'],'owners'); break;
 			endswitch;
-			$this->load->library('parser');
-			$this->load->model('mails');
-			$mail_content = $this->mails->read_record(3,'mails');
-			$parser_data = array(
-				'user_name' => $user['name'],
-				'cabinet_link' => site_url($cabinetLink)
-			);
-			$mailtext = $this->parser->parse($mail_content['file_path'],$parser_data,TRUE);
-			$this->send_mail($user['email'],'robot@house2trade.com','House2Trade',$mail_content['subject'],$mailtext);
+			$this->parseAndSendMail(3,array('email'=>$user['email'],'user_name'=>$user['name'],'cabinet_link'=>site_url($cabinetLink)));
 			$account = json_encode(array('id'=>$user['id'],'group'=>$user['group']));
 			$this->session->set_userdata(array('logon'=>md5($user['email']),'account'=>$account));
 			redirect($cabinetLink);

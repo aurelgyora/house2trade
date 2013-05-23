@@ -132,6 +132,12 @@ class MY_Controller extends CI_Controller{
 		$result = FALSE;
 		if($operationCode == 0):
 			$result = $this->changeStatusForSellerAndBuyer($sellerID,$buyerID);
+			if($result['sellerStatus'] == 16):
+				$this->sendMultiMailsPropertiesIDs(9,array($sellerID));
+			endif;
+			if($result['buyerStatus'] == 16):
+				$this->sendMultiMailsPropertiesIDs(9,array($buyerID));
+			endif;
 		else:
 			$result = $this->changeStatusForManyProperties($propertiesIDs,$operationCode);
 		endif;
@@ -148,13 +154,15 @@ class MY_Controller extends CI_Controller{
 			case 14: $sellerStatus = 16; break;
 			case 15: $sellerStatus = 13; break;
 		endswitch;
-		$result = $this->properties->update_field($sellerID,'status',$sellerStatus,'properties');
+		$result['status'] = $this->properties->update_field($sellerID,'status',$sellerStatus,'properties');
 		switch($buyerStatus):
 			case 1: $buyerStatus = 14; break;
 			case 15: $buyerStatus = 14; break;
 			case 13: $buyerStatus = 16; break;
 		endswitch;
-		$result = $this->properties->update_field($buyerID,'status',$buyerStatus,'properties');
+		$result['sellerStatus'] = $sellerStatus;
+		$result['buyerStatus'] = $buyerStatus;
+		$result['status'] = $this->properties->update_field($buyerID,'status',$buyerStatus,'properties');
 		return $result;
 	}
 	
@@ -316,9 +324,22 @@ class MY_Controller extends CI_Controller{
 		return $this->pagination->create_links();
 	}
 	
-	public function send_mail($to,$from_mail,$from_name,$subject,$text){
+	public function sendMail($to,$from_mail,$from_name,$subject,$text) {
+
+		$this->load->library('phpmailer');
+		$mail = new PHPMailer();
+		$mail->IsSendmail();
+		$mail->SetFrom($from_mail,$from_name);
+		$mail->AddReplyTo($from_mail,$from_name);
+		$mail->AddAddress($to);
+		$mail->Subject = $subject;
+		$mail->MsgHTML($text);
+		$mail->AltBody = strip_tags($text); 
+		//$mail->AddAttachment('images/phpmailer-mini.gif');
+		return $mail->Send();
 		
-		$this->load->library('email');
+		
+		/*$this->load->library('email');
 		$this->email->clear(TRUE);
 		$config['smtp_host'] = 'localhost';
 		$config['charset'] = 'utf-8';
@@ -335,7 +356,8 @@ class MY_Controller extends CI_Controller{
 			return TRUE;
 		else:
 			return FALSE;
-		endif;
+		endif;*/
+	 	
 	}
 	
 	public function loadimage(){
@@ -467,5 +489,83 @@ class MY_Controller extends CI_Controller{
 		endswitch;
 	}
 	
+	public function parseAndSendMail($mailID,$parserData){
+		
+		if(isset($parserData['email']) && !empty($parserData['email'])):
+			$this->load->library('parser');
+			$this->load->model('mails');
+			$mailContent = $this->mails->read_record($mailID,'mails');
+			$mailtext = $this->parser->parse($mailContent['file_path'],$parserData,TRUE);
+			return $this->sendMail($parserData['email'],'robot@house2trade.com','House2Trade',$mailContent['subject'],$mailtext);
+		else:
+			return FALSE;
+		endif;
+	}
 	
+	public function sendMailBySellerAndBuyerPropertyID($mailID,$seller_id,$buyer_id){
+		
+		if($this->account['group'] == 2):
+			$sellerInfo = $this->getUsersInformationByPropertiesIDs($seller_id,3);
+			$this->parseAndSendMail($mailID,array(
+				'email'=>$sellerInfo['email'],'user_first_name'=>$sellerInfo['fname'],'user_last_name'=>$sellerInfo['lname'],
+				'property_address'=>$sellerInfo['address1'].', '.$sellerInfo['city'].', '.$sellerInfo['state'].' '.$sellerInfo['zip_code'],
+				'cabinet_link'=>site_url(OWNER_START_PAGE)
+			));
+		elseif($this->account['group'] == 3):
+			$sellerBrokerID = $this->getUsersInformationByPropertiesIDs($seller_id,2);
+			$this->parseAndSendMail($mailID,array(
+				'email'=>$sellerBrokerID['email'],'user_first_name'=>$sellerBrokerID['fname'],'user_last_name'=>$sellerBrokerID['lname'],
+				'property_address'=>$sellerBrokerID['address1'].', '.$sellerBrokerID['city'].', '.$sellerBrokerID['state'].' '.$sellerBrokerID['zip_code'],
+				'cabinet_link'=>site_url(BROKER_START_PAGE)
+			));
+		endif;
+		$buyerInfo = $this->getUsersInformationByPropertiesIDs($buyer_id,3);
+		$this->parseAndSendMail($mailID,array(
+			'email'=>$buyerInfo['email'],'user_first_name'=>$buyerInfo['fname'],'user_last_name'=>$buyerInfo['lname'],
+			'property_address'=>$buyerInfo['address1'].', '.$buyerInfo['city'].', '.$buyerInfo['state'].' '.$buyerInfo['zip_code'],
+			'cabinet_link'=>site_url(OWNER_START_PAGE)
+		));
+		$buyerBrokerID = $this->getUsersInformationByPropertiesIDs($buyer_id,2);
+		$this->parseAndSendMail($mailID,array(
+			'email'=>$buyerBrokerID['email'],'user_first_name'=>$buyerBrokerID['fname'],'user_last_name'=>$buyerBrokerID['lname'],
+			'property_address'=>$buyerBrokerID['address1'].', '.$buyerBrokerID['city'].', '.$buyerBrokerID['state'].' '.$buyerBrokerID['zip_code'],
+			'cabinet_link'=>site_url(BROKER_START_PAGE)
+		));
+		return TRUE;
+	}
+	
+	public function sendMultiMailsPropertiesIDs($mailID,$propertiesIDs){
+		
+		$brokersIDs = $this->getUsersInformationByPropertiesIDs($propertiesIDs,2,TRUE);
+		for($i=0;$i<count($brokersIDs);$i++):
+			if($brokersIDs[$i]['account'] != $this->account['id']):
+				$this->parseAndSendMail($mailID,array(
+					'email'=>$brokersIDs[$i]['email'],'user_first_name'=>$brokersIDs[$i]['fname'],'user_last_name'=>$brokersIDs[$i]['lname'],
+					'property_address'=>$brokersIDs[$i]['address1'].', '.$brokersIDs[$i]['city'].', '.$brokersIDs[$i]['state'].' '.$brokersIDs[$i]['zip_code'],
+					'cabinet_link'=>site_url(BROKER_START_PAGE)
+				));
+			endif;
+		endfor;
+		$ownersIDs = $this->getUsersInformationByPropertiesIDs($propertiesIDs,3,TRUE);
+		for($i=0;$i<count($brokersIDs);$i++):
+			if($ownersIDs[$i]['account'] != $this->account['id']):
+				$this->parseAndSendMail($mailID,array(
+					'email'=>$ownersIDs[$i]['email'],'user_first_name'=>$ownersIDs[$i]['fname'],'user_last_name'=>$ownersIDs[$i]['lname'],
+					'property_address'=>$ownersIDs[$i]['address1'].', '.$ownersIDs[$i]['city'].', '.$ownersIDs[$i]['state'].' '.$ownersIDs[$i]['zip_code'],
+					'cabinet_link'=>site_url(OWNER_START_PAGE)
+				));
+			endif;
+		endfor;
+		return TRUE;
+	}
+	
+	public function getUsersInformationByPropertiesIDs($propertyID,$group = 3,$multy = FALSE){
+		
+		$this->load->model('union');
+		if($group == 3):
+			return $this->union->getOwnersAndPropertiesInformationByIDs($propertyID,$multy);
+		elseif($group == 2):
+			return $this->union->getBrokersAndPropertiesInformationByIDs($propertyID,$multy);
+		endif;
+	}
 }
