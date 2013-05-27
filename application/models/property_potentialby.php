@@ -58,25 +58,25 @@ class Property_potentialby extends MY_Model{
 		$this->db->select('properties.*');
 		$this->db->distinct();
 		$this->db->from('property_potentialby');
-		$this->db->join('properties','properties.id = property_potentialby.buyer_id');
-		//$this->db->where('property_potentialby.seller_id',$currentProperty);
+		$this->db->join('properties','properties.id = property_potentialby.seller_id');
 		$this->db->where('property_potentialby.buyer_id',$currentProperty);
-		$this->db->order_by('properties.id');
+		$this->db->where('property_potentialby.seller_id !=',$currentProperty);
+		$this->db->order_by('properties.address1');
 		$query = $this->db->get();
 		$data = $query->result_array();
 		if($data) return $data;
 		return NULL;
 	}
 	
-	function instantTradeLeveLs($propertiesID){
+	function instantTradeLeveLs($currentProperty,$propertiesID){
 		
 		$this->db->select('properties.*');
 		$this->db->distinct();
 		$this->db->from('property_potentialby');
-		$this->db->join('properties','properties.id = property_potentialby.buyer_id');
-		//$this->db->where_in('property_potentialby.seller_id',$propertiesID);
+		$this->db->join('properties','properties.id = property_potentialby.seller_id');
 		$this->db->where_in('property_potentialby.buyer_id',$propertiesID);
-		$this->db->order_by('properties.id');
+		$this->db->where('property_potentialby.seller_id !=',$currentProperty);
+		$this->db->order_by('properties.address1');
 		$query = $this->db->get();
 		$data = $query->result_array();
 		if($data) return $data;
@@ -107,6 +107,22 @@ class Property_potentialby extends MY_Model{
 		$data = $query->result_array();
 		if(!empty($data)):
 			return $data[0]['id'];
+		endif;
+		return NULL;
+	}
+	
+	function getPropertiesIDs($sellerID,$fields = 'buyer_id'){
+		
+		$this->db->select($fields);
+		$this->db->where('seller_id',$sellerID);
+		$query = $this->db->get('property_potentialby');
+		$data = $query->result_array();
+		if(!empty($data)):
+			$ids = array();
+			for($i=0;$i<count($data);$i++):
+				$ids[] = $data[$i][$fields];
+			endfor;
+			return $ids;
 		endif;
 		return NULL;
 	}

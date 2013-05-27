@@ -326,8 +326,7 @@
 				if(target === 'remove'){
 					$("a.show-modal-confirm[data-propery-id="+parameter+"]").parents('div.media').html(data.message);
 				}else{
-					$("a.show-modal-confirm[data-propery-id="+parameter+"]").siblings("button.btn-property-remove-potential-by").removeClass('hidden').show();
-					$("a.show-modal-confirm[data-propery-id="+parameter+"]").hide();
+					$("a.show-modal-confirm[data-propery-id="+parameter+"]").replaceWith('<h3>Added to potential by</h3>');
 				}
 				$("#addToPotentialBy").modal('hide');
 			}

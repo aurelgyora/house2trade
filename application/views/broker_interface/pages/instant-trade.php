@@ -58,7 +58,11 @@
 							<?= ucfirst($levels['level2'][$i]['type']); ?> Home
 						</p>
 					</div>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-target="remove" data-src="<?=$levels['level2'][$i]['id'];?>">Remove from potential by</button>
+				<?php if($levels['level2'][$i]['potentialby'] == FALSE):?>
+					<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level2'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+				<?php else:?>
+					<h3>Already added to potential by</h3>
+				<?php endif;?>
 				</div>
 			<?php endfor;?>
 			<?php if(!empty($levels['level3'])):?>
@@ -82,7 +86,11 @@
 							<?= ucfirst($levels['level3'][$i]['type']); ?> Home
 						</p>
 					</div>
-					<button class="btn btn-mini btn-link" data-target="remove" data-src="<?=$levels['level3'][$i]['id'];?>">Operation</button>
+				<?php if($levels['level3'][$i]['potentialby'] == FALSE):?>
+					<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level3'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+				<?php else:?>
+					<h4>Already added to potential by</h4>
+				<?php endif;?>
 				</div>
 				<?php endfor;?>
 			<?php endif;?>
@@ -107,7 +115,11 @@
 							<?= ucfirst($levels['level4'][$i]['type']); ?> Home
 						</p>
 					</div>
-					<button class="btn btn-mini btn-link" data-target="remove" data-src="<?=$levels['level4'][$i]['id'];?>">Operation</button>
+				<?php if($levels['level4'][$i]['potentialby'] == FALSE):?>
+					<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level4'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+				<?php else:?>
+					<h4>Already added to potential by</h4>
+				<?php endif;?>
 				</div>
 				<?php endfor;?>
 			<?php endif;?>
@@ -132,7 +144,11 @@
 							<?= ucfirst($levels['level5'][$i]['type']); ?> Home
 						</p>
 					</div>
-					<button class="btn btn-mini btn-link" data-target="remove" data-src="<?=$levels['level5'][$i]['id'];?>">Operation</button>
+				<?php if($levels['level5'][$i]['potentialby'] == FALSE):?>
+					<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level5'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+				<?php else:?>
+					<h4>Already added to potential by</h4>
+				<?php endif;?>
 				</div>
 				<?php endfor;?>
 			<?php endif;?>
@@ -157,7 +173,11 @@
 							<?= ucfirst($levels['level6'][$i]['type']); ?> Home
 						</p>
 					</div>
-					<button class="btn btn-mini btn-link" data-target="remove" data-src="<?=$levels['level6'][$i]['id'];?>">Operation</button>
+				<?php if($levels['level6'][$i]['potentialby'] == FALSE):?>
+					<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level6'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+				<?php else:?>
+					<h4>Already added to potential by</h4>
+				<?php endif;?>
 				</div>
 				<?php endfor;?>
 			<?php endif;?>
@@ -165,6 +185,7 @@
 	<?php endif;?>
 			</div>
 		</div>
+		<?php $this->load->view("broker_interface/modal/add-to-potential-by");?>
 	</div>
 	<?php $this->load->view("broker_interface/includes/footer");?>
 	<?php $this->load->view("broker_interface/includes/scripts");?>

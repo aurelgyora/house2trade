@@ -215,6 +215,9 @@ class MY_Controller extends CI_Controller{
 			endif;
 			$this->load->model('property_potentialby');
 			$downPaymentID = $this->property_potentialby->getDownPaymentValue($match[$nameFieldSeller],$match[$nameFieldBuyer]);
+			
+			print_r($downPaymentID);
+			
 			return $this->property_potentialby->update_field($downPaymentID,'down_payment',$downPaymentValue,'property_potentialby');
 		else:
 			return FALSE;
@@ -567,5 +570,95 @@ class MY_Controller extends CI_Controller{
 		elseif($group == 2):
 			return $this->union->getBrokersAndPropertiesInformationByIDs($propertyID,$multy);
 		endif;
+	}
+
+	public function getInstantTradeAllLevels($current_property){
+		
+		$this->load->model(array('properties','property_potentialby','images','property_type'));
+		$potentialBypropertiesIDs = $this->property_potentialby->getPropertiesIDs($current_property);
+		$levels['level1'] = $this->properties->read_record($current_property,'properties');
+		if($levels['level1']):
+			$levels['level1']['photo'] = $this->images->mainPhoto($levels['level1']['id']);
+			if(!$levels['level1']['photo']):
+				$levels['level1']['photo'] = 'img/property.png';
+			endif;
+			$this->load->model('property_type');
+			$levels['level1']['type'] = $this->property_type->read_field($levels['level1']['type'],'property_type','title');
+		endif;
+		$levels['level2'] = $this->property_potentialby->instantTradeLeveL2($current_property);
+		if(!empty($levels['level2'])):
+			$levels['level2'] = $this->propertiesImagesTypes($levels['level2'],TRUE);
+			$levels['level2'] = $this->isPotentialByExist($levels['level2'],$potentialBypropertiesIDs);
+			/**************************************************************************/
+			if($levels['level3'] = $this->property_potentialby->instantTradeLeveLs($current_property,$this->getPropertyIDs($levels['level2']))):
+				$levels['level3'] = $this->propertiesImagesTypes($levels['level3'],TRUE);
+				$levels['level3'] = $this->isPotentialByExist($levels['level3'],$potentialBypropertiesIDs);
+				/**************************************************************************/
+				if($levels['level4'] = $this->property_potentialby->instantTradeLeveLs($current_property,$this->getPropertyIDs($levels['level3']))):
+					$levels['level4'] = $this->propertiesImagesTypes($levels['level4'],TRUE);
+					$levels['level4'] = $this->isPotentialByExist($levels['level4'],$potentialBypropertiesIDs);
+					/**************************************************************************/
+					if($levels['level5'] = $this->property_potentialby->instantTradeLeveLs($current_property,$this->getPropertyIDs($levels['level4']))):
+						$levels['level5'] = $this->propertiesImagesTypes($levels['level5'],TRUE);
+						$levels['level5'] = $this->isPotentialByExist($levels['level5'],$potentialBypropertiesIDs);
+						/**************************************************************************/
+						if($levels['level6'] = $this->property_potentialby->instantTradeLeveLs($current_property,$this->getPropertyIDs($levels['level5']))):
+							$levels['level6'] = $this->propertiesImagesTypes($levels['level6'],TRUE);
+							$levels['level6'] = $this->isPotentialByExist($levels['level6'],$potentialBypropertiesIDs);
+						endif;
+					endif;
+				endif;
+			endif;
+		endif;
+		return $levels;
+	}
+
+	public function getPropertyIDs($properties){
+		
+		$ids = array();
+		for($i=0;$i<count($properties);$i++):
+			$ids[] = $properties[$i]['id'];
+		endfor;
+		return $ids;
+	}
+
+	public function propertiesImagesTypes($properties,$propertyType = NULL){
+		
+		$this->load->model('images');
+		$IDs = $this->getPropertyIDs($properties);
+		$mainPhotos = $this->images->mainPhotos($IDs);
+		for($i=0;$i<count($properties);$i++):
+			$properties[$i]['photo'] = 'img/thumb.png';
+			if($mainPhotos && array_key_exists($properties[$i]['id'],$mainPhotos)):
+				$properties[$i]['photo'] = $mainPhotos[$properties[$i]['id']];
+			endif;
+		endfor;
+		if(!is_null($propertyType)):
+			$property_type = $this->property_type->read_records('property_type');
+			for($i=0;$i<count($properties);$i++):
+				for($j=0;$j<count($property_type);$j++):
+					if($properties[$i]['type'] == $property_type[$j]['id']):
+						$properties[$i]['type'] = $property_type[$j]['title'];
+						break;
+					endif;
+				endfor;
+			endfor;
+		endif;
+		return $properties;
+	}
+	
+	private function isPotentialByExist($properties,$potentialByPropertiesIDs){
+		
+		for($i=0;$i<count($properties);$i++):
+			$properties[$i]['potentialby'] = FALSE;
+		endfor;
+		if(!empty($potentialByPropertiesIDs)):
+			for($i=0;$i<count($properties);$i++):
+				if(array_search($properties[$i]['id'],$potentialByPropertiesIDs) !== FALSE):
+					$properties[$i]['potentialby'] = TRUE;
+				endif;
+			endfor;
+		endif;
+		return $properties;
 	}
 }
