@@ -215,9 +215,6 @@ class MY_Controller extends CI_Controller{
 			endif;
 			$this->load->model('property_potentialby');
 			$downPaymentID = $this->property_potentialby->getDownPaymentValue($match[$nameFieldSeller],$match[$nameFieldBuyer]);
-			
-			print_r($downPaymentID);
-			
 			return $this->property_potentialby->update_field($downPaymentID,'down_payment',$downPaymentValue,'property_potentialby');
 		else:
 			return FALSE;
@@ -629,7 +626,7 @@ class MY_Controller extends CI_Controller{
 		$mainPhotos = $this->images->mainPhotos($IDs);
 		for($i=0;$i<count($properties);$i++):
 			$properties[$i]['photo'] = 'img/thumb.png';
-			if($mainPhotos && array_key_exists($properties[$i]['id'],$mainPhotos)):
+			if(!empty($mainPhotos) && array_key_exists($properties[$i]['id'],$mainPhotos)):
 				$properties[$i]['photo'] = $mainPhotos[$properties[$i]['id']];
 			endif;
 		endfor;

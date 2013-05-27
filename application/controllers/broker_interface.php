@@ -272,6 +272,7 @@ class Broker_interface extends MY_Controller{
 			$pagevar['match'] = $this->match->parseMatchPropertyID($this->session->userdata('current_property'));
 			$matchesPropertiesIDs = $this->getMatchPropertiesIDs($pagevar['match']);
 			$pagevar['properties'] = $this->getMatchPropertiesInformationList($matchesPropertiesIDs);
+			$pagevar['properties'] = $this->propertiesImagesTypes($pagevar['properties']);
 			if(!empty($pagevar['match'])):
 				$pagevar['match']['my_status_field'] = $this->getFieldMatchName($pagevar['match']);
 			endif;

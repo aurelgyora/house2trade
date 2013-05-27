@@ -43,28 +43,29 @@ class Images extends MY_Model{
 	
 	function mainPhotos($propertiesID){
 		
-		$this->db->select('property,photo');
-		$this->db->where('main',1);
-		$this->db->where_in('property',$propertiesID);
-		$query = $this->db->get('images');
-		$result = array();
-		foreach($query->result() as $row):
-			$i = 0; $index = 0;
-			foreach($row as $value):
-				if(!$i):
-					$index = $value;
-					$result[$index] = '';
-				else:
-					$result[$index] = $value;
-				endif;
-				$i++;
+		if(!empty($propertiesID)):
+			$this->db->select('property,photo');
+			$this->db->where('main',1);
+			$this->db->where_in('property',$propertiesID);
+			$query = $this->db->get('images');
+			$result = array();
+			foreach($query->result() as $row):
+				$i = 0; $index = 0;
+				foreach($row as $value):
+					if(!$i):
+						$index = $value;
+						$result[$index] = '';
+					else:
+						$result[$index] = $value;
+					endif;
+					$i++;
+				endforeach;
 			endforeach;
-		endforeach;
-		if($result):
-			return $result;
-		else:
-			return NULL;
+			if($result):
+				return $result;
+			endif;
 		endif;
+		return NULL;
 	}
 	
 	function image_exist($property){
