@@ -3,26 +3,28 @@
 	<div class="container_12">
 		<a class="logo grid_4" href="<?=site_url();?>"><img src="<?=site_url('img/house2trade.png');?>" alt="House2Trade" />&nbsp;</a>
 		<nav class="grid_8">
-		<?php /* if($this->loginstatus):?>
+		<?php if ( $this->loginstatus ) : ?>
 			<ul class="auth">
 				<!-- <li><?=$this->user['name'];?></li> -->
-			<?php $cabinetLink = '';
-			switch($this->account['group']):
-				case 1: $cabinetLink = ADM_START_PAGE; break;
-				case 2: $cabinetLink = BROKER_START_PAGE; break;
-				case 3: $cabinetLink = OWNER_START_PAGE; break;
-			endswitch;?>
+				<?php 
+				$cabinetLink = '';
+				switch($this->account['group']):
+					case 1: $cabinetLink = ADM_START_PAGE; break;
+					case 2: $cabinetLink = BROKER_START_PAGE; break;
+					case 3: $cabinetLink = OWNER_START_PAGE; break;
+				endswitch;
+				?>
 				<li><?=anchor($cabinetLink,'My account')?></li>
 				<li>&nbsp;|&nbsp;</li>
 				<li><?=anchor('logout','Logout')?></li>
 			</ul>
-		<?php else:?>
+		<?php else: ?>
 			<ul class="auth">
 				<li><?=anchor('login','Log in')?></li>
 				<li>&ndash; or &ndash;</li>
 				<li><?=anchor('signup','Sign up')?></li>
 			</ul>
-		<?php endif; */?>
+		<?php endif; ?>
 			<ul class="main-nav">
 				<li><?=anchor('','Home');?></li>
 				<!--<li><?=anchor('search','Search');?></li>-->

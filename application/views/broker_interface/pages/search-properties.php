@@ -31,22 +31,22 @@
 							</a>
 							<div class="media-body">
 								<h4 class="media-heading">
-									<?php if($zillow_exist_id):?>
-										<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$property['id']);?>"><?= $property['address1'];?></a>
-										<span><?= $property['city'].', '.$property['state'].' '.$property['zip_code']; ?></span>
+									<?php if($zillow_exist_id != FALSE):?>
+										<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$zillow['id']);?>"><?=$zillow['address1'];?></a>
+										<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
 									<?php else:?>
-										<a href="#"><?= $property['address1'];?></a>
-										<span><?= $property['city'].', '.$property['state'].' '.$property['zip_code']; ?></span>
+										<a href="#"><?=$zillow['address1'];?></a>
+										<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
 										<small>Property is not in our listing</small>
 									<?php endif; ?>
 								</h4>
 								<p>
-									$<?=$property['price'];?> <span class="separator">|</span> 
-									<?=$property['bedrooms'];?> Bd <span class="separator">|</span> 
-									<?=$property['bathrooms'];?> Ba <span class="separator">|</span> 
-									<?=$property['sqf'];?> Sq Ft <span class="separator">|</span> 
-									<?=$property['lotsize'];?> Acres <br/>
-									<?= ucfirst($property['type']); ?> Home
+									$<?=$zillow['price'];?> <span class="separator">|</span> 
+									<?=$zillow['bedrooms'];?> Bd <span class="separator">|</span> 
+									<?=$zillow['bathrooms'];?> Ba <span class="separator">|</span> 
+									<?=$zillow['sqf'];?> Sq Ft <span class="separator">|</span> 
+									<?=$zillow['lotsize'];?> Acres <br/>
+									<?= ucfirst($zillow['type']); ?> Home
 									<?php if(isset($zillow['year']) && $zillow['year']):?>
 									<span class="separator">|</span> Built <?= $zillow['year'];?>
 									<?php endif;?>

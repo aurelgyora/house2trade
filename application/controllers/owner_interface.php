@@ -65,10 +65,7 @@ class Owner_interface extends MY_Controller{
 	
 	public function searchProperty(){
 		
-		$this->load->model('union');
-		$this->load->model('property_type');
-		$from = (int)$this->uri->segment(5);
-		$potentialby = $favorite = FALSE;
+		$this->load->model(array('union','property_type','properties'));
 		$pagevar = array(
 			'zillow' => array(),
 			'zillow_exist_id' => FALSE,
@@ -79,137 +76,24 @@ class Owner_interface extends MY_Controller{
 			'parameters' => json_decode($this->session->userdata('search_json_data'))
 		);
 		if($this->session->userdata('search_sql')):
-			$sql = $this->session->userdata('search_sql')." LIMIT $from,7";
-			$this->load->model('properties');
-			$pagevar['properties'] = $this->properties->query_execute($sql);
-			$ids = array();
-			for($i=0;$i<count($pagevar['properties']);$i++):
-				$ids[] = $pagevar['properties'][$i]['id'];
-			endfor;
-			$this->load->model('images');
-			$this->load->model('property_favorite');
-			$this->load->model('property_potentialby');
-			if($ids):
-				$mainPhotos = $this->images->mainPhotos($ids);
-				if($this->session->userdata('current_property')):
-					$favorite = $this->property_favorite->record_exists($this->session->userdata('current_property'),$ids);
-					$potentialby = $this->property_potentialby->record_exists($this->session->userdata('current_property'),$ids);
-				endif;
-				for($i=0;$i<count($pagevar['properties']);$i++):
-					$pagevar['properties'][$i]['photo'] = 'img/thumb.png';
-					if($mainPhotos && array_key_exists($pagevar['properties'][$i]['id'],$mainPhotos)):
-						$pagevar['properties'][$i]['photo'] = $mainPhotos[$pagevar['properties'][$i]['id']];
+			if($this->session->userdata('zillow_address') && $this->session->userdata('zillow_zip')):
+				if($zillow_result = $this->zillowApi($this->session->userdata('zillow_address'),$this->session->userdata('zillow_zip'))):
+					if($pagevar['zillow_exist_id'] = $this->properties->properties_exits($zillow_result['property-state'],$zillow_result['property-zipcode'])):
+						$pagevar['zillow'] = $this->getPropertyFromZillow($zillow_result,$pagevar['parameters']);
+					else:
+						$pagevar['zillow'] = $this->getUnshiftProperty($zillow_result);
 					endif;
-					$pagevar['properties'][$i]['favorite'] = FALSE;
-					$pagevar['properties'][$i]['potentialby'] = FALSE;
-					if($this->session->userdata('current_property')):
-						if($favorite && array_key_exists($pagevar['properties'][$i]['id'],$favorite)):
-							$pagevar['properties'][$i]['favorite'] = TRUE;
-						endif;
-						if($potentialby && array_key_exists($pagevar['properties'][$i]['id'],$potentialby)):
-							$pagevar['properties'][$i]['potentialby'] = TRUE;
-						endif;
-					endif;
-					for($j=0;$j<count($pagevar['property_type']);$j++):
-						if($pagevar['properties'][$i]['type'] == $pagevar['property_type'][$j]['id']):
-							$pagevar['properties'][$i]['type'] = $pagevar['property_type'][$j]['title'];
-							break;
-						endif;
-					endfor;
-				endfor;
-				$count = 0;
-				if($pagevar['properties']):
-					$count = count($this->properties->query_execute($this->session->userdata('search_sql')));
 				endif;
-				$pagevar['pages'] = $this->pagination('homeowner/search/result',5,$count,7);
+			endif;
+			if($pagevar['properties'] = $this->getPropertiesFromSearch(intval($this->uri->segment(5)),7)):
+				$count = count($this->properties->query_execute($this->session->userdata('search_sql')));
+				$pagevar['pages'] = $this->pagination('broker/search/result',5,$count,7);
 			else:
 				$pagevar['properties'] = NULL;
 				$pagevar['pages'] = NULL;
 			endif;
-			if($this->session->userdata('zillow_address') && $this->session->userdata('zillow_zip')):
-				$zillow_result = $this->zillowApi($this->session->userdata('zillow_address'),$this->session->userdata('zillow_zip'));
-				if($zillow_result):
-					$zillow_exist = $this->properties->properties_exits($zillow_result['property-state'],$zillow_result['property-zipcode']);
-					if($zillow_exist):
-						$sql = 'SELECT properties.* FROM properties WHERE properties.state = "'.$zillow_result['property-state'].'" AND properties.zip_code = "'.$zillow_result['property-zipcode'] .'"';
-						if($pagevar['parameters']):
-							if(!empty($pagevar['parameters']->beds_num)):
-								$sql .= ' AND properties.bedrooms = '.$pagevar['parameters']->beds_num;
-							endif;
-							if(!empty($pagevar['parameters']->baths_num)):
-								$sql .= ' AND properties.bathrooms = '.$pagevar['parameters']->baths_num;
-							endif;
-							if(!empty($pagevar['parameters']->property_min_price)):
-								$sql .= ' AND properties.price >= '.$pagevar['parameters']->property_min_price;
-							endif;
-							if(!empty($pagevar['parameters']->property_max_price)):
-								$sql .= ' AND properties.price <= '.$pagevar['parameters']->property_max_price;
-							endif;
-							if(!empty($pagevar['parameters']->square_feet)):
-								$sql .= ' AND properties.sqf >= '.$pagevar['parameters']->square_feet;
-							endif;
-							if(!empty($pagevar['parameters']->type)):
-								$sql .= ' AND properties.type = '.$pagevar['parameters']->type;
-							endif;
-						endif;
-						$sql .= ' LIMIT 1';
-						$pagevar['zillow'] = $this->properties->query_execute($sql);
-						$pagevar['zillow'] = $pagevar['zillow'][0];
-						if($pagevar['zillow']):
-							$pagevar['zillow']['potentialby'] = FALSE;
-							if($potentialby && array_key_exists($pagevar['zillow']['id'],$potentialby)):
-								$pagevar['zillow']['potentialby'] = TRUE;
-							endif;
-							if(!$pagevar['zillow']['potentialby']):
-								$pagevar['zillow']['favorite'] = FALSE;
-								if($favorite && array_key_exists($pagevar['zillow']['id'],$favorite)):
-									$pagevar['zillow']['favorite'] = TRUE;
-								endif;
-							endif;
-							for($j=0;$j<count($pagevar['property_type']);$j++):
-								if($pagevar['zillow']['type'] == $pagevar['property_type'][$j]['id']):
-									$pagevar['zillow']['type'] = $pagevar['property_type'][$j]['title'];
-									break;
-								endif;
-							endfor;
-							$pagevar['zillow']['photo'] = $this->images->mainPhoto($pagevar['zillow']['id']);
-						endif;
-						$pagevar['zillow_exist_id'] = $zillow_exist;
-					else:
-						$unshift = array(
-							'uid'=>0,'email'=>'','status'=>0,'oid'=>0,'fname'=>'','lname'=>'',
-							'address1'=> $zillow_result['property-address1'],
-							'description'=> $zillow_result['property-discription'],
-							'city'=> $zillow_result['property-city'],
-							'state'=> $zillow_result['property-state'],
-							'type'=> $zillow_result['property-type'],
-							'bathrooms'=> $zillow_result['property-bathrooms'],
-							'bedrooms'=> $zillow_result['property-bedrooms'],
-							'sqf'=> $zillow_result['property-sqf'],
-							'tax'=> $zillow_result['property-tax'],
-							'price'=> $zillow_result['property-price'],
-							'year'=> $zillow_result['property-year'],
-							'last-sold-date'=> $zillow_result['property-last-sold-date'],
-							'last-sold-price'=> $zillow_result['property-last-sold-price'],
-						);
-						$pagevar['zillow'] = $unshift;
-						if($pagevar['zillow']):
-							$pagevar['zillow']['favorite'] = FALSE;
-							$pagevar['zillow']['potentialby'] = FALSE;
-							$pagevar['zillow']['photo'] = site_url('img/thumb.png');
-							$images = $this->arrayImagesFromPage($zillow_result['page-content']);
-							if($images):
-								$random = array_rand($images);
-								if(isset($random) && $random):
-									$pagevar['zillow']['photo'] = $images[$random];
-								endif;
-							endif;
-						endif;
-					endif;
-				endif;
-			endif;
 		endif;
-		$this->session->set_userdata('backpath',uri_string());
+		$this->session->set_userdata('backpath',site_url(uri_string()));
 		$this->load->view("owner_interface/pages/search-properties",$pagevar);
 	}
 	

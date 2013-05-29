@@ -12,19 +12,15 @@ class Admin_interface extends MY_Controller{
 	
 	/******************************************** pages *******************************************************/
 	
-	public function control_pages($pageName = FALSE){
+	public function control_pages(){
 		
 		if($this->input->post('submit')):
 			$update = $this->input->post();
 			$this->pages->update_record($update);
 			redirect(ADM_START_PAGE.'/pages');
 		endif;
-		
-		if($this->uri->segment(4)):
-			$pageName = $this->uri->segment(4);
-		endif;
-		if($pageName):
-			$this->load->view('admin_interface/pages/page-editor',array('page'=>$this->pages->read_record($pageName)));
+		if($this->uri->total_segments() == 3):
+			$this->load->view('admin_interface/pages/page-editor',array('page'=>$this->pages->read_record($this->uri->segment(3))));
 		else:
 			$this->load->view('admin_interface/pages/list-site-pages',array('pages'=>$this->pages->read_records('pages','title','ASC')));
 		endif;

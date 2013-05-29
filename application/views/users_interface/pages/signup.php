@@ -21,7 +21,9 @@
 			<div class="grid_4">
 				<?=$page['content'];?>
 			</div>
+			<div class="clear"> </div>
 		</div>
+		<div class="clear"> </div>
 	</div>
 <?php $this->load->view("users_interface/includes/footer");?>
 <?php $this->load->view("users_interface/includes/scripts");?>

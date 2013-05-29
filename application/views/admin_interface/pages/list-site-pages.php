@@ -38,7 +38,7 @@
 							<td><?=$pages[$i]['url']?></td>
 							<td><?=$pages[$i]['title']?></td>
 							<td>
-								<a href="<?=site_url(uri_string().'/'.$pages[$i]['url']);?>" class="btn set-operation" type="button">Edit</a>
+								<a href="<?=site_url('administrator/pages/'.$pages[$i]['url']);?>" class="btn set-operation" type="button">Edit</a>
 							</td>
 						</tr>
 				<?php endfor;?>

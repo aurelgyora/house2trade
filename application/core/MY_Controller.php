@@ -40,7 +40,7 @@ class MY_Controller extends CI_Controller{
 		endif;
 	}
 	
-	function jsonAccount($field = FALSE){
+	public function jsonAccount($field = FALSE){
 		
 		$account = '';
 		if($this->loginstatus):
@@ -52,6 +52,94 @@ class MY_Controller extends CI_Controller{
 			endif;
 		endif;
 		return $account;
+	}
+	
+	public function getPropertiesFromSearch($from,$count){
+		
+		$this->load->model('properties');
+		$potentialby = $favorite = FALSE;
+		$sql = $this->session->userdata('search_sql')." LIMIT $from,$count";
+		if($properties = $this->properties->query_execute($sql)):
+			$properties = $this->propertiesImagesTypes($properties,TRUE);
+			$properties = $this->propertiesPotentiaByAndFavorite($properties);
+		endif;
+		return $properties;
+	}
+	
+	public function getPropertyFromZillow($zillow_result,$parameters = NULL){
+		
+		$sql = 'SELECT properties.* FROM properties WHERE properties.address1 = "'.trim($zillow_result['property-address1']).'" AND properties.state = "'.$zillow_result['property-state'].'" AND properties.zip_code = "'.$zillow_result['property-zipcode'] .'"';
+		if(!is_null($parameters)):
+			if(!empty($parameters->beds_num)):
+				$sql .= ' AND properties.bedrooms = '.$parameters->beds_num;
+			endif;
+			if(!empty($parameters->baths_num)):
+				$sql .= ' AND properties.bathrooms = '.$parameters->baths_num;
+			endif;
+			if(!empty($parameters->property_min_price)):
+				$sql .= ' AND properties.price >= '.$parameters->property_min_price;
+			endif;
+			if(!empty($parameters->property_max_price)):
+				$sql .= ' AND properties.price <= '.$parameters->property_max_price;
+			endif;
+			if(!empty($parameters->square_feet)):
+				$sql .= ' AND properties.sqf >= '.$parameters->square_feet;
+			endif;
+			if(!empty($parameters->type)):
+				$sql .= ' AND properties.type = '.$parameters->type;
+			endif;
+		endif;
+		$sql .= ' LIMIT 1';
+		$this->load->model('properties');
+		if($properties = $this->properties->query_execute($sql)):
+			$properties = $this->propertiesImagesTypes($properties,TRUE);
+			$properties = $this->propertiesPotentiaByAndFavorite($properties);
+			$properties[0]['photo'] = site_url($properties[0]['photo']);
+			return $properties[0];
+		else:
+			return FALSE;
+		endif;
+	}
+	
+	public function getUnshiftProperty($zillow_result){
+		
+		$property = array(
+			'uid'=>0,'email'=>'','status'=>0,'oid'=>0,'fname'=>'','lname'=>'','address1'=> $zillow_result['property-address1'],'zip_code'=>$zillow_result['property-zipcode'],
+			'description'=> $zillow_result['property-discription'],'city'=> $zillow_result['property-city'],
+			'state'=> $zillow_result['property-state'],'type'=> $zillow_result['property-type'],'lotsize'=>$zillow_result['property-lot-size'],
+			'bathrooms'=> $zillow_result['property-bathrooms'],'bedrooms'=> $zillow_result['property-bedrooms'],
+			'sqf'=> $zillow_result['property-sqf'],'tax'=> $zillow_result['property-tax'],'price'=> $zillow_result['property-price'],
+			'year'=> $zillow_result['property-year'],'last-sold-date'=> $zillow_result['property-last-sold-date'],
+			'last-sold-price'=> $zillow_result['property-last-sold-price'],'favorite'=>FALSE,'potentialby'=>FALSE,'photo'=>site_url('img/thumb.png')
+		);
+		if($images = $this->arrayImagesFromPage($zillow_result['page-content'])):
+			$random = array_rand($images);
+			if(isset($random) && $random):
+				$property['photo'] = $images[$random];
+			endif;
+		endif;
+		return $property;
+	}
+	
+	private function propertiesPotentiaByAndFavorite($properties){
+		
+		$this->load->model(array('property_favorite','property_potentialby'));
+		$propertiesIDs = $this->getPropertyIDs($properties);
+		$favorite = $this->property_favorite->record_exists($this->session->userdata('current_property'),$propertiesIDs);
+		$potentialby = $this->property_potentialby->record_exists($this->session->userdata('current_property'),$propertiesIDs);
+		for($i=0;$i<count($properties);$i++):
+			$properties[$i]['favorite'] = FALSE;
+			$properties[$i]['potentialby'] = FALSE;
+			if($this->session->userdata('current_property')):
+				if($favorite && array_key_exists($properties[$i]['id'],$favorite)):
+					$properties[$i]['favorite'] = TRUE;
+				endif;
+				if($potentialby && array_key_exists($properties[$i]['id'],$potentialby)):
+					$properties[$i]['potentialby'] = TRUE;
+				endif;
+			endif;
+		endfor;
+		return $properties;
 	}
 	
 	/*************************************************************************************************************/

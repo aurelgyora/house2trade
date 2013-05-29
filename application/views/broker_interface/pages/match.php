@@ -59,7 +59,7 @@
 							<?= ucfirst($properties[$i]['type']); ?> Home <br/>
 						</p>
 						<?php if($properties[$i]['id'] == $this->session->userdata('current_property')):?>
-							<p>This is your property</p>
+							<p class="property-owner">This is your property</p>
 						<?php endif;?>
 					</div>
 				</div>
@@ -73,9 +73,9 @@
 					<?php endif?>
 					%
 					<?php if($match['status'.$matchIndex] == 1):?>
-						<p class="text-success">Approve</p>
+						<p class="property-owner text-success">Approved</p>
 					<?php else:?>
-						<p class="text-info">Not approve</p>
+						<p class="property-owner text-info">Not approved</p>
 					<?php endif?>
 				<?php endif;?>
 			<?php endfor;?>

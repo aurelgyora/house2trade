@@ -35,6 +35,11 @@
 							<?=$properties[$i]['lotsize'];?> Acres <br/>
 							<?= ucfirst($properties[$i]['type']); ?> Home
 						</p>
+						<?php if($properties[$i]['status'] == 11):?>
+							<p class="property-owner">Broker deactive property</p>
+						<?php elseif($properties[$i]['status'] == 12):?>
+							<p class="property-owner">Homeowner deactive property</p>
+						<?php endif;?>
 						<?=getPropertyStatus($properties[$i]['id'],$properties[$i]['status'],$this->profile['group']);?>
 					</div>
 				</div>
