@@ -30,30 +30,31 @@
 							</a>
 							<div class="media-body">
 								<h4 class="media-heading">
-								<?php if($zillow_exist_id):?>
-									<a href="<?=site_url('homeowner/search/information/'.$zillow['id']);?>"><?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?></a>
+								<?php if($zillow_exist_id != FALSE):?>
+									<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$zillow['id']);?>"><?=$zillow['address1'];?></a>
+									<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
 								<?php else:?>
-									<?=$zillow['address1'].', '.$zillow['city'].', '.$zillow['state'];?> <br/>
+									<a href="#"><?=$zillow['address1'];?></a>
+									<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
 									<small>Property is not in our listing</small>
-								<?php endif;?>
+								<?php endif; ?>
 								</h4>
-								<p><em><?=word_limiter($zillow['description'],100);?></em></p>
 								<p>
-									For Sale: $<?=($zillow['price'])?$zillow['price']:' &mdash;';?><br/>
-									Bedrooms: <?=($zillow['bedrooms'])?$zillow['bedrooms'].' beds':'&mdash;';?><br/>
-									Bathrooms: <?=($zillow['bathrooms'])?$zillow['bathrooms'].' beds':'&mdash;';?><br/>
-									<?= ucfirst($zillow['type']); ?>: <?=$zillow['sqf'];?> sq ft<br/>
-									Lot: <?= $zillow['sqf'];?> sq ft <br/>
-									Tax: $<?=$zillow['tax'];?>
-								<?php if(isset($zillow['year']) && $zillow['year']):?>
-									<br/>Year Built: <?= $zillow['year'];?><br/>
-								<?php endif;?>
-								<?php if(isset($zillow['last-sold-date']) && $zillow['last-sold-date']):?>
-									Last Sold: <?= date("M Y",strtotime($zillow['last-sold-date']));?>
-								<?php endif;?>
-								<?php if(isset($zillow['last-sold-price']) && $zillow['last-sold-price']):?>
-									 for $<?= $zillow['last-sold-price'];?>
-								<?php endif;?>
+									$<?=$zillow['price'];?> <span class="separator">|</span> 
+									<?=$zillow['bedrooms'];?> Bd <span class="separator">|</span> 
+									<?=$zillow['bathrooms'];?> Ba <span class="separator">|</span> 
+									<?=$zillow['sqf'];?> Sq Ft <span class="separator">|</span> 
+									<?=$zillow['lotsize'];?> Acres <br/>
+									<?= ucfirst($zillow['type']); ?> Home
+									<?php if(isset($zillow['year']) && $zillow['year']):?>
+									<span class="separator">|</span> Built <?= $zillow['year'];?>
+									<?php endif;?>
+									<?php if(isset($zillow['last-sold-date']) && $zillow['last-sold-date']):?>
+									<span class="separator">|</span>Last Sold in <?= date("M Y",strtotime($zillow['last-sold-date']));?>
+									<?php endif;?>
+									<?php if(isset($zillow['last-sold-price']) && $zillow['last-sold-price']):?>
+										 for $<?= $zillow['last-sold-price'];?>
+									<?php endif;?>
 								</p>
 							</div>
 						<?php if($zillow_exist_id && !$zillow['potentialby']):?>
@@ -77,16 +78,20 @@
 						</a>
 						<div class="media-body">
 							<h4 class="media-heading">
-								<a href="<?=site_url('homeowner/search/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'].', '.$properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code'];?></a>
+								<a href="<?=site_url('broker/search/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'];?></a>
+								<span><?= $properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code']; ?></span>
 							</h4>
+							<?php if($properties[$i]['status'] == 17):?>
+								<p class="text-info">Not from our listing</p>
+							<?php endif;?>
 							<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 							<p>
-								For Sale: $<?=$properties[$i]['price'];?> <br/>
-								Bedrooms: <?=($properties[$i]['bedrooms'])?$properties[$i]['bedrooms'].' beds':'&mdash;';?><br/>
-								Bathrooms: <?=($properties[$i]['bathrooms'])?$properties[$i]['bathrooms'].' baths':'&mdash;';?><br/>
-								<?= ucfirst($properties[$i]['type']); ?>: <?=$properties[$i]['sqf'];?> sq ft<br/>
-								Lot: <?= $properties[$i]['sqf'];?> sq ft <br/>
-								Tax: $<?= $properties[$i]['tax']; ?>
+								$<?=$properties[$i]['price'];?> <span class="separator">|</span> 
+								<?=$properties[$i]['bedrooms'];?> Bd <span class="separator">|</span> 
+								<?=$properties[$i]['bathrooms'];?> Ba <span class="separator">|</span> 
+								<?=$properties[$i]['sqf'];?> Sq Ft <span class="separator">|</span> 
+								<?=$properties[$i]['lotsize'];?> Acres <br/>
+								<?= ucfirst($properties[$i]['type']); ?> Home
 							</p>
 						</div>
 			<?php if($properties[$i]['owner'] != $this->account['id']):?>
@@ -103,7 +108,7 @@
 				<?php endif;?>
 			<?php endif;?>
 					</div>
-				<?php endfor;?>
+			<?php endfor;?>
 				</div>
 				<?=$pages;?>
 			<?php endif;?>

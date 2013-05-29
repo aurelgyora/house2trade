@@ -31,14 +31,14 @@
 							</a>
 							<div class="media-body">
 								<h4 class="media-heading">
-									<?php if($zillow_exist_id != FALSE):?>
-										<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$zillow['id']);?>"><?=$zillow['address1'];?></a>
-										<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
-									<?php else:?>
-										<a href="#"><?=$zillow['address1'];?></a>
-										<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
-										<small>Property is not in our listing</small>
-									<?php endif; ?>
+								<?php if($zillow_exist_id != FALSE):?>
+									<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$zillow['id']);?>"><?=$zillow['address1'];?></a>
+									<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
+								<?php else:?>
+									<a href="#"><?=$zillow['address1'];?></a>
+									<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
+									<small>Property is not in our listing</small>
+								<?php endif; ?>
 								</h4>
 								<p>
 									$<?=$zillow['price'];?> <span class="separator">|</span> 
