@@ -31,8 +31,11 @@
 							<div class="media-body">
 								<h4 class="media-heading">
 								<?php if($zillow_exist_id != FALSE):?>
-									<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$zillow['id']);?>"><?=$zillow['address1'];?></a>
+									<a href="<?=site_url('homeowner/'.$this->uri->segment(2).'/information/'.$zillow['id']);?>"><?=$zillow['address1'];?></a>
 									<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
+									<?php if($zillow['status'] == 17):?>
+										<small>Property is not in our listing</small>
+									<?php endif;?>
 								<?php else:?>
 									<a href="#"><?=$zillow['address1'];?></a>
 									<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
@@ -78,11 +81,11 @@
 						</a>
 						<div class="media-body">
 							<h4 class="media-heading">
-								<a href="<?=site_url('broker/search/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'];?></a>
+								<a href="<?=site_url('homeowner/search/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'];?></a>
 								<span><?= $properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code']; ?></span>
 							</h4>
 							<?php if($properties[$i]['status'] == 17):?>
-								<p class="text-info">Not from our listing</p>
+								<small>Property is not in our listing</small>
 							<?php endif;?>
 							<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 							<p>

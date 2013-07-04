@@ -14,7 +14,7 @@
 				<?php $this->load->view("broker_interface/forms/setect-property");?>
 				</div>
 				<div class="clear"></div>
-		<?php if(!$this->session->userdata('current_property') || !$match):?>
+		<?php if($this->session->userdata('current_property') === FALSE || !$match):?>
 				<p>Match is missing or is not selected current seller</p>
 		<?php else:?>
 			<div id="form-request"></div>

@@ -1,6 +1,6 @@
 <select id="input-select-property" class="span6 input-select-property" name="current_property">
-<?php if(!$this->session->userdata('current_property')):?>
-	<option value="" selected="selected">Select property</option>
+<?php if($this->session->userdata('current_property') == FALSE):?>
+	<option value="" selected="selected">Full properties list</option>
 <?php endif;?>
 <?php if($this->uri->segment(2) == 'properties' && $this->session->userdata('current_property')):?>
 	<option value="0">View Full List</option>

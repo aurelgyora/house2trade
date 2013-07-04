@@ -10,7 +10,7 @@
 		<div class="row">
 			<hr/>
 			<?php $this->load->view("owner_interface/includes/rightbar");?>
-			<div class="span9">
+			<div class="span6">
 				<div class="navbar">
 					<div class="navbar-inner">
 					<?php if($this->session->userdata('search_sql')):?>
@@ -20,6 +20,8 @@
 					<?php endif;?>
 					</div>
 				</div>
+			</div>
+			<div class="row">
 	<?php if($property):?>
 				<?php $this->load->view("owner_interface/forms/set-current-property");?>
 			<?php if($images):?>

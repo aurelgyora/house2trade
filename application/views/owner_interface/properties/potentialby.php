@@ -37,7 +37,7 @@
 					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
 				</div>
 			<?php endfor;?>
-			<?php if(!$this->session->userdata('current_property') || !$properties):?>
+			<?php if($this->session->userdata('current_property') === FALSE || !$properties):?>
 				<p>Favorite properties is missing or is not selected current seller</p>
 			<?php endif;?>
 			<?=$pages;?>

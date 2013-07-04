@@ -3,7 +3,7 @@
  */
  
 var mt = mt || {};
-mt.baseURL = 'http://'+window.location.hostname+'/';
+mt.baseURL = 'http://house2trade/';
 mt.currentURL = window.location.href;
 mt.currentElement = 0;
 mt.isValidEmailAddress = function(emailAddress){
@@ -101,4 +101,8 @@ $(function(){
 		$("#div-search-property").removeClass('hidden');
 	});
 	
+	$('#banner-slider .grid_3 .btn-submit').click(function(e){
+		e.preventDefault();
+		$('html, body').animate({scrollTop: 500}, 2000);
+	});
 });

@@ -29,6 +29,12 @@ class Owner_interface extends MY_Controller{
 				$this->session->unset_userdata(array('search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
 			endif;
 		endif;
+		if($this->session->userdata('current_property') === FALSE):
+			$this->load->model('properties');
+			if($properties = $this->properties->read_records($this->account['id'])):
+				$this->session->set_userdata('current_property',$properties[0]['id']);
+			endif;
+		endif;
 	}
 	
 	/******************************************** cabinet *******************************************************/
@@ -87,13 +93,13 @@ class Owner_interface extends MY_Controller{
 			endif;
 			if($pagevar['properties'] = $this->getPropertiesFromSearch(intval($this->uri->segment(5)),7)):
 				$count = count($this->properties->query_execute($this->session->userdata('search_sql')));
-				$pagevar['pages'] = $this->pagination('broker/search/result',5,$count,7);
+				$pagevar['pages'] = $this->pagination('homeowner/search/result',5,$count,7);
 			else:
 				$pagevar['properties'] = NULL;
 				$pagevar['pages'] = NULL;
 			endif;
 		endif;
-		$this->session->set_userdata('backpath',site_url(uri_string()));
+		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("owner_interface/pages/search-properties",$pagevar);
 	}
 	
@@ -101,7 +107,7 @@ class Owner_interface extends MY_Controller{
 		
 		$this->load->model(array('property_favorite','union'));
 		$from = (int)$this->uri->segment(4);
-		if(!$this->session->userdata('current_property')):
+		if($this->session->userdata('current_property') === FALSE):
 			$this->session->set_userdata('current_property',0);
 		endif;
 		$pagevar = array(
@@ -123,7 +129,7 @@ class Owner_interface extends MY_Controller{
 		
 		$this->load->model(array('property_potentialby','union'));
 		$from = (int)$this->uri->segment(4);
-		if(!$this->session->userdata('current_property')):
+		if($this->session->userdata('current_property') === FALSE):
 			$this->session->set_userdata('current_property',0);
 		endif;
 		$pagevar = array(
@@ -187,10 +193,9 @@ class Owner_interface extends MY_Controller{
 		
 		$offset = intval($this->uri->segment(5));
 		$per_page = 10;
-		$this->load->model('union');
-		$this->load->model('properties');
-		$this->load->model('images');
+		$this->load->model(array('union','properties','images'));
 		$pagevar = array(
+			'select' => $this->union->selectOwnerProperties($this->account['id']),
 			'properties' => $this->properties->read_limit_records($per_page,$offset),
 			'pagination' => $this->pagination(OWNER_START_PAGE,5,$this->properties->countRecords(3),$per_page)
 		);

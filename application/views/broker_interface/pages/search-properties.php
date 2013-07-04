@@ -34,6 +34,9 @@
 								<?php if($zillow_exist_id != FALSE):?>
 									<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$zillow['id']);?>"><?=$zillow['address1'];?></a>
 									<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
+									<?php if($zillow['status'] == 17):?>
+										<small>Property is not in our listing</small>
+									<?php endif;?>
 								<?php else:?>
 									<a href="#"><?=$zillow['address1'];?></a>
 									<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
@@ -83,7 +86,7 @@
 								<span><?= $properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code']; ?></span>
 							</h4>
 							<?php if($properties[$i]['status'] == 17):?>
-								<p class="text-info">Not from our listing</p>
+								<small>Property is not in our listing</small>
 							<?php endif;?>
 							<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 							<p>

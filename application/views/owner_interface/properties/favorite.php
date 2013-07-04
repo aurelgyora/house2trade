@@ -40,7 +40,7 @@
 				<?php endif;?>
 				</div>
 			<?php endfor;?>
-			<?php if(!$this->session->userdata('current_property') || !$properties):?>
+			<?php if($this->session->userdata('current_property') === FALSE || !$properties):?>
 				<p>Favorite properties is missing or is not selected current seller</p>
 			<?php endif;?>
 			</div>

@@ -60,20 +60,33 @@ class Properties extends MY_Model{
 		return $this->db->affected_rows();
 	}
 	
-	function read_records($owner){
+	function read_records($owner = NULL,$broker = NULL,$orderBy = 'properties.zip_code,properties.state,properties.address1'){
 		
-		$this->db->where('owner',$owner);
+		if(!is_null($owner)):
+			$this->db->where('owner',$owner);
+		endif;
+		if(!is_null($broker)):
+			$this->db->where('broker',$broker);
+		endif;
+		if(!is_null($orderBy)):
+			$this->db->order_by($orderBy);
+		endif;
 		$this->db->where('status <',17);
 		$query = $this->db->get('properties');
 		$data = $query->result_array();
-		if($data) return $data;
+		if(!empty($data)):
+			return $data;
+		endif;
 		return NULL;
 	}
 
-	function properties_exits($state,$zip_code){
+	function properties_exits($state,$zip_code,$address = NULL){
 		
 		$this->db->where('state',$state);
 		$this->db->where('zip_code',$zip_code);
+		if(!is_null($address)):
+			$this->db->where('md5(address1)',md5($address));
+		endif;
 		$query = $this->db->get('properties',1);
 		$data = $query->result_array();
 		if($data) return $data[0]['id'];

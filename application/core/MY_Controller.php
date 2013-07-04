@@ -334,7 +334,11 @@ class MY_Controller extends CI_Controller{
 				$this->match->update_field($matchID,'status',2,'match');
 				$message = 'Match is broken!';
 			endif;
-			$result['message'] = '<div class="alert alert-info">'.$message.' <a href="'.site_url('broker/match?action=cancel&match='.$matchID.'&field='.$nameFieldStatus).'">Cancel operation</a></div>';
+			$cabinet = 'broker';
+			if($this->account['group'] == 3):
+				$cabinet = 'homeowner';
+			endif;
+			$result['message'] = '<div class="alert alert-info">'.$message.' <a href="'.site_url($cabinet.'/match?action=cancel&match='.$matchID.'&field='.$nameFieldStatus).'">Cancel operation</a></div>';
 			$result['status'] = $status;
 		endif;
 		return $result;
@@ -349,15 +353,35 @@ class MY_Controller extends CI_Controller{
 			$this->match->update_field($matchID,$field,0,'match');
 			$this->match->update_field($matchID,'status',0,'match');
 			$this->changePropertiesStatus(16,NULL,NULL,array($this->session->userdata('current_property')));
+			$this->changePotentialBuyStatus($matchID,3);
 			$result['status'] = TRUE;
 		endif;
 		return $result;
 	}
 	
-	public function getFieldMatchName($match){
+	public function getFieldMatchName($match,$field = 'status'){
 		
 		if(!empty($match) && $nameFieldSeller = array_search($this->session->userdata('current_property'),$match)):
-			return 'status'.($nameFieldSeller[11]);
+			return $field.($nameFieldSeller[11]);
+		else:
+			return FALSE;
+		endif;
+	}
+	
+	public function changePotentialBuyStatus($matchID,$status = 1){
+		
+		$match = $this->match->read_record($matchID,'match');
+		if(!empty($match) && $propertyMatchPosition = array_search($this->session->userdata('current_property'),$match)):
+			if($propertyMatchPosition[11] > 1):
+				$buyerPropertyID = $match['property_id'.(string)(intval($propertyMatchPosition[11])-1)];
+			else:
+				$buyerPropertyID = $match['property_id'.$match['level']];
+			endif;
+			$this->load->model('property_potentialby');
+			if($potentialBuyID = $this->property_potentialby->record_exist($this->session->userdata('current_property'),$buyerPropertyID)):
+				$this->property_potentialby->update_field($potentialBuyID,'status',$status,'property_potentialby');
+				return TRUE;
+			endif;
 		else:
 			return FALSE;
 		endif;
@@ -635,7 +659,7 @@ class MY_Controller extends CI_Controller{
 			endif;
 		endfor;
 		$ownersIDs = $this->getUsersInformationByPropertiesIDs($propertiesIDs,3,TRUE);
-		for($i=0;$i<count($brokersIDs);$i++):
+		for($i=0;$i<count($ownersIDs);$i++):
 			if($ownersIDs[$i]['account'] != $this->account['id']):
 				$this->parseAndSendMail($mailID,array(
 					'email'=>$ownersIDs[$i]['email'],'user_first_name'=>$ownersIDs[$i]['fname'],'user_last_name'=>$ownersIDs[$i]['lname'],

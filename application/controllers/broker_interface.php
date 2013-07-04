@@ -17,6 +17,12 @@ class Broker_interface extends MY_Controller{
 				$this->session->unset_userdata(array('search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
 			endif;
 		endif;
+		if($this->session->userdata('current_property') === FALSE && $this->uri->segment(3) != 'full-list'):
+			$this->load->model('properties');
+			if($properties = $this->properties->read_records(null,$this->account['id'])):
+				$this->session->set_userdata('current_property',$properties[0]['id']);
+			endif;
+		endif;
 	}
 	
 	/******************************************** cabinet *******************************************************/
@@ -91,7 +97,7 @@ class Broker_interface extends MY_Controller{
 		
 		$this->load->model(array('property_favorite','union'));
 		$from = (int)$this->uri->segment(4);
-		if(!$this->session->userdata('current_property')):
+		if($this->session->userdata('current_property') === FALSE):
 			$this->session->set_userdata('current_property',0);
 		endif;
 		$pagevar = array(
@@ -113,7 +119,7 @@ class Broker_interface extends MY_Controller{
 		
 		$this->load->model(array('property_potentialby','union'));
 		$from = (int)$this->uri->segment(4);
-		if(!$this->session->userdata('current_property')):
+		if($this->session->userdata('current_property') === FALSE):
 			$this->session->set_userdata('current_property',0);
 		endif;
 		$pagevar = array(
@@ -178,7 +184,7 @@ class Broker_interface extends MY_Controller{
 		$this->load->model('union');
 		$this->load->model('properties');
 		$this->load->model('images');
-		if(!$this->session->userdata('current_property')):
+		if($this->session->userdata('current_property') === 0):
 			redirect(BROKER_START_PAGE.'/full-list');
 		endif;
 		$pagevar = array(
