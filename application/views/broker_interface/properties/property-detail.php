@@ -86,7 +86,7 @@
 					</div>
 				</div>
 				<div class="span3">
-					<h1 class="pp-title"><?= $property['address1'].'<br/>'.$property['city'].', '.$property['state'].' '.$property['zip_code'];?></h1>
+					<h1 class="pp-title">HT-<?=$property['id'].'<br/>'.$property['address1'].'<br/>'.$property['city'].', '.$property['state'].' '.$property['zip_code'];?></h1>
 					<h2 class="pp">Property Details</h2>
 					<p>
 						<strong>Foreclosure:</strong> $<?=$property['price'];?> <br/>

@@ -35,6 +35,7 @@
 			<?php endif;?>
 				<h2 class="pp">Property Details</h2>
 				<p>
+					HT-<?=$property['id'];?> <br/>
 					City, Address, State, Zip: <?=$property['city'].', '.$property['address1'].', '.$property['state'].' '.$property['zip_code'];?> <br/>
 					For Sale: $<?=$property['price'];?> <br/>
 					Bedrooms: <?=$property['bedrooms'];?> beds <br/>

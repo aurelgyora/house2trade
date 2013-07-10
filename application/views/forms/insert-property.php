@@ -19,7 +19,7 @@
 			</div>
 			<div class="control-group">
 				<label for="email">Email*: </label>
-				<input id="login-email" class="span4 valid-required FieldSend" name="email" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
+				<input id="login-email" class="span4 valid-required unique-email FieldSend" name="email" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
 			</div>
 		</fieldset>
 	</div>

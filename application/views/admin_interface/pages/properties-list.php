@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <?php $this->load->view("admin_interface/includes/head");?>
+
+<link rel="stylesheet" href="<?=base_url('css/chosen.css');?>" />
 </head>
 <body>
 	<?php $this->load->view("admin_interface/includes/header");?>
@@ -15,7 +17,7 @@
 						<a class="brand" href="<?=site_url(ADM_START_PAGE.'/properties');?>">Properties</a>
 					</div>
 				</div>
-				<div class="clear"></div>
+				<?php $this->load->view('forms/select-chosen-property');?>
 				<?php $this->load->helper('text');?>
 			<?php for($i=0;$i<count($properties);$i++):?>
 				<div class="media">
@@ -50,5 +52,8 @@
 	</div>
 	<?php $this->load->view("admin_interface/includes/footer");?>
 	<?php $this->load->view("admin_interface/includes/scripts");?>
+	
+<script type="text/javascript" src="<?=site_url('js/vendor/chosen.jquery.js');?>"></script>
+<script type="text/javascript" src="<?=site_url('js/libs/chosen.js');?>"></script>
 </body>
 </html>

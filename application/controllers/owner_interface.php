@@ -99,7 +99,7 @@ class Owner_interface extends MY_Controller{
 				$pagevar['pages'] = NULL;
 			endif;
 		endif;
-		$this->session->set_userdata('backpath',uri_string());
+		$this->session->set_userdata('backpath',site_url(uri_string()));
 		$this->load->view("owner_interface/pages/search-properties",$pagevar);
 	}
 	
@@ -195,7 +195,6 @@ class Owner_interface extends MY_Controller{
 		$per_page = 10;
 		$this->load->model(array('union','properties','images'));
 		$pagevar = array(
-			'select' => $this->union->selectOwnerProperties($this->account['id']),
 			'properties' => $this->properties->read_limit_records($per_page,$offset),
 			'pagination' => $this->pagination(OWNER_START_PAGE,5,$this->properties->countRecords(3),$per_page)
 		);

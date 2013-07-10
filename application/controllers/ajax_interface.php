@@ -136,36 +136,34 @@ class Ajax_interface extends MY_Controller{
 			endfor;
 			if($dataval):
 				$this->load->model('properties');
-				if(!$this->properties->properties_exits($dataval['state'],$dataval['zip_code'],$dataval['address1'])):
-					$dataval['user_id'] = FALSE;
-					$userID = $this->users->user_exist('email',$dataval['email']);
-					if($userID === FALSE):
+				if(!$this->users->user_exist('email',$dataval['email'])):
+					if(!$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
 						$this->load->helper('string');
 						$dataval['password'] = random_string('alnum',12);
-						if($dataval['user_id'] = $this->users->insert_record($dataval)):
+						$dataval['user_id'] = $this->users->insert_record($dataval);
+						if($dataval['user_id']):
 							$this->load->model('owners');
 							$ownerID = $this->owners->insert_record($dataval);
+							$property_id = $this->properties->insert_record($dataval);
+							if($property_id):
+								$this->getPropertyImages($dataval,$property_id);
+							endif;
 							$this->users->update_field($dataval['user_id'],'account',$ownerID,'users');
 							$this->users->update_field($dataval['user_id'],'group',3,'users');
+							$this->properties->update_field($property_id,'status',$this->profile['status'],'properties');
 							$this->parseAndSendMail(2,array(
 								'email'=>$dataval['email'],'user_first_name'=>$dataval['fname'],'user_last_name'=>$dataval['lname'],
 								'user_login'=>$dataval['email'],'user_password'=>$dataval['password'],'cabinet_link'=>site_url(OWNER_START_PAGE)
 							));
 							$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
+							$json_request['status'] = TRUE;
+							$this->session->set_userdata(array('current_property'=>$property_id,'property_id'=>$property_id));
 						endif;
 					else:
-						$dataval['user_id'] = $userID;
-					endif;
-					if($dataval['user_id'] !== FALSE):
-						if($propertyID = $this->properties->insert_record($dataval)):
-							$this->getPropertyImages($dataval,$propertyID);
-							$this->properties->update_field($propertyID,'status',$this->profile['status'],'properties');
-							$json_request['status'] = TRUE;
-							$this->session->set_userdata(array('current_property'=>$propertyID,'property_id'=>$propertyID));
-						endif;
+						$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
 					endif;
 				else:
-					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
+					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Homeowner already exist';
 				endif;
 			endif;
 		endif;

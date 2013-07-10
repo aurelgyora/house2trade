@@ -169,4 +169,17 @@ class Properties extends MY_Model{
 			FALSE;
 		endif;
 	}
+
+	function getAllTitles(){
+		
+		$this->db->select('id,address1,city,state',FALSE);
+		$this->db->order_by('address1,city,state');
+		$query = $this->db->get('properties');
+		$data = $query->result_array();
+		if(!empty($data)):
+			return $data;
+		else:
+			return NULL;
+		endif;
+	}
 }

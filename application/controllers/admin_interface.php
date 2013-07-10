@@ -147,9 +147,17 @@ class Admin_interface extends MY_Controller{
 		$per_page = 10;
 		$this->load->model('properties');
 		$pagevar = array(
-			'properties' => $this->properties->read_limit_records($per_page,$offset),
-			'pagination' => $this->pagination(ADM_START_PAGE.'/properties',4,$this->properties->countRecords(),$per_page)
+			'properties_titles' => $this->properties->getAllTitles(),
+			'properties' => array(),
+			'pagination' => array()
 		);
+		if($this->input->get('property') === FALSE || !is_numeric($this->input->get('property'))):
+			$pagevar['properties'] = $this->properties->read_limit_records($per_page,$offset);
+			$pagevar['pagination'] = $this->pagination(ADM_START_PAGE.'/properties',4,$this->properties->countRecords(),$per_page);
+		else:
+			$pagevar['properties'][0] = $this->properties->read_record($this->input->get('property'),'properties');
+			$pagevar['pagination'] = NULL;
+		endif;
 		if($pagevar['properties']):
 			$ids = array();
 			for($i=0;$i<count($pagevar['properties']);$i++):

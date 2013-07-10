@@ -25,7 +25,7 @@
 					</a>
 					<div class="media-body">
 						<h4 class="media-heading">
-							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$property['id']);?>"><?= $property['address1'];?></a>
+							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$property['id']);?>">HT-<?=$property['id'].'. '.$property['address1'];?></a>
 							<span><?= $property['city'].', '.$property['state'].' '.$property['zip_code']; ?></span>
 						</h4>
 						<p>
