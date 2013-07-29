@@ -198,6 +198,9 @@ class Owner_interface extends MY_Controller{
 			'properties' => $this->properties->read_limit_records($per_page,$offset),
 			'pagination' => $this->pagination(OWNER_START_PAGE,5,$this->properties->countRecords(3),$per_page)
 		);
+		
+		print_r($pagevar['properties']);exit;
+		
 		if($pagevar['properties']):
 			$ids = array();
 			for($i=0;$i<count($pagevar['properties']);$i++):
