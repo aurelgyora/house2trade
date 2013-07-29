@@ -11,7 +11,7 @@
 			<?php $this->load->view("broker_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-				<?php $this->load->view("broker_interface/forms/set-active-property");?>
+				<?php $this->load->view("broker_interface/forms/show-property");?>
 				<?php if($this->uri->segment(2) == 'properties'):?>
 					<a href="<?=site_url('broker/register-properties');?>" class="btn btn-small btn-link" type="button">Add new Property</a>
 				<?php endif;?>

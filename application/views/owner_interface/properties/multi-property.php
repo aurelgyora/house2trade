@@ -11,7 +11,7 @@
 			<?php $this->load->view("owner_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-				<?php $this->load->view("owner_interface/forms/set-current-property");?>
+					<?php $this->load->view("owner_interface/forms/select-property");?>
 				<?php if(($this->uri->segment(2) == 'properties')&&($this->owner['seller'])):?>
 					<a href="<?=site_url('homeowner/register-properties');?>" class="btn btn-small btn-link" type="button">Add new Property</a>
 				<?php endif;?>
@@ -44,7 +44,7 @@
 			</div>
 		</div>
 	</div>
-	<?php $this->load->view("broker_interface/includes/footer");?>
-	<?php $this->load->view("broker_interface/includes/scripts");?>
+	<?php $this->load->view("owner_interface/includes/footer");?>
+	<?php $this->load->view("owner_interface/includes/scripts");?>
 </body>
 </html>

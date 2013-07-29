@@ -35,6 +35,8 @@ define('FOPEN_WRITE_CREATE',					'ab');
 define('FOPEN_READ_WRITE_CREATE',				'a+b');
 define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
+
+define('PER_PAGE_DEFAULT',						10);
 define('PATH_PAGE_VARIABLE',					getcwd().'/variables/page_variables.php');
 define('IMAGE_LOADING',							'/img/loading.gif');
 define('TOOLTIP_FIELD_BLANK',					'data-trigger="focus" data-placement="right" role="tooltip" data-original-title="This field can not be blank"');

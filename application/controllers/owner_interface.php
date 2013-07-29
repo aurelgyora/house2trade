@@ -3,6 +3,8 @@
 class Owner_interface extends MY_Controller{
 	
 	var $owner = array('seller'=>FALSE);
+	var $per_page = PER_PAGE_DEFAULT;
+	var $offset = 0;
 	
 	function __construct(){
 		
@@ -121,7 +123,7 @@ class Owner_interface extends MY_Controller{
 			$property_type = $this->property_type->read_records('property_type');
 			$pagevar['properties'] = $this->propertiesImagesTypes($pagevar['properties'],$mainPhotos,$property_type);
 		endif;
-		$this->session->set_userdata('backpath',uri_string());
+		$this->session->set_userdata('backpath',site_url(uri_string()));
 		$this->load->view("owner_interface/properties/favorite",$pagevar);
 	}
 	
@@ -143,7 +145,7 @@ class Owner_interface extends MY_Controller{
 			$property_type = $this->property_type->read_records('property_type');
 			$pagevar['properties'] = $this->propertiesImagesTypes($pagevar['properties'],$mainPhotos,$property_type);
 		endif;
-		$this->session->set_userdata('backpath',uri_string());
+		$this->session->set_userdata('backpath',site_url(uri_string()));
 		$this->load->view("owner_interface/properties/potentialby",$pagevar);
 	}
 	
@@ -157,7 +159,7 @@ class Owner_interface extends MY_Controller{
 		if($this->session->userdata('current_property') == TRUE):
 			$pagevar['levels'] = $this->getInstantTradeAllLevels($this->session->userdata('current_property'));
 		endif;
-		$this->session->set_userdata('backpath',uri_string());
+		$this->session->set_userdata('backpath',site_url(uri_string()));
 		$this->load->view("owner_interface/pages/instant-trade",$pagevar);
 	}
 	
@@ -183,7 +185,7 @@ class Owner_interface extends MY_Controller{
 				$pagevar['match']['my_status_field'] = $this->getFieldMatchName($pagevar['match']);
 			endif;
 		endif;
-		$this->session->set_userdata('backpath',uri_string());
+		$this->session->set_userdata('backpath',site_url(uri_string()));
 		$this->load->view("owner_interface/pages/match",$pagevar);
 	}
 	
@@ -191,21 +193,15 @@ class Owner_interface extends MY_Controller{
 	
 	public function properties(){
 		
-		$offset = intval($this->uri->segment(5));
-		$per_page = 10;
+		$this->offset = intval($this->uri->segment(5));
 		$this->load->model(array('union','properties','images'));
 		$pagevar = array(
-			'properties' => $this->properties->read_limit_records($per_page,$offset),
-			'pagination' => $this->pagination(OWNER_START_PAGE,5,$this->properties->countRecords(3),$per_page)
+			'select' => $this->union->selectOwnerProperties($this->account['id']),
+			'properties' => $this->properties->getLimit($this->per_page,$this->offset),
+			'pagination' => $this->pagination(OWNER_START_PAGE,5,$this->properties->countRecords(3),$this->per_page)
 		);
-		
-		print_r($pagevar['properties']);exit;
-		
 		if($pagevar['properties']):
-			$ids = array();
-			for($i=0;$i<count($pagevar['properties']);$i++):
-				$ids[] = $pagevar['properties'][$i]['id'];
-			endfor;
+			$ids = $this->getValuesInArray($pagevar['properties']);
 			$this->load->model('images');
 			$mainPhotos = $this->images->mainPhotos($ids);
 			$this->load->model('property_type');
@@ -224,7 +220,7 @@ class Owner_interface extends MY_Controller{
 				endfor;
 			endfor;
 		endif;
-		$this->session->set_userdata('backpath',uri_string());
+		$this->session->set_userdata('backpath',site_url(uri_string()));
 		$this->session->unset_userdata(array('property_id'=>'','search_sql'=>'','search_json_data'=>'','zillow_address'=>'','zillow_zip'=>''));
 		$this->load->view("owner_interface/properties/multi-property",$pagevar);
 	}

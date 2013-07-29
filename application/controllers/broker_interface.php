@@ -181,10 +181,8 @@ class Broker_interface extends MY_Controller{
 	
 	public function properties(){
 		
-		$this->load->model('union');
-		$this->load->model('properties');
-		$this->load->model('images');
-		if($this->session->userdata('current_property') === 0):
+		$this->load->model(array('union','properties','images'));
+		if($this->session->userdata('current_property') == 0):
 			redirect(BROKER_START_PAGE.'/full-list');
 		endif;
 		$pagevar = array(
@@ -194,7 +192,7 @@ class Broker_interface extends MY_Controller{
 		if($pagevar['property']):
 			$pagevar['property']['photo'] = $this->images->mainPhoto($pagevar['property']['id']);
 			if(!$pagevar['property']['photo']):
-				$pagevar['property']['photo'] = 'img/property.png';
+				$pagevar['property']['photo'] = 'img/thumb.png';
 			endif;
 			$this->load->model('property_type');
 			$pagevar['property']['type'] = $this->property_type->read_field($pagevar['property']['type'],'property_type','title');
@@ -211,7 +209,7 @@ class Broker_interface extends MY_Controller{
 		$this->load->model(array('union','properties'));
 		$pagevar = array(
 			'select' => $this->union->selectBrokerProperties($this->account['id']),
-			'properties' => $this->properties->read_limit_records($per_page,$offset),
+			'properties' => $this->properties->getLimit($per_page,$offset),
 			'pagination' => $this->pagination(BROKER_START_PAGE.'/full-list',5,$this->properties->countRecords(2),$per_page)
 		);
 		if($pagevar['properties']):
@@ -251,9 +249,8 @@ class Broker_interface extends MY_Controller{
 		elseif(!$current_property && $this->uri->total_segments() == 3):
 			redirect('broker/'.$this->uri->segment(2));
 		endif;
-		$this->load->model('properties');
-		$this->load->model('images');
-		$this->load->model('union');
+		
+		$this->load->model(array('properties','images','union'));
 		$pagevar = array(
 			'select' => $this->union->selectBrokerProperties($this->account['id']),
 			'property' => $this->properties->read_record($current_property,'properties'),

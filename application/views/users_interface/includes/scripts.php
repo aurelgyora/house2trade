@@ -2,7 +2,7 @@
 <script>window.jQuery || document.write('<script src="<?=site_url('js/vendor/jquery.js');?>"><\/script>')</script>
 <script src="<?=site_url('js/vendor/jquery.cycle.js');?>"></script>
 <script src="<?=site_url('js/vendor/jquery.easing.js');?>"></script>
-<script src="<?=site_url('js/main.js');?>"></script>
+<script src="<?=site_url('js/libs/base.js');?>"></script>
 <script type="text/javascript">
 //	$(function(){$('div#banner-slider').cycle({fx: 'fade',speed: '1500',easing: 'easeInOutExpo',timeout: 5000});});
 </script>

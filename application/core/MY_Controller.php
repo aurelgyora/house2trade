@@ -405,6 +405,17 @@ class MY_Controller extends CI_Controller{
 	}
 	
 	/*************************************************************************************************************/
+	
+	public function getValuesInArray($array,$value = 'id'){
+		
+		$ids = array();
+		for($i=0;$i<count($array);$i++):
+			$ids[] = $array[$i][$value];
+		endfor;
+		return $ids;
+	}
+	
+	/*************************************************************************************************************/
 	public function pagination($url,$uri_segment,$total_rows,$per_page){
 		
 		$this->load->library('pagination');

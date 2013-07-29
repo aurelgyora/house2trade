@@ -13,7 +13,7 @@
 			<div class="span9">
 				<div class="navbar">
 					<div class="navbar-inner">
-						<?=anchor('broker/properties/information/'.$this->session->userdata('property_id'),'Back');?>
+						<?=anchor('broker/properties/information/'.$this->session->userdata('property_id'),'Back to property detail','class="btn btn-link"');?>
 					</div>
 				</div>
 				<div id="div-property-information">

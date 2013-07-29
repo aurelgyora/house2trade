@@ -11,7 +11,7 @@
 			<?php $this->load->view("owner_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-				<?php $this->load->view("owner_interface/forms/setect-property");?>
+				<?php $this->load->view("owner_interface/forms/set-active-property");?>
 				</div>
 				<div class="clear"></div>
 			<?php if($this->session->userdata('current_property') == FALSE || empty($levels['level2'])):?>

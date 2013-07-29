@@ -152,7 +152,7 @@ class Admin_interface extends MY_Controller{
 			'pagination' => array()
 		);
 		if($this->input->get('property') === FALSE || !is_numeric($this->input->get('property'))):
-			$pagevar['properties'] = $this->properties->read_limit_records($per_page,$offset);
+			$pagevar['properties'] = $this->properties->getLimit($per_page,$offset);
 			$pagevar['pagination'] = $this->pagination(ADM_START_PAGE.'/properties',4,$this->properties->countRecords(),$per_page);
 		else:
 			$pagevar['properties'][0] = $this->properties->read_record($this->input->get('property'),'properties');

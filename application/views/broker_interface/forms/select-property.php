@@ -1,4 +1,4 @@
-<select autocomplet="off" class="span6 set-current-property" name="current_property">
+<select class="span6 choise-property" name="current_property">
 <?php if($this->session->userdata('current_property') == FALSE):?>
 	<option value="" selected="selected">Select property</option>
 <?php endif;?>

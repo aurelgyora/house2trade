@@ -58,18 +58,6 @@
 			,"json");
 		}
 	});
-	$("#input-select-property").change(function(){
-		var parameter = $(this).val();
-		$.post(mt.baseURL+"set-active-property",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
-	});
-	$("#input-select-current-property").change(function(){
-		var parameter = $(this).val();
-		$.post(mt.baseURL+"set-current-property",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
-	});
-	$("#input-select-favorite").change(function(){
-		var parameter = $(this).val();
-		$.post(mt.baseURL+"set-current-favorite",{'parameter':parameter},function(data){mt.redirect(data.redirect)},"json");
-	});
 	$("#seller-register-properties").click(function(event){
 		event.preventDefault();
 		var err = false; var _this = this;
@@ -257,13 +245,21 @@
 		if(err){return false;}
 	})
 	$("button.btn-property-add-favorite").click(function(){
-		if($("select.input-select-property").emptyValue()){alert('At first select a property'); return false;}
-		var parameter = $(this).attr('data-src');
-		var _this = this;
-		$.post(mt.baseURL+"add-to-favorite",{'parameter':parameter},function(data){
-			if(data.status){$(_this).siblings("button.btn-property-remove-favorite").removeClass('hidden').show();$(_this).hide();
-			}else{$(_this).html('Error adding');}
-		},"json");
+		if($("select.set-current-property").emptyValue()){
+			alert('At first select a property');
+			return false;
+		}else{
+			var parameter = $(this).attr('data-src');
+			var _this = this;
+			$.post(mt.baseURL+"add-to-favorite",{'parameter':parameter},function(data){
+				if(data.status){
+					$(_this).siblings("button.btn-property-remove-favorite").removeClass('hidden').show();
+					$(_this).hide();
+				}else{
+					$(_this).html('Error adding');
+				}
+			},"json");
+		}
 	});
 	$("button.btn-property-remove-favorite").click(function(){
 		var parameter = $(this).attr('data-src');

@@ -14,7 +14,7 @@
 				<div class="navbar">
 					<div class="navbar-inner">
 					<?php if($this->session->userdata('search_sql')):?>
-						<?=anchor('homeowner/search/result','Back to search result','class="btn btn-link"');?>
+						<?=anchor(OWNER_START_PAGE.'/search/result','Back to search result','class="btn btn-link"');?>
 					<?php else:?>
 						<?=anchor($this->session->userdata('backpath'),'Back to my properties','class="btn btn-link"');?>
 					<?php endif;?>
@@ -22,64 +22,86 @@
 				</div>
 			</div>
 			<div class="row">
-	<?php if($property):?>
-				<?php $this->load->view("owner_interface/forms/set-current-property");?>
-			<?php if($images):?>
-				<div class="fotorama" data-width="499" data-height="333">
-				<?php for($i=0;$i<count($images);$i++):?>
-					<a href="<?=site_url($images[$i]['photo']);?>"><img src="<?=site_url($images[$i]['photo']);?>"></a>
-				<?php endfor;?>
+			<?php if($property):?>
+				<div class="span6">
+					<?php $this->load->view("owner_interface/forms/select-property");?>
+					<ul class="nav nav-tabs" id="myTab">
+					<?php if($images):?>
+						<li class="active"><a href="#photos">Photos</a></li>
+					<?php endif; ?>
+						<li><a href="#map">Map</a></li>
+						<li><a href="#panorama">Street View</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane" id="map">
+							<div id="map-canvas" style="width: 450px; height: 300px"></div>
+						</div>
+						<div class="tab-pane" id="panorama">
+							<div id="pano" style="width: 450px; height: 300px;"></div>
+						</div>
+					<?php if($images): ?>
+						<div class="tab-pane active" id="photos">
+							<div class="fotorama" data-width="460" data-height="333" data-cropToFit="true" data-loop="true" data-autoplay="true">
+							<?php for($i=0;$i<count($images);$i++):?>
+								<a href="<?=site_url($images[$i]['photo']);?>"><img src="<?=site_url($images[$i]['photo']);?>"></a>
+							<?php endfor;?>
+							</div>
+						</div>
+					<?php else:?>
+						<p><img src="<?=site_url('img/thumb.png');?>"></p>
+					<?php endif;?>
+					</div>
+					<div class="property-actions">
+					<?php if($property['owner'] == $this->account['id']):?>
+						<a href="<?=site_url(OWNER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>
+						<a class="btn btn-mini btn-link link-operation-account" href="#confirm-user" data-toggle="modal" data-src="<?=$property['id'];?>" data-url="<?=site_url(BROKER_START_PAGE.'/delete');?>">Delete property</a>
+					<?php endif;?>
+					<?php if($property['status'] != 17):?>
+						<?php if(($property['id'] != $this->session->userdata('current_property'))):?>
+							<?php if(!$property['potentialby']):?>
+								<?php if(!$property['favorite']):?>
+									<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$property['id'];?>">Add to favorite</button>
+									<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$property['id'];?>">Remove from favorite</button>
+								<?php else:?>
+									<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="null" data-src="<?=$property['id'];?>">Remove from favorite</button>
+									<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$property['id'];?>">Add to favorite</button>
+								<?php endif;?>
+							<?php else:?>
+									<h3>Already added to potential by</h3>
+								<?php endif;?>
+						<?php else:?>
+								<button class="btn btn-mini btn-link disabled" disabled="disabled">Add to favorite</button>
+						<?php endif;?>
+					<?php endif;?>
+					</div>
+				</div>
+				<div class="span3">
+					<h1 class="pp-title">HT-<?=$property['id'].'<br/>'.$property['address1'].'<br/>'.$property['city'].', '.$property['state'].' '.$property['zip_code'];?></h1>
+					<h2 class="pp">Property Details</h2>
+					<p>
+						<strong>Foreclosure:</strong> $<?=$property['price'];?> <br/>
+						<strong>Bedrooms:</strong> <?=$property['bedrooms'];?> beds <br/>
+						<strong>Bathrooms:</strong> <?=$property['bathrooms'];?> baths <br/>
+						<strong><?= ucfirst($property['type']); ?></strong>: <?=$property['sqf'];?> sq ft<br/>
+						<strong>Lot:</strong> <?= $property['sqf'];?> sq ft <br/>
+						<strong>Tax:</strong> $<?= $property['tax']; ?>
+					</p>
+					<h2 class="pp">Description</h2>
+					<p><?=$property['description'];?></p>
+					<?php if($property['status'] < 17 && isset($property['email'])):?>
+					<h2 class="pp">Contacts</h2>
+					<p>
+						<strong>Phone:</strong> <?=$property['phone'];?><br/>
+						<strong>Cell:</strong> <?=$property['cell'];?><br/>
+						<strong>Email:</strong> <?=$property['email'];?>
+					</p>
+					<?php else:?>
+					<p>Not from our listing</p>
+					<?php endif;?>
 				</div>
 			<?php else:?>
-				<p><img src="<?=site_url('img/thumb.png');?>"></p>
-			<?php endif;?>
-				<h2 class="pp">Property Details</h2>
-				<p>
-					HT-<?=$property['id'];?> <br/>
-					City, Address, State, Zip: <?=$property['city'].', '.$property['address1'].', '.$property['state'].' '.$property['zip_code'];?> <br/>
-					For Sale: $<?=$property['price'];?> <br/>
-					Bedrooms: <?=$property['bedrooms'];?> beds <br/>
-					Bathrooms: <?=$property['bathrooms'];?> baths <br/>
-					<?= ucfirst($property['type']); ?>: <?=$property['sqf'];?> sq ft<br/>
-					Lot: <?= $property['sqf'];?> sq ft <br/>
-					Tax: $<?= $property['tax']; ?>
-				</p>
-				<h2 class="pp">Description</h2>
-				<p>
-					<?=$property['description'];?>
-				</p>
-			<?php if($property['status'] < 17 && isset($property['email'])):?>
-				<h2 class="pp">Contacts</h2>
-				<p>
-					Phone: <?=$property['phone'];?><br/>
-					Cell: <?=$property['cell'];?><br/>
-					Email: <a href="mailto:<?=$property['email'];?>"><?=$property['email'];?></a>
-				</p>
-			<?php endif;?>
-			<?php if($property['owner'] == $this->account['id']):?>
-					<a href="<?=site_url(OWNER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>
-					<a class="btn btn-mini btn-link link-operation-account" href="#confirm-user" data-toggle="modal" data-src="<?=$property['id'];?>" data-url="<?=site_url(OWNER_START_PAGE.'/delete/seller');?>">Delete property</a>
-			<?php endif;?>
-	<?php if($property['status'] != 17):?>
-		<?php if(($property['id'] != $this->session->userdata('current_property'))):?>
-			<?php if(!$property['potentialby']):?>
-				<?php if(!$property['favorite']):?>
-					<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$property['id'];?>">Add to favorite</button>
-					<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$property['id'];?>">Remove from favorite</button>
-				<?php else:?>
-					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="null" data-src="<?=$property['id'];?>">Remove from favorite</button>
-					<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$property['id'];?>">Add to favorite</button>
-				<?php endif;?>
-			<?php else:?>
-					<h3>Already added to potential by</h3>
-				<?php endif;?>
-		<?php else:?>
-				<button class="btn btn-mini btn-link disabled" disabled="disabled">Add to favorite</button>
-		<?php endif;?>
-	<?php endif;?>
-	<?php else:?>
 				<h3>Information is missing</h3>
-	<?php endif;?>
+			<?php endif;?>
 			</div>
 		</div>
 		<?php $this->load->view("modal/confirm-user");?>
@@ -87,5 +109,45 @@
 	<?php $this->load->view("owner_interface/includes/footer");?>
 	<?php $this->load->view("owner_interface/includes/scripts");?>
 	<script type="text/javascript" src="<?=site_url('js/vendor/fotorama.js');?>"></script>
+	<script type="text/javascript">
+		$("#myTab a").click(function(event){
+			event.preventDefault();
+			$(this).tab('show');
+			initialize();
+		})
+	</script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript">
+		var geocoder, map, marker, panorama;
+		function initialize() {
+			var mapOptions = {
+				zoom : 15,
+				mapTypeId : google.maps.MapTypeId.ROADMAP
+			}
+			map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+			var panoramaOptions = {
+				pov: {
+					heading: 18,
+					pitch: 5
+				}
+			};
+			panorama = new  google.maps.StreetViewPanorama(document.getElementById('pano'), panoramaOptions);
+			geocoder = new google.maps.Geocoder();
+			geocoder.geocode({
+				'address' : "<?= $property['address1'].', '.$property['city'].', '.$property['state'].' '.$property['zip_code'].', United States';?>"
+			}, function(results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					map.setCenter(results[0].geometry.location);
+					panorama.setPosition(results[0].geometry.location);
+					marker = new google.maps.Marker({
+						map : map,
+						position : results[0].geometry.location
+					});
+				} else { }
+			});
+			map.setStreetView(panorama);
+		}
+		initialize();
+	</script>
 </body>
 </html>

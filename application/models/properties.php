@@ -104,7 +104,7 @@ class Properties extends MY_Model{
 		return FALSE;
 	}
 	
-	function read_limit_records($count,$from){
+	function getLimit($count,$from){
 		
 		if($this->account['group'] == 2):
 			$this->db->where('broker',$this->account['id']);

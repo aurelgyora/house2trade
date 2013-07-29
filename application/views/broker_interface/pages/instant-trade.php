@@ -15,7 +15,7 @@
 			<?php $this->load->view("broker_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-				<?php $this->load->view("broker_interface/forms/setect-property");?>
+				<?php $this->load->view("broker_interface/forms/select-property");?>
 				</div>
 				<div class="clear"></div>
 	<?php if($this->session->userdata('current_property') == FALSE || empty($levels['level2'])):?>
@@ -210,7 +210,7 @@
 		$(document).ready(function(){ 
 	    	$('div.cycle-blocks-2').cycle({
 	        	fx:     'fade',
-	        	speed:  '1000',					
+	        	speed:  '1000',
 	        	easing: 'easeInOutExpo',
 	        	timeout: 0,
 	        	pager:  '.nav-2',

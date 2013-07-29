@@ -28,10 +28,9 @@
 				</div>
 			</div>
 			<div class="row">
+			<?php if($property):?>
 				<div class="span6">
-				<?php if($property):?>
 					<?php $this->load->view("broker_interface/forms/set-current-property");?>
-						
 					<ul class="nav nav-tabs" id="myTab">
 						<?php if($images):?>
 						<li class="active"><a href="#photos">Photos</a></li>
@@ -39,7 +38,6 @@
 						<li><a href="#map">Map</a></li>
 						<li><a href="#panorama">Street View</a></li>
 					</ul>
-					 
 					<div class="tab-content">
 						<div class="tab-pane" id="map">
 							<div id="map-canvas" style="width: 450px; height: 300px"></div>
@@ -108,10 +106,10 @@
 				<?php else:?>
 					<p>Not from our listing</p>
 				<?php endif;?>
-				<?php else:?>
-					<h3>Information is missing</h3>
-				<?php endif;?>
 				</div>
+			<?php else:?>
+				<h3>Information is missing</h3>
+			<?php endif;?>
 			</div>
 		</div>
 		<?php $this->load->view("modal/confirm-user");?>
@@ -120,7 +118,7 @@
 	<?php $this->load->view("broker_interface/includes/scripts");?>
 	<script type="text/javascript" src="<?=site_url('js/vendor/fotorama.js');?>"></script>
 	<script type="text/javascript">
-	  	$('#myTab a').click(function (e) {
+		$('#myTab a').click(function (e) {
 			e.preventDefault();
 			$(this).tab('show');
 			initialize();
@@ -129,22 +127,19 @@
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 	<script type="text/javascript">
 		var geocoder, map, marker, panorama;
-		
 		function initialize() {
 			var mapOptions = {
 				zoom : 15,
 				mapTypeId : google.maps.MapTypeId.ROADMAP
 			}
 			map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-			
-		  	var panoramaOptions = {
-		    	pov: {
-		      		heading: 18,
-		      		pitch: 5
-		    	}
-		  	};
-		  	panorama = new  google.maps.StreetViewPanorama(document.getElementById('pano'), panoramaOptions);			
-			
+			var panoramaOptions = {
+				pov: {
+					heading: 18,
+					pitch: 5
+				}
+			};
+			panorama = new  google.maps.StreetViewPanorama(document.getElementById('pano'), panoramaOptions);
 			geocoder = new google.maps.Geocoder();
 			geocoder.geocode({
 				'address' : "<?= $property['address1'].', '.$property['city'].', '.$property['state'].' '.$property['zip_code'].', United States';?>"
@@ -158,11 +153,9 @@
 					});
 				} else { }
 			});
-		
-	  		map.setStreetView(panorama);
+			map.setStreetView(panorama);
 		}
-		
 		initialize();
-	</script>	
+	</script>
 </body>
 </html>

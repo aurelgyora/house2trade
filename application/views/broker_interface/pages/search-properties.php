@@ -11,7 +11,7 @@
 			<?php $this->load->view("broker_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-					<?php $this->load->view("broker_interface/forms/setect-property");?>
+					<?php $this->load->view("broker_interface/forms/select-property");?>
 				</div>
 				<div class="clear"></div>
 				<p>See foreclosures in your area - for free!</p>

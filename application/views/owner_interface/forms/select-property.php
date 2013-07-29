@@ -1,5 +1,6 @@
-<select autocomplet="off" class="span6 set-current-property" name="current_property">
-<?php if($this->session->userdata('current_property') == FALSE):?>
+<?php if($this->session->userdata('current_property') === FALSE || $this->owner['seller'] || count($select) > 1):?>
+<select class="span6 select-property" name="current_property">
+<?php if($this->session->userdata('current_property') === FALSE):?>
 	<option value="" selected="selected">Select property</option>
 <?php endif;?>
 <?php for($i=0;$i<count($select);$i++):?>
@@ -8,3 +9,4 @@
 	</option>
 <?php endfor;?>
 </select>
+<?php endif;?>

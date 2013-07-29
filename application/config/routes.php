@@ -28,10 +28,14 @@ $route['multi-upload'] = "ajax_interface/multiUpload";
 $route['delete-property-images']= "ajax_interface/deletePropertyImages";
 $route['save-profile'] = "ajax_interface/saveProfile";
 
+
+
+$route['show-detail-property'] = "ajax_interface/showDetailProperty";
 $route['set-active-property'] = "ajax_interface/setActiveProperty";
+$route['show-properties-list'] = "ajax_interface/showPropertiesList";
 $route['set-current-property'] = "ajax_interface/setCurrentProperty";
-$route['set-current-favorite'] = "ajax_interface/setCurrentFavorite";
-$route['input-select-owner-property'] = "ajax_interface/setCurrentProperty";
+
+
 
 $route['text-load/:any/from/:num'] = "ajax_interface/text_load";
 $route[BROKER_START_PAGE.'/delete'] = "ajax_interface/deleteProperty";

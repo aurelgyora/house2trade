@@ -76,6 +76,77 @@ class Ajax_interface extends MY_Controller{
 		endif;
 	}
 	
+	/********************************************** OWNER *******************************************************/
+	
+	function showDetailProperty(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$json_request = array('status'=>FALSE,'responseText'=>'','redirect'=>site_url());
+		if($this->input->post('parameter') !== FALSE):
+			$this->session->set_userdata('current_property',$this->input->post('parameter'));
+			switch($this->account['group']):
+				case 2: $json_request['redirect'] = site_url(BROKER_START_PAGE.'/information'); break;
+				case 3: 
+					if(!$this->session->userdata('search_sql')):
+						$this->session->set_userdata('property_id',$this->input->post('parameter'));
+					endif;
+					$json_request['redirect'] = site_url(OWNER_START_PAGE.'/information');
+					break;
+			endswitch;
+			$json_request['status'] = TRUE;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function setActiveProperty(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$json_request = array('status'=>FALSE,'responseText'=>'','redirect'=>site_url());
+		if($this->input->post('parameter')  !== FALSE):
+			$this->session->set_userdata('current_property',$this->input->post('parameter'));
+			if($this->session->userdata('backpath') !== FALSE):
+				$json_request['redirect'] = $this->session->userdata('backpath');
+			elseif(isset($_SERVER['HTTP_REFERER'])):
+				$json_request['redirect'] = $_SERVER['HTTP_REFERER'];
+			else:
+				$json_request['redirect'] = ($this->account['group'] == 2)?BROKER_START_PAGE:OWNER_START_PAGE;
+			endif;
+			$json_request['status'] = TRUE;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function showPropertiesList(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$json_request = array('status'=>FALSE,'responseText'=>'','redirect'=>site_url());
+		if($this->input->post('parameter') !== FALSE):
+			$this->session->set_userdata('current_property',$this->input->post('parameter'));
+			$json_request['redirect'] = site_url(BROKER_START_PAGE);
+			$json_request['status'] = TRUE;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function setCurrentProperty(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$json_request = array('status'=>FALSE,'responseText'=>'');
+		if($this->input->post('parameter') !== FALSE):
+			$this->session->set_userdata('current_property',$this->input->post('parameter'));
+			$json_request['status'] = TRUE;
+		endif;
+		echo json_encode($json_request);
+	}
+	
 	/******************************************** company *******************************************************/
 	
 	function saveCompany(){
@@ -236,55 +307,6 @@ class Ajax_interface extends MY_Controller{
 			return TRUE;
 		endif;
 		return FALSE;
-	}
-	
-	function setActiveProperty(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Access denied');
-		endif;
-		$property = $this->input->post('parameter');
-		if($property):
-			$this->session->set_userdata('current_property',$property);
-			echo json_encode(array('redirect'=>site_url(BROKER_START_PAGE)));
-		else:
-			$this->session->unset_userdata('current_property');
-			echo json_encode(array('redirect'=>site_url(BROKER_START_PAGE.'/full-list')));
-		endif;
-	}
-	
-	function setCurrentProperty(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Access denied');
-		endif;
-		$property = $this->input->post('parameter');
-		if($property):
-			$this->session->set_userdata('current_property',$property);
-		endif;
-		switch($this->account['group']):
-			case 2: echo json_encode(array('redirect'=>site_url(BROKER_START_PAGE.'/information')));
-				break;
-			case 3: 
-				if(!$this->session->userdata('search_sql')):
-					$this->session->set_userdata('property_id',$property);
-				endif;
-				echo json_encode(array('redirect'=>site_url(OWNER_START_PAGE.'/information')));
-				break;
-			default: echo json_encode(array('redirect'=>site_url()));
-		endswitch;
-	}
-	
-	function setCurrentFavorite(){
-		
-		if(!$this->input->is_ajax_request()):
-			show_error('Access denied');
-		endif;
-		$property = $this->input->post('parameter');
-		if($property):
-			$this->session->set_userdata('current_property',$property);
-		endif;
-		echo json_encode(array('redirect'=>site_url($this->session->userdata('backpath'))));
 	}
 	
 	function deletePropertyImages(){

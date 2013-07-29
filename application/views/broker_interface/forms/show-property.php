@@ -1,6 +1,9 @@
-<select autocomplet="off" class="span6 set-current-property" name="current_property">
+<select class="span6 show-properties" name="current_property">
 <?php if($this->session->userdata('current_property') == FALSE):?>
-	<option value="" selected="selected">Select property</option>
+	<option value="" selected="selected">Full properties list</option>
+<?php endif;?>
+<?php if($this->uri->segment(2) == 'properties' && $this->session->userdata('current_property')):?>
+	<option value="0">View Full List</option>
 <?php endif;?>
 <?php for($i=0;$i<count($select);$i++):?>
 	<option value="<?=$select[$i]['id'];?>" <?=($select[$i]['id'] == $this->session->userdata('current_property'))?'selected="selected"':'';?>>
