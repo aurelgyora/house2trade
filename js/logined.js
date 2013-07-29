@@ -173,6 +173,8 @@
 		$(".valid-required").tooltip('destroy');
 		$("#div-choise-metod").addClass('hidden');
 		$("#div-account-properties").hide().removeClass('hidden').fadeIn('slow');
+		$("#form-request").empty();
+		$("#metod-block-message").empty();
 	});
 	$("#save-profile").click(function(event){
 		event.preventDefault();
@@ -223,6 +225,8 @@
 		$(".valid-required").tooltip('destroy');
 		$("#div-account-properties").hide().addClass('hidden');
 		$("#div-choise-metod").hide().removeClass('hidden').fadeIn('slow');
+		$("#form-request").empty();
+		$("#metod-block-message").empty();
 	});
 	$("a.add-property-images").click(function(){
 		$(".valid-required").tooltip('destroy');
