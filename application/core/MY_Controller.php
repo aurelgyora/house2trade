@@ -121,7 +121,7 @@ class MY_Controller extends CI_Controller{
 		return $property;
 	}
 	
-	private function propertiesPotentiaByAndFavorite($properties){
+	public function propertiesPotentiaByAndFavorite($properties){
 		
 		$this->load->model(array('property_favorite','property_potentialby'));
 		$propertiesIDs = $this->getPropertyIDs($properties);
@@ -140,6 +140,16 @@ class MY_Controller extends CI_Controller{
 			endif;
 		endfor;
 		return $properties;
+	}
+	
+	/*************************************************************************************************************/
+	
+	public function createClearDesiredProperty($mainProperty){
+		
+		if(isset($mainProperty['id'])):
+			$this->load->model('desired_properties');
+			return $this->desired_properties->insertClearRecord($mainProperty);
+		endif;
 	}
 	
 	/*************************************************************************************************************/

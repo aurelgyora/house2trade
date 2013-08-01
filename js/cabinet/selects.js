@@ -51,7 +51,9 @@ $(function(){
 			url: mt.baseURL+'set-current-property',
 			data: {'parameter':parameter},type: 'POST',dataType: 'json',
 			beforeSend: function(){},
-			success: function(response,textStatus,xhr){},
+			success: function(response,textStatus,xhr){
+				mt.redirect(mt.currentURL);
+			},
 			error: function(xhr,textStatus,errorThrown){}
 		});
 	});

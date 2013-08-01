@@ -820,32 +820,31 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Access denied');
 		endif;
-		$property = $this->input->post('parameter');
 		$json_request = array('status'=>FALSE,'redirect'=>'','messages'=>'');
-		if($property):
-			$this->load->model('images');
-			$this->load->model('properties');
-			$this->load->model('owners');
+		if($propertyID = $this->input->post('parameter')):
+			$this->load->model(array('images','properties','owners','desired_properties'));
 			if($this->account['group'] == 2):
 				$json_request['redirect'] = site_url(BROKER_START_PAGE);
 			else:
 				$json_request['redirect'] = site_url(OWNER_START_PAGE);
 			endif;
-			$images = $this->images->read_records($property);
+			$images = $this->images->read_records($propertyID);
 			for($i=0;$i<count($images);$i++):
 				$this->filedelete($images[$i]['photo']);
 			endfor;
-			$this->images->delete_records($property);
-			$owner = $this->properties->read_field($property,'properties','owner');
+			$this->images->delete_records($propertyID);
+			$owner = $this->properties->read_field($propertyID,'properties','owner');
 			$ownerID = $this->users->read_field($owner,'users','account');
-			$this->properties->delete_record($property,'properties');
+			$this->properties->delete_record($propertyID,'properties');
 			$this->users->delete_record($owner,'users');
 			$this->owners->delete_record($ownerID,'owners');
+			$desiredPropert = $this->desired_properties->getDesiredByPropertyID($propertyID);
+			$this->desired_properties->delete_record($desiredPropert['id'],'desired_properties');
 			$json_request['status'] = TRUE;
 			$this->session->unset_userdata(array('current_property'=>'','property_id'=>''));
-			$this->session->set_userdata('msgs','<img src="'.site_url('img/check.png').'" alt="" /> Property deleted');
+			$this->session->set_userdata('msgs','Property deleted');
 		else:
-			$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error deleting<hr/>';
+			$json_request['message'] = 'Error deleting<hr/>';
 		endif;
 		echo json_encode($json_request);
 	}
@@ -929,9 +928,8 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Access denied');
 		endif;
-		$data = $this->input->post('postdata');
 		$json_request = array('status'=>FALSE,'redirect'=>site_url('broker/search/result'),'messages'=>'');
-		if($data):
+		if($data = $this->input->post('postdata')):
 			$data = preg_split("/&/",$data);
 			for($i=0;$i<count($data);$i++):
 				$dataid = preg_split("/=/",$data[$i]);

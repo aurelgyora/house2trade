@@ -94,6 +94,10 @@ $route['broker/favorite'] = "broker_interface/favoriteProperty";
 $route['broker/favorite/from'] = "broker_interface/favoriteProperty";
 $route['broker/favorite/from/:num'] = "broker_interface/favoriteProperty";
 
+$route['broker/recommended'] = "broker_interface/recommendedProperty";
+$route['broker/recommended/from'] = "broker_interface/recommendedProperty";
+$route['broker/recommended/from/:num'] = "broker_interface/recommendedProperty";
+
 $route['broker/potential-by'] = "broker_interface/potentialByProperty";
 $route['broker/potential-by/from'] = "broker_interface/potentialByProperty";
 $route['broker/potential-by/from/:num'] = "broker_interface/potentialByProperty";

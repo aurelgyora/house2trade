@@ -261,23 +261,7 @@
 		if(!err && !mt.isValidPhone($("#company-phone").val())){$("#login-email").attr('data-original-title','Incorrect Phone Number').tooltip('show');err = true;}
 		if(err){return false;}
 	})
-	$("button.btn-property-add-favorite").click(function(){
-		if($("select.set-current-property").emptyValue()){
-			alert('At first select a property');
-			return false;
-		}else{
-			var parameter = $(this).attr('data-src');
-			var _this = this;
-			$.post(mt.baseURL+"add-to-favorite",{'parameter':parameter},function(data){
-				if(data.status){
-					$(_this).siblings("button.btn-property-remove-favorite").removeClass('hidden').show();
-					$(_this).hide();
-				}else{
-					$(_this).html('Error adding');
-				}
-			},"json");
-		}
-	});
+	
 	$("button.btn-property-remove-favorite").click(function(){
 		var parameter = $(this).attr('data-src');
 		var _this = this;

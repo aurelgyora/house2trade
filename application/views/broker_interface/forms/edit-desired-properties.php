@@ -20,27 +20,27 @@
 			</div>
 			<div class="control-group">
 				<label for="state">Zip code*: </label>
-				<input class="span2 valid-required FieldSend" name="desired_zip_code" type="text" value="<?=$desired_property['zip_code'];?>">
+				<input class="span2 valid-required FieldSend" name="desired_zip_code" type="text" value="<?=($desired_property['zip_code'])?$desired_property['zip_code']:'';?>">
 			</div>
 		</div>
 		<div class="span4">
 			<div class="control-group">
 				<label for="bathrooms">Bathrooms: </label>
-				<input class="span2 digital FieldSend" name="desired_bathrooms" type="text" value="<?=$desired_property['bathrooms'];?>">
+				<input class="span2 digital FieldSend" name="desired_bathrooms" type="text" value="<?=($desired_property['zip_code'])?$desired_property['bathrooms']:'';?>">
 			</div>
 			<div class="control-group">
 				<label for="bedrooms">Bedrooms: </label>
-				<input class="span2 digital FieldSend" name="desired_bedrooms" type="text" value="<?=$desired_property['bedrooms'];?>">
+				<input class="span2 digital FieldSend" name="desired_bedrooms" type="text" value="<?=($desired_property['zip_code'])?$desired_property['bedrooms']:'';?>">
 			</div>
 			<div class="control-group">
 				<label for="price">Max price*: </label>
-				<input class="span2 numeric-float valid-required FieldSend" name="desired_max_price" type="text" value="<?=$desired_property['max_price'];?>">
+				<input class="span2 numeric-float valid-required FieldSend" name="desired_max_price" type="text" value="<?=($desired_property['zip_code'])?$desired_property['max_price']:'';?>">
 			</div>
 		</div>
 	</fieldset>
 	<div class="clear"></div>
 	<div class="form-actions">
 		<div class="form-request"></div>
-		<button class="btn btn-success btn-save-disared-property" type="submit" name="submit" value="send">Save disared property</button>
+		<button class="btn btn-success btn-save-disared-property" data-target="<?=($this->uri->segment(2) == 'recommended')?'refresh':'';?>" type="submit" name="submit" value="send">Save disared property</button>
 	</div>
 <?= form_close(); ?>

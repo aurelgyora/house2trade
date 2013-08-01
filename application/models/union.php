@@ -98,4 +98,53 @@ class Union extends CI_Model{
 	}
 	
 	/*****************************************************************************************************************/
+	
+	function recommendedList($searchData,$count,$from){
+		
+		$sql = 'SELECT properties.* FROM properties WHERE TRUE';
+		$sql .= ' AND properties.state LIKE "%'.$searchData['state'].'%" AND properties.city LIKE "%'.$searchData['city'].'%" AND properties.zip_code LIKE "%'.$searchData['zip_code'].'%"';
+		if(!empty($searchData['bedrooms'])):
+			$sql .= ' AND properties.bedrooms = '.$searchData['bedrooms'];
+		endif;
+		if(!empty($searchData['bathrooms'])):
+			$sql .= ' AND properties.bathrooms = '.$searchData['bathrooms'];
+		endif;
+		if(!empty($searchData['max_price'])):
+			$sql .= ' AND properties.price <= '.$searchData['max_price'];
+		endif;
+		if(!empty($searchData['type'])):
+			$sql .= ' AND properties.type = '.$searchData['type'];
+		endif;
+		$sql .= " ORDER BY properties.address1 ASC, properties.state ASC, properties.zip_code ASC LIMIT $from,$count";
+		$result = $this->db->query($sql);
+		if($data = $result->result_array()):
+			return $data;
+		endif;
+		return NULL;
+	}
+	
+	function recommendedCount($searchData){
+		
+		$sql = 'SELECT COUNT(*) AS cnt_properties FROM properties WHERE TRUE';
+		$sql .= ' AND properties.state LIKE "%'.$searchData['state'].'%" AND properties.city LIKE "%'.$searchData['city'].'%" AND properties.zip_code LIKE "%'.$searchData['zip_code'].'%"';
+		if(!empty($searchData['bedrooms'])):
+			$sql .= ' AND properties.bedrooms = '.$searchData['bedrooms'];
+		endif;
+		if(!empty($searchData['bathrooms'])):
+			$sql .= ' AND properties.bathrooms = '.$searchData['bathrooms'];
+		endif;
+		if(!empty($searchData['max_price'])):
+			$sql .= ' AND properties.price <= '.$searchData['max_price'];
+		endif;
+		if(!empty($searchData['type'])):
+			$sql .= ' AND properties.type = '.$searchData['type'];
+		endif;
+		$result = $this->db->query($sql);
+		if($data = $result->result_array()):
+			return $data[0]['cnt_properties'];
+		endif;
+		return 0;
+	}
+	
+	/*****************************************************************************************************************/
 }

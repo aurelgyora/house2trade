@@ -112,27 +112,27 @@ $.fn.hideToolTip = function(){
 			}
 	});
 }
-$.fn.exists = function(){return $(this).length;}
-$.fn.emptyValue = function(){if($(this).val() == ''){return true;}else{return false;}}
-$.fn.ForceMaxValue = function(){
-	$(this).keyup(function(){
-		var value = parseInt($(this).val().trim());
-		var maxValue = parseInt($(this).attr('data-max-value').trim());
-		if($.isNumeric(value) && $.isNumeric(maxValue)){
-			if(value > maxValue){$(this).val(maxValue)}else{$(this).val(value);}
-		}
-	});
-	return false;
-};
-$.fn.ForceNumericOnly = function(){
-	return this.each(function(){
-		$(this).keydown(function(e){
-			var key = e.charCode || e.keyCode || 0;
-			return(key == 8 || key == 9 || key == 46 || (key >= 37 && key <= 40) || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
-		});
-	});
-};
 $(function(){
+	$.fn.exists = function(){return $(this).length;}
+	$.fn.emptyValue = function(){if($(this).val() == ''){return true;}else{return false;}}
+	$.fn.ForceMaxValue = function(){
+		$(this).keyup(function(){
+			var value = parseInt($(this).val().trim());
+			var maxValue = parseInt($(this).attr('data-max-value').trim());
+			if($.isNumeric(value) && $.isNumeric(maxValue)){
+				if(value > maxValue){$(this).val(maxValue)}else{$(this).val(value);}
+			}
+		});
+		return false;
+	};
+	$.fn.ForceNumericOnly = function(){
+		return this.each(function(){
+			$(this).keydown(function(e){
+				var key = e.charCode || e.keyCode || 0;
+				return(key == 8 || key == 9 || key == 46 || (key >= 37 && key <= 40) || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+			});
+		});
+	};
 	$(".none").click(function(event){event.preventDefault();});
 	$("input.valid-numeric").ForceNumericOnly();
 	$("input.valid-max-value").ForceMaxValue();

@@ -177,6 +177,41 @@ class Broker_interface extends MY_Controller{
 		$this->load->view("broker_interface/pages/match",$pagevar);
 	}
 	
+	public function recommendedProperty(){
+		
+		$this->load->model(array('desired_properties','union','property_type'));
+		$from = (int)$this->uri->segment(4);
+		
+		$pagevar = array(
+			'select' => $this->union->selectBrokerProperties($this->account['id']),
+			'property_type'=>$this->property_type->read_records('property_type'),
+			'desired_property' => array(),
+			'properties' => array(),
+			'pages' => NULL,
+		);
+		if($this->session->userdata('current_property') == FALSE):
+			$this->session->set_userdata('current_property',0);
+		else:
+			if(!$pagevar['desired_property'] = $this->desired_properties->getDesiredByPropertyID($this->session->userdata('current_property'))):
+				$this->load->model('properties');
+				if($mainProperty = $this->properties->read_record($this->session->userdata('current_property'),'properties')):
+					$desiredPropertyID = $this->createClearDesiredProperty($mainProperty);
+					$pagevar['desired_property'] = $this->desired_properties->read_record($desiredPropertyID,'desired_properties');
+				endif;
+			endif;
+			if(!empty($pagevar['desired_property']['zip_code'])):
+				if($pagevar['properties'] = $this->union->recommendedList($pagevar['desired_property'],7,$from)):
+					$pagevar['pages'] = $this->pagination('broker/recommended',4,$this->union->recommendedCount($pagevar['desired_property']),7);
+					$pagevar['properties'] = $this->propertiesImagesTypes($pagevar['properties'],TRUE);
+					$pagevar['properties'] = $this->propertiesPotentiaByAndFavorite($pagevar['properties']);
+				endif;
+			endif;
+		endif;
+		$this->session->set_userdata('backpath',uri_string());
+		$this->load->view("broker_interface/properties/recommended",$pagevar);
+	}
+	
+	
 	/********************************************* properties ********************************************************/
 	
 	public function properties(){
@@ -311,8 +346,10 @@ class Broker_interface extends MY_Controller{
 			show_error('Access Denied!');
 		endif;
 		$this->load->model(array('accounts_owners','desired_properties'));
+		if(!$pagevar['desired_property'] = $this->desired_properties->getDesiredByPropertyID($pagevar['property']['id'],'desired_properties')):
+			$this->createClearDesiredProperty($pagevar['property']);
+		endif;
 		$pagevar['property']['owner'] = $this->accounts_owners->read_record($pagevar['property']['owner'],'accounts_owners');
-		$pagevar['desired_property'] = $this->desired_properties->getDesiredByPropertyID($pagevar['property']['id'],'desired_properties');
 		$this->load->view("broker_interface/properties/property-card",$pagevar);
 	}
 }

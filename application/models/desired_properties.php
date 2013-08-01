@@ -29,6 +29,19 @@ class Desired_properties extends MY_Model{
 		return $this->db->insert_id();
 	}
 	
+	function insertClearRecord($mainProperty){
+		
+		if($this->account['group'] == 2):
+			$this->broker = $this->account['id'];
+			$this->owner = $mainProperty['owner'];
+		elseif($this->account['group'] == 3):
+			$this->owner = $this->account['id'];
+		endif;
+		$this->property_id = $mainProperty['id'];
+		$this->db->insert('desired_properties',$this);
+		return $this->db->insert_id();
+	}
+	
 	function update_record($id,$data){
 
 		$this->db->set('zip_code',$data['desired_zip_code']);

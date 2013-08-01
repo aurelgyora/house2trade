@@ -56,10 +56,11 @@ $(function(){
 		}else{
 			$("html,body").animate({scrollTop:0},400);
 		}
-	});
+	})
 	$("button.btn-save-disared-property").click(function(event){
 		event.preventDefault();
 		var _form = $("form.form-edit-desired-property");
+		var _target = $(this).attr('data-target');
 		if(mt.validation($(_form))){
 			var postdata = mt.formSerialize($(_form).find('.FieldSend'));
 			$.ajax({
@@ -70,6 +71,9 @@ $(function(){
 				success: function(data,textStatus,xhr){
 					if(data.status){
 						$("div.form-request").html(data.message);
+					}
+					if(_target == 'refresh'){
+						mt.redirect(mt.currentURL);
 					}
 				},
 				error: function(xhr,textStatus,errorThrown){
@@ -108,13 +112,13 @@ $(function(){
 		$(this).parents("form").defaultValidationErrorStatus();
 		$("div.div-manage-property").hide().addClass('hidden');
 		$("#div-edit-desired-property").hide().removeClass('hidden').fadeIn('slow');
-	});
+	})
 	$("a.btn-edit-main-property").click(function(){
 		$("html,body").animate({scrollTop:0},400);
 		$(this).parents("form").defaultValidationErrorStatus();
 		$("div.div-manage-property").hide().addClass('hidden');
 		$("#div-property-information").hide().removeClass('hidden').fadeIn('slow');
-	});
+	})
 	$("a.add-property-images").click(function(){
 		$("html,body").animate({scrollTop:0},400);
 		$(this).parents("form").defaultValidationErrorStatus();
@@ -126,5 +130,33 @@ $(function(){
 		$(this).parents("form").defaultValidationErrorStatus();
 		$("div.div-manage-property").hide().addClass('hidden');
 		$("#div-remove-photo-properties").hide().removeClass('hidden').fadeIn('slow');
+	})
+	$("button.btn-property-add-favorite").click(function(){
+		if($("select.choise-property").emptyValue()){
+			alert('At first select a property');
+			return false;
+		}else{
+			var _this = this;
+			var parameter = $(this).attr('data-src');
+			$.ajax({
+				url: mt.baseURL+'add-to-favorite',data: {'parameter':parameter},type:'POST',dataType:'json',
+				beforeSend: function(){},
+				success: function(data,textStatus,xhr){
+					if(data.status){
+						$(_this).siblings("button.btn-property-remove-favorite").removeClass('hidden').show();
+						$(_this).hide();
+					}else{
+						$(_this).html('Error adding');
+					}
+				},
+				error: function(xhr,textStatus,errorThrown){
+					alert('Error!');
+				}
+			});
+		}
+	})
+	$("a.show-desired-property-form").click(function(){
+		$(this).remove();
+		$("div.div-desired-property-form").removeClass('hidden');
 	})
 });
