@@ -1,4 +1,4 @@
-<?=form_open($this->uri->uri_string(),array('class'=>'form-horizontal','id'=>'form-remove-property-images')); ?>
+<?=form_open($this->uri->uri_string(),array('class'=>'form-horizontal form-remove-property-images')); ?>
 	<legend>List property images</legend>
 	<div class="media">
 	<?php for($i=0;$i<count($images);$i++):?>
@@ -11,10 +11,7 @@
 	<?php endfor;?>
 	</div>
 	<div class="form-actions">
-		<span class="pull-right" id="photo-delete-message"></span>
-		<button class="btn btn-danger" id="delete-property-images" type="submit" name="submit" value="send">Delete property images</button>
-		<div class="span4">
-			<a class="none btn add-property-images"><i class="icon-plus"></i> Add images</a>
-		</div>
+		<div class="form-request"></div>
+		<button class="btn btn-danger btn-delete-property-images" type="submit" name="submit" value="send">Delete property images</button>
 	</div>
 <?= form_close(); ?>

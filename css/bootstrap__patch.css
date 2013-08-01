@@ -21,7 +21,7 @@ header { background: url('../img/header-back.png') no-repeat center bottom; back
 	display: inline-block;
 	text-decoration: none;
 	border-radius: 0;
-	height: 30px;
+	height: 32px;
 	line-height: 30px;
 	margin: 0;
 	padding: 0 20px;
@@ -41,12 +41,13 @@ header { background: url('../img/header-back.png') no-repeat center bottom; back
 .decision  { display: inline-block; margin: 0 0.5em; }
 .link-more { text-decoration: none !important; color: #222; border-bottom: 1px solid #9CF; font-weight: 600; }
 
-label { display: block; margin-bottom: 4px; margin-top: 12px; color: #333; font-size: 12px; font-weight: bold; padding-left: 3px; font-family: 'Open Sans Condensed', sans-serif; text-transform: uppercase; font-weight: normal; font-size: 14px; color: #000; }
+label { display: block; margin-bottom: 4px; margin-top: 4px; color: #444; font-weight: 600; padding-left: 3px; font-family: 'Open Sans', sans-serif; text-transform: uppercase; font-size: 13px; }
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input { width: 180px; margin-left: 0; margin-right: 0; border: 1px solid #777; box-shadow: inset 1px 1px 2px 1px #CCC; padding: 4px 10px; font-size: 13px; background: #fff; border-radius: 0; }
 select, .form-horizontal select { border: 1px solid #777; box-shadow: inset 1px 1px 2px 1px #CCC; padding: 4px 4px 4px 8px; font-size: 13px; background: #fff; min-width: 110px; margin: 0 2px 7px; border-radius: 0; height: 30px; width: 150px; }
 .navbar select { margin: 0; }
 .navbar .nav { margin: 8px 10px 0 0; }
 input[type="radio"] { margin: 7px 5px; }
+input.span2, #property-type, #input-select-type { width: 206px; }
 legend { font-weight: 500; color: #444; }
 .media-object { width: 120px; height: 90px; }
 .navbar-inner { line-height: 40px; border: 0; background: none; box-shadow: none; padding-left: 0; padding-right: 0; }
@@ -58,7 +59,7 @@ legend { font-weight: 500; color: #444; }
 header { height: 56px; margin-bottom: 2.5em; }
 header h1.admin-header { float: right; margin: 0.2em 0 0; font-size: 1.5em; }
 hr { display: none; }
-.well { padding: 0 25px 0 0; background: none; border: 0 none; box-shadow: none; }
+.well { padding: 0 25px 0 0; background: none; border: 0 none; box-shadow: none; border-right: 1px dotted #ccc; border-radius: 0; }
 .nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus { background: #767676; padding-top: .75em; padding-bottom: .75em; border-radius: 5px; border-bottom: 0; }
 .nav-pills > li > a { border-radius: 0; }
 

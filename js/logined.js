@@ -3,6 +3,35 @@
  */
 
 (function($){
+	
+	$("button.btn-delete-property-images").click(function(event){
+		event.preventDefault();
+		var _form = $("form.form-remove-property-images");
+		var postdata = mt.formSerialize($(_form).find("input:checkbox:checked"));
+		if(postdata == ''){
+			$("#block-message").html("Not selected images");
+			return false;
+		}
+		$.ajax({
+			url: mt.baseURL+"delete-property-images",data:{'postdata':postdata},type:'POST',dataType:'json',
+			beforeSend: function(){
+				$(_form).defaultValidationErrorStatus();
+			},
+			success: function(data,textStatus,xhr){
+				if(data.status == false){
+					$("div.form-request").html(data.message);
+				}else{
+					$(_form).find("input:checkbox:checked").parents('div.property-image-item').remove();
+					$("div.form-request").html('Images deleted');
+					$("html,body").animate({scrollTop:0},400);
+				}
+			},
+			error: function(xhr,textStatus,errorThrown){
+				alert('Error!');
+			}
+		});
+	});
+	//----------------------------------------------------------------------------------
 	$("#register-properties").click(function(event){
 		event.preventDefault();
 		var err = false; var _this = this;
@@ -204,22 +233,6 @@
 	$("#edit-profile").click(function(){
 		$("#div-view-account-broker").addClass('hidden');
 		$("#div-edit-account-broker").removeClass('hidden');
-	});
-	$("#delete-property-images").click(function(event){
-		event.preventDefault();
-		var postdata = mt.formSerialize($("#form-remove-property-images input:checkbox:checked"));
-		if(postdata == ''){
-			$("#block-message").html("Not selected images");
-			return false;
-		}
-		$.post(mt.baseURL+"delete-property-images",{'postdata':postdata},
-			function(data){
-				$("#block-message").html(data.message);
-				if(data.status){
-					$("#form-remove-property-images input:checkbox:checked").parents('div.property-image-item').remove();
-					$("#photo-delete-message").html('Images deleted');
-				}
-			},"json");
 	});
 	$("#set-properties-auto-data").click(function(){
 		$(".valid-required").tooltip('destroy');

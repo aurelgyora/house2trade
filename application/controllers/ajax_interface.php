@@ -186,56 +186,64 @@ class Ajax_interface extends MY_Controller{
 	
 	/******************************************** property *******************************************************/
 	
+	function propertyExist(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$json_request = array('status'=>TRUE,'message'=>'');
+		if($propertyData = $this->getPropertySingUpData($this->input->post('postdata'))):
+			$this->load->model('properties');
+			if(!$this->users->user_exist('email',$propertyData['email'])):
+				if($this->properties->properties_exits($propertyData['state'],$propertyData['zip_code'])):
+					$json_request['message'] = 'Property already exist';
+					$json_request['status'] = FALSE;
+				endif;
+			else:
+				$json_request['status'] = FALSE;
+				$json_request['message'] = 'Homeowner already exist';
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
 	function signupProperty(){
 		
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
 		$json_request = array('status'=>FALSE,'message'=>'Signup is impossible');
-		$data = trim($this->input->post('postdata'));
-		if($data):
-			$data = preg_split("/&/",$data);
-			for($i=0;$i<count($data);$i++):
-				$dataid = preg_split("/=/",$data[$i]);
-				if(!isset($dataid[0]) || !isset($dataid[1])):
-					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> An error while retrieving the data. try again';
-					echo json_encode($json_request);
-					exit();
-				else:
-					$dataval[trim($dataid[0])] = trim(htmlspecialchars($dataid[1]));
-				endif;
-			endfor;
-			if($dataval):
-				$this->load->model('properties');
-				if(!$this->users->user_exist('email',$dataval['email'])):
-					if(!$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
-						$this->load->helper('string');
-						$dataval['password'] = random_string('alnum',12);
-						$dataval['user_id'] = $this->users->insert_record($dataval);
-						if($dataval['user_id']):
-							$this->load->model('owners');
-							$ownerID = $this->owners->insert_record($dataval);
-							$property_id = $this->properties->insert_record($dataval);
-							if($property_id):
-								$this->getPropertyImages($dataval,$property_id);
-							endif;
-							$this->users->update_field($dataval['user_id'],'account',$ownerID,'users');
-							$this->users->update_field($dataval['user_id'],'group',3,'users');
-							$this->properties->update_field($property_id,'status',$this->profile['status'],'properties');
-							$this->parseAndSendMail(2,array(
-								'email'=>$dataval['email'],'user_first_name'=>$dataval['fname'],'user_last_name'=>$dataval['lname'],
-								'user_login'=>$dataval['email'],'user_password'=>$dataval['password'],'cabinet_link'=>site_url(OWNER_START_PAGE)
-							));
-							$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> The letter with registration confirmation was sent to homeowner email';
-							$json_request['status'] = TRUE;
-							$this->session->set_userdata(array('current_property'=>$property_id,'property_id'=>$property_id));
+		if($propertyData = $this->getPropertySingUpData($this->input->post('postdata'))):
+			$this->load->model(array('properties','desired_properties'));
+			if(!$this->users->user_exist('email',$propertyData['email'])):
+				if(!$this->properties->properties_exits($propertyData['state'],$propertyData['zip_code'])):
+					$this->load->helper('string');
+					$propertyData['password'] = random_string('alnum',12);
+					$propertyData['user_id'] = $this->users->insert_record($propertyData);
+					if($propertyData['user_id']):
+						$this->load->model('owners');
+						$ownerID = $this->owners->insert_record($propertyData);
+						if($propertyID = $this->properties->insert_record($propertyData)):
+							$this->getPropertyImages($propertyData,$propertyID);
+							$propertyData['desired_property_id'] = $propertyID;
+							$this->desired_properties->insert_record($propertyData);
 						endif;
-					else:
-						$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
+						$this->users->update_field($propertyData['user_id'],'account',$ownerID,'users');
+						$this->users->update_field($propertyData['user_id'],'group',3,'users');
+						$this->properties->update_field($propertyID,'status',$this->profile['status'],'properties');
+						$this->parseAndSendMail(2,array(
+							'email'=>$propertyData['email'],'user_first_name'=>$propertyData['fname'],'user_last_name'=>$propertyData['lname'],
+							'user_login'=>$propertyData['email'],'user_password'=>$propertyData['password'],'cabinet_link'=>site_url(OWNER_START_PAGE)
+						));
+						$json_request['message'] = 'The letter with registration confirmation was sent to homeowner email';
+						$json_request['status'] = TRUE;
+						$this->session->set_userdata(array('current_property'=>$propertyID,'property_id'=>$propertyID));
 					endif;
 				else:
-					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Homeowner already exist';
+					$json_request['message'] = 'Property already exist';
 				endif;
+			else:
+				$json_request['message'] = 'Homeowner already exist';
 			endif;
 		endif;
 		echo json_encode($json_request);
@@ -347,47 +355,71 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 	
-	function save_property_info(){
+	function saveMainProperty(){
 		
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
-		$json_request = array('status'=>FALSE,'message'=>'Property saved','redirect'=>'');
-		$data = trim($this->input->post('postdata'));
-		if($data):
+		$json_request = array('status'=>FALSE,'message'=>'Property not saved','redirect'=>'');
+		if($data = trim($this->input->post('postdata'))):
+			$propertyData = array();
 			$data = preg_split("/&/",$data);
 			for($i=0;$i<count($data);$i++):
 				$dataid = preg_split("/=/",$data[$i]);
-				$dataval[$dataid[0]] = trim($dataid[1]);
+				$propertyData[$dataid[0]] = trim($dataid[1]);
 			endfor;
-			if($dataval):
-				$dataval['password'] = $dataval['confirm'] = '';
-				$this->load->model('owners');
-				$this->load->model('properties');
+			if($propertyData):
+				$this->load->model(array('owners','properties'));
 				if($this->account['group'] == 2):
 					$broker = $this->properties->read_field($this->session->userdata('property_id'),'properties','broker');
 					if($broker != $this->account['id']):
+						$json_request['message'] = 'Аccess denied';
+						echo json_encode($json_request);
 						exit;
 					endif;
 				endif;
-				if($dataval['password'] != $dataval['confirm']):
-					$json_request['message'] = 'Passwords do not match';
-				else:
-					$json_request['status'] = TRUE;
-					if(!isset($dataval['setpswd'])):
-						if($this->account['group'] == 2):
-							$owner = $this->properties->read_field($this->session->userdata('property_id'),'properties','owner');
-							$this->owners->update_record($owner,$dataval);
+				if($this->account['group'] == 2):
+					if($accountID = $this->properties->read_field($this->session->userdata('property_id'),'properties','owner')):
+						$ownerID = $this->users->read_field($accountID,'users','account');
+						$this->owners->update_field($ownerID,'fname',$propertyData['fname'],'owners');
+						$this->owners->update_field($ownerID,'lname',$propertyData['lname'],'owners');
+					endif;
+				endif;
+				$this->properties->update_record($this->session->userdata('property_id'),$propertyData);
+				$json_request['status'] = TRUE;
+				$json_request['message'] = 'Property saved';
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+	
+	function saveDisaredProperty(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Аccess denied');
+		endif;
+		$json_request = array('status'=>FALSE,'message'=>'Property not saved','redirect'=>'');
+		if($data = trim($this->input->post('postdata'))):
+			$propertyData = array();
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$propertyData[$dataid[0]] = trim($dataid[1]);
+			endfor;
+			if($propertyData):
+				$this->load->model(array('desired_properties','properties'));
+				if($desiredProperty = $this->desired_properties->getDesiredByPropertyID($this->session->userdata('property_id'))):
+					if($this->account['group'] == 2):
+						$broker = $this->desired_properties->read_field($desiredProperty['id'],'desired_properties','broker');
+						if($broker != $this->account['id']):
+							$json_request['message'] = 'Аccess denied';
+							echo json_encode($json_request);
+							exit;
 						endif;
-						$this->properties->update_record($this->session->userdata('property_id'),$dataval);
 					endif;
-					switch($this->account['group']):
-						case 2: $json_request['redirect'] = site_url(BROKER_START_PAGE); break;
-						case 3: $json_request['redirect'] = site_url(OWNER_START_PAGE); break;
-					endswitch;
-					if(($this->account['group'] != 2) && !empty($dataval['password'])):
-						$this->users->update_field($this->account['id'],'password',md5($dataval['password']),'users');
-					endif;
+					$json_request['status'] = TRUE;
+					$json_request['message'] = 'Desired property saved';
+					$this->desired_properties->update_record($desiredProperty['id'],$propertyData);
 				endif;
 			endif;
 		endif;
@@ -469,6 +501,28 @@ class Ajax_interface extends MY_Controller{
 			$json_request['message'] = $result['message'];
 		endif;
 		echo json_encode($json_request);
+	}
+	
+	private function getPropertySingUpData($post = NULL){
+		
+		if(!is_null($post)):
+			$post = preg_split("/&/",$post);
+			$dataval = array();
+			for($i=0;$i<count($post);$i++):
+				$dataid = preg_split("/=/",$post[$i]);
+				if(!isset($dataid[0]) || !isset($dataid[1])):
+					$json_request['message'] = 'An error while retrieving the data. try again';
+					echo json_encode($json_request);
+					exit();
+				else:
+					$dataval[trim($dataid[0])] = trim(htmlspecialchars($dataid[1]));
+				endif;
+			endfor;
+			if($dataval):
+				return $dataval;
+			endif;
+		endif;
+		return FALSE;
 	}
 	
 	/************************************** favorite & potential by **********************************************/

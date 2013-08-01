@@ -300,19 +300,19 @@ class Broker_interface extends MY_Controller{
 		elseif(!$current_property && $this->uri->total_segments() == 3):
 			redirect(BROKER_START_PAGE);
 		endif;
-		$this->load->model('properties');
-		$this->load->model('images');
-		$this->load->model('property_type');
+		$this->load->model(array('properties','images','property_type'));
 		$pagevar = array(
 			'property' => $this->properties->read_record($current_property,'properties'),
+			'desired_property' => array(),
 			'images' => $this->images->read_records($current_property),
 			'property_type'=>$this->property_type->read_records('property_type')
 		);
 		if($pagevar['property']['broker'] != $this->account['id']):
 			show_error('Access Denied!');
 		endif;
-		$this->load->model('accounts_owners');
+		$this->load->model(array('accounts_owners','desired_properties'));
 		$pagevar['property']['owner'] = $this->accounts_owners->read_record($pagevar['property']['owner'],'accounts_owners');
+		$pagevar['desired_property'] = $this->desired_properties->getDesiredByPropertyID($pagevar['property']['id'],'desired_properties');
 		$this->load->view("broker_interface/properties/property-card",$pagevar);
 	}
 }

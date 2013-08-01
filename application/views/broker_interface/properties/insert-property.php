@@ -13,7 +13,7 @@
 			<div class="span9">
 				<div class="navbar">
 					<div class="navbar-inner">
-						<?=anchor($this->session->userdata('backpath'),'Back','class="btn btn-link"');?>
+						<?=anchor($this->session->userdata('backpath'),'Back to properties list','class="btn btn-link"');?>
 					</div>
 				</div>
 				<div class="clear"></div>
@@ -28,7 +28,7 @@
 				</div>
 				<div class="clear"></div>
 				<div id="div-account-properties" class="hidden">
-					<?php $this->load->view('forms/insert-property');?>
+					<?php $this->load->view('broker_interface/forms/insert-property');?>
 				</div>
 				<div class="clear"></div>
 				<div id="div-insert-photo-properties" class="hidden">

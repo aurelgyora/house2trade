@@ -7,42 +7,36 @@
 ?>
 <?php if(!$seller):?>
 	<legend>HomeOwner data</legend>
-	<div class="span4">
-		<fieldset>
+	<fieldset>
+		<div class="span4">
 			<div class="control-group">
 				<label for="fname">First Name*: </label>
-				<input id="property-fname" class="span4 valid-required FieldSend" name="fname" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
+				<input id="property-fname" class="span2 valid-required FieldSend" name="fname" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
 			</div>
 			<div class="control-group">
 				<label for="lname">Last Name*: </label>
-				<input id="property-lname" class="span4 valid-required FieldSend" name="lname" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
+				<input id="property-lname" class="span2 valid-required FieldSend" name="lname" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
 			</div>
+		</div>
+		<div class="span4">
 			<div class="control-group">
 				<label for="email">Email*: </label>
-				<input id="login-email" class="span4 valid-required unique-email FieldSend" name="email" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
+				<input id="login-email" class="span2 valid-required unique-email FieldSend" name="email" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
 			</div>
-		</fieldset>
-	</div>
+		</div>
+	</fieldset>
 	<div class="clear"></div>
 <?php endif;?>
 	<legend>Property data</legend>
-	<div class="span4">
-		<fieldset>
+	<fieldset>
+		<div class="span4">
 			<div class="control-group">
 				<label for="city">City*: </label>
-				<input id="property-city" class="span4 valid-required FieldSend" name="city" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
+				<input id="property-city" class="span2 valid-required FieldSend" name="city" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
 			</div>
 			<div class="control-group">
 				<label for="state">State*: </label>
-				<input id="property-state" class="span4 valid-required FieldSend" name="state" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
-			</div>
-			<div class="control-group">
-				<label for="address1">Address 1*: </label>
-				<textarea id="property-address1" class="span4 valid-required FieldSend" rows="3" name="address1" <?=TOOLTIP_FIELD_BLANK;?>></textarea>
-			</div>
-			<div class="control-group">
-				<label for="address2">Address 2: </label>
-				<textarea id="property-address2" class="span4 FieldSend" rows="3" name="address2" <?=TOOLTIP_FIELD_BLANK;?>></textarea>
+				<input id="property-state" class="span2 valid-required FieldSend" name="state" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
 			</div>
 			<div class="control-group">
 				<label for="type">Type*: </label>
@@ -51,10 +45,6 @@
 					<option value="<?=$property_type[$i]['id'];?>"><?=$property_type[$i]['title'];?></option>
 				<?php endfor;?>
 				</select>
-			</div>
-			<div class="control-group">
-				<label for="zip_code">Zip code*: </label>
-				<input id="property-zipcode" class="span2 digital valid-required FieldSend" name="zip_code" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
 			</div>
 			<div class="control-group">
 				<label for="bathrooms">Bathrooms*: </label>
@@ -76,6 +66,20 @@
 				<label for="price">Price*: </label>
 				<input id="property-price" class="span2 numeric-float valid-required FieldSend" name="price" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
 			</div>
+		</div>
+		<div class="span4">
+			<div class="control-group">
+				<label for="zip_code">Zip code*: </label>
+				<input id="property-zipcode" class="span2 digital valid-required FieldSend" name="zip_code" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
+			</div>
+			<div class="control-group">
+				<label for="address1">Address 1*: </label>
+				<textarea id="property-address1" class="span3 valid-required FieldSend" rows="3" name="address1" <?=TOOLTIP_FIELD_BLANK;?>></textarea>
+			</div>
+			<div class="control-group">
+				<label for="address2">Address 2: </label>
+				<textarea id="property-address2" class="span3 FieldSend" rows="3" name="address2" <?=TOOLTIP_FIELD_BLANK;?>></textarea>
+			</div>
 			<div class="control-group">
 				<label for="tax">Tax: </label>
 				<input id="property-tax" class="span2 digital FieldSend" name="tax" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="">
@@ -90,10 +94,13 @@
 			</div>
 			<div class="control-group">
 				<label for="description">Description*: </label>
-				<textarea id="property-discription" class="span8 valid-required FieldSend" rows="2" name="description" <?=TOOLTIP_FIELD_BLANK;?>></textarea>
+				<textarea id="property-discription" class="span3 valid-required FieldSend" rows="3" name="description" <?=TOOLTIP_FIELD_BLANK;?>></textarea>
 			</div>
-		</fieldset>
-	</div>
+		</div>
+	</fieldset>
+	<legend>Desired property</legend>
+	<fieldset>
+	</fieldset>
 	<div class="clear"></div>
 	<div class="form-actions">
 		<div id="form-request"></div>

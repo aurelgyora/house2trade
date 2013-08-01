@@ -1,4 +1,4 @@
-<?=form_open($this->uri->uri_string(),array('id'=>'form-metod-property-register')); ?>
+<?= form_open($this->uri->uri_string(),array('id'=>'form-metod-property-register')); ?>
 	<legend>Get information about your property</legend>
 	<div class="span2">
 		<fieldset>

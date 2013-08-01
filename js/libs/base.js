@@ -35,15 +35,26 @@ mt.matches_parameters = function(parameter1,parameter2){
 	return false;
 };
 mt.exist_email = function(emailInput){
+	
 	var user_email = $(emailInput).val();
-	$(emailInput).tooltip('destroy');
-	if(user_email != ''){
-		if(!mt.isValidEmailAddress(user_email)){$(emailInput).attr('data-original-title','Not valid email address').tooltip('show');}
-		else{
-			$.post(mt.baseURL+"valid/exist-email",{'parametr':user_email,'type':'email'},
-				function(data){if(!data.status){$(emailInput).attr('data-original-title','Email already exist').tooltip('show');}},"json");
+	var error = false;
+	if($(emailInput).emptyValue() === false){
+		if(!mt.isValidEmailAddress(user_email)){
+			$(emailInput).setValidationErrorStatus('Not valid email address');
+			error = true;
+		}else{
+			$.post(mt.baseURL+"valid/exist-email",
+				{'parametr':user_email,'type':'email'},
+				function(data){
+					if(!data.status){
+						$(emailInput).setValidationErrorStatus('Email already exist');
+						error = true;
+					}
+				}
+			,"json");
 		}
 	}
+	return error;
 };
 mt.minLength = function(string,Len){if(string != ''){if(string.length < Len){return false}}return true}
 mt.FieldsIsNotNumeric = function(formObject){
@@ -52,27 +63,76 @@ mt.FieldsIsNotNumeric = function(formObject){
 	$(formObject).find("input.numeric-float").each(function(i,element){if(($(element).val() != '') && (!$.isNumeric($(element).val()))){result[num] = $(element).attr('id');num++;}});
 	if($.isEmptyObject(result)){return false;}else{return result;}
 }
-$(function(){
-	$.fn.exists = function(){return $(this).length;}
-	$.fn.emptyValue = function(){if($(this).val() == ''){return true;}else{return false;}}
-	$.fn.ForceMaxValue = function(){
-		$(this).keyup(function(){
-			var value = parseInt($(this).val().trim());
-			var maxValue = parseInt($(this).attr('data-max-value').trim());
-			if($.isNumeric(value) && $.isNumeric(maxValue)){
-				if(value > maxValue){$(this).val(maxValue)}else{$(this).val(value);}
+mt.noValidEmails = function(elements){
+	var user_email = ''; var errors = false;
+	$(elements).each(function(i,element){
+		user_email = $(element).val().trim();
+		if(!mt.isValidEmailAddress(user_email)){
+			$(element).setValidationErrorStatus('Incorrect Email Address');
+			errors = true;
+		}
+	});
+	return errors;
+}
+mt.validation = function(jqForm){
+	var errors = false;
+	$(jqForm).defaultValidationErrorStatus();
+	$(jqForm).find(".valid-required:visible").each(function(i,element){
+		if($(this).emptyValue()){
+			$(this).setValidationErrorStatus('This field can not be blank');
+			errors = true;
+		}
+	});
+	if($(jqForm).find(".valid-email:visible").length > 0){
+		if(mt.noValidEmails($(jqForm).find(".valid-email:visible"))){errors = true;}
+	}
+	if(errors){return false;}else{return true;}
+}
+$.fn.setValidationErrorStatus = function(text){
+	$(this).attr('role','tooltip').showToolTip(text);
+}
+$.fn.defaultValidationErrorStatus = function(){
+	$(".form-request").html('');
+	$("#form-request").html('');
+	$("#photos-block-message").html('');
+	$(this).find(":input[role='tooltip']").hideToolTip();
+}
+$.fn.showToolTip = function(ToolTipText){
+	var config = {placement:'right',trigger:'hover',title:ToolTipText}
+	return this.each(
+		function(){
+			$(this).tooltip(config).tooltip('show');
+		});
+}
+$.fn.hideToolTip = function(){
+	return this.each(
+		function(){
+			if($(this).is("[role='tooltip']") == true){
+				$(this).removeAttr('role').tooltip('destroy');
 			}
+	});
+}
+$.fn.exists = function(){return $(this).length;}
+$.fn.emptyValue = function(){if($(this).val() == ''){return true;}else{return false;}}
+$.fn.ForceMaxValue = function(){
+	$(this).keyup(function(){
+		var value = parseInt($(this).val().trim());
+		var maxValue = parseInt($(this).attr('data-max-value').trim());
+		if($.isNumeric(value) && $.isNumeric(maxValue)){
+			if(value > maxValue){$(this).val(maxValue)}else{$(this).val(value);}
+		}
+	});
+	return false;
+};
+$.fn.ForceNumericOnly = function(){
+	return this.each(function(){
+		$(this).keydown(function(e){
+			var key = e.charCode || e.keyCode || 0;
+			return(key == 8 || key == 9 || key == 46 || (key >= 37 && key <= 40) || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
 		});
-		return false;
-	};
-	$.fn.ForceNumericOnly = function(){
-		return this.each(function(){
-			$(this).keydown(function(e){
-				var key = e.charCode || e.keyCode || 0;
-				return(key == 8 || key == 9 || key == 46 || (key >= 37 && key <= 40) || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
-			});
-		});
-	};
+	});
+};
+$(function(){
 	$(".none").click(function(event){event.preventDefault();});
 	$("input.valid-numeric").ForceNumericOnly();
 	$("input.valid-max-value").ForceMaxValue();
@@ -104,4 +164,6 @@ $(function(){
 		e.preventDefault();
 		$('html, body').animate({scrollTop: 500}, 2000);
 	});
+	$(":input").keydown(function(){$(this).hideToolTip();})
+	$(":input").change(function(){$(this).hideToolTip();})
 });

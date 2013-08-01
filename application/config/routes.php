@@ -6,7 +6,7 @@ $route['404_override'] = '';
 $route['set-db-data'] = 'users_interface/setDbData';
 $route['clear-session'] = 'users_interface/clearSession';
 $route['valid/exist-email'] = 'ajax_interface/existEmail';
-
+$route['valid/property-exist'] = "ajax_interface/propertyExist";
 /*************************************************** CRON INTRERFACE ***********************************************/
 $route['csv-export-properties'] = "scripts_interface/csvExportProperties";
 $route['remove-images-by-zipcode'] = "scripts_interface/removeImagesByZipcode";
@@ -22,20 +22,17 @@ $route['change-property-status'] = "ajax_interface/changePropertyStatus";
 $route['change-down-payment-value'] = "ajax_interface/changeDownPaymentValue";
 $route['change-match-statuses'] = "ajax_interface/changeMatchAndPropertyStatuses";
 
-$route['save-property-info'] = "ajax_interface/save_property_info";
+$route['save-disared-property'] = "ajax_interface/saveDisaredProperty";
+
 $route['send-forgot-password'] = "ajax_interface/send_forgot_password";
 $route['multi-upload'] = "ajax_interface/multiUpload";
 $route['delete-property-images']= "ajax_interface/deletePropertyImages";
 $route['save-profile'] = "ajax_interface/saveProfile";
 
-
-
 $route['show-detail-property'] = "ajax_interface/showDetailProperty";
 $route['set-active-property'] = "ajax_interface/setActiveProperty";
 $route['show-properties-list'] = "ajax_interface/showPropertiesList";
 $route['set-current-property'] = "ajax_interface/setCurrentProperty";
-
-
 
 $route['text-load/:any/from/:num'] = "ajax_interface/text_load";
 $route[BROKER_START_PAGE.'/delete'] = "ajax_interface/deleteProperty";
