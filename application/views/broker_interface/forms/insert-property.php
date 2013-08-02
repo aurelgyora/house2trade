@@ -138,6 +138,7 @@
 	</div>
 	<div class="form-actions">
 		<div id="form-request"></div>
+		<span class="wait-request hidden"><img src="<?=site_url('img/loading.gif');?>" alt="" /></span>
 		<button class="btn btn-success btn-broker-register-property" data-register-step="1" type="button">Continue</button>
 		<span class="decision">or</span>
 		<a class="none link-more" id="set-properties-auto-data" href="#">Add property info by ZIP</a>

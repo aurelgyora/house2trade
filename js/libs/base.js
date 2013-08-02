@@ -95,6 +95,7 @@ $.fn.defaultValidationErrorStatus = function(){
 	$(".form-request").html('');
 	$("#form-request").html('');
 	$("#photos-block-message").html('');
+	$(".wait-request").addClass('hidden');
 	$(this).find(":input[role='tooltip']").hideToolTip();
 }
 $.fn.showToolTip = function(ToolTipText){

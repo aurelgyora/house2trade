@@ -81,13 +81,16 @@
 				url: mt.baseURL+'save-main-property',data: {'postdata':postdata},type:'POST',dataType:'json',
 				beforeSend: function(){
 					$(_form).defaultValidationErrorStatus();
+					$(".wait-request").removeClass('hidden');
 				},
 				success: function(data,textStatus,xhr){
+					$(_form).defaultValidationErrorStatus();
 					if(data.status){
 						$("div.form-request").html(data.message);
 					}
 				},
 				error: function(xhr,textStatus,errorThrown){
+					$(_form).defaultValidationErrorStatus();
 					alert('Error!');
 				}
 			});
@@ -105,8 +108,10 @@
 				url: mt.baseURL+'save-disared-property',data: {'postdata':postdata},type:'POST',dataType:'json',
 				beforeSend: function(){
 					$(_form).defaultValidationErrorStatus();
+					$(".wait-request").removeClass('hidden');
 				},
 				success: function(data,textStatus,xhr){
+					$(_form).defaultValidationErrorStatus();
 					if(data.status){
 						$("div.form-request").html(data.message);
 					}
@@ -115,6 +120,7 @@
 					}
 				},
 				error: function(xhr,textStatus,errorThrown){
+					$(_form).defaultValidationErrorStatus();
 					alert('Error!');
 				}
 			});
@@ -150,7 +156,6 @@
 		});
 	})
 	//----------------------------------------------------------------------------------
-	
 	$("#register-properties").click(function(event){
 		event.preventDefault();
 		var err = false; var _this = this;
@@ -323,14 +328,15 @@
 		$("#div-account-properties").hide().removeClass('hidden').fadeIn('slow');
 		$("#form-request").empty();
 		$("#metod-block-message").empty();
+		$("html,body").animate({scrollTop:0},400);
 	});
-	
 	$("#set-properties-auto-data").click(function(){
 		$(".valid-required").tooltip('destroy');
 		$("#div-account-properties").hide().addClass('hidden');
 		$("#div-choise-metod").hide().removeClass('hidden').fadeIn('slow');
 		$("#form-request").empty();
 		$("#metod-block-message").empty();
+		$("html,body").animate({scrollTop:0},400);
 	});
 	$("a.add-property-images").click(function(){
 		$(".valid-required").tooltip('destroy');
@@ -352,7 +358,6 @@
 		if(!err && !mt.isValidPhone($("#company-phone").val())){$("#login-email").attr('data-original-title','Incorrect Phone Number').tooltip('show');err = true;}
 		if(err){return false;}
 	})
-	
 	$("button.btn-property-remove-favorite").click(function(){
 		var parameter = $(this).attr('data-src');
 		var _this = this;

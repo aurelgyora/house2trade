@@ -14,8 +14,10 @@ $(function(){
 					url: mt.baseURL+"valid/property-exist",data:{'postdata':postdata},type:'POST',dataType:'json',
 					beforeSend: function(){
 						$(_form).defaultValidationErrorStatus();
+						$(".wait-request").removeClass('hidden');
 					},
 					success: function(data,textStatus,xhr){
+						$(_form).defaultValidationErrorStatus();
 						if(data.status == false){
 							$("#form-request").html(data.message);
 						}else{
@@ -31,6 +33,7 @@ $(function(){
 						}
 					},
 					error: function(xhr,textStatus,errorThrown){
+						$(_form).defaultValidationErrorStatus();
 						alert('Error!');
 					}
 				});
@@ -40,17 +43,20 @@ $(function(){
 					url: mt.baseURL+'signup-property',data: {'postdata':postdata},type:'POST',dataType:'json',
 					beforeSend: function(){
 						$(_form).defaultValidationErrorStatus();
-						$("#form-request").html('Please wait ...');
+						$(".wait-request").removeClass('hidden');
 					},
 					success: function(data,textStatus,xhr){
+						$(_form).defaultValidationErrorStatus();
 						if(data.status){
 							$("#div-choise-metod").remove();
 							$("#div-account-properties").remove();
 							$("#div-insert-photo-properties").removeClass('hidden');
 							$("#photos-block-message").html(data.message);
+							$("html,body").animate({scrollTop:0},400);
 						}
 					},
 					error: function(xhr,textStatus,errorThrown){
+						$(_form).defaultValidationErrorStatus();
 						alert('Error!');
 					}
 				});

@@ -41,6 +41,7 @@
 	<div class="clear"></div>
 	<div class="form-actions">
 		<div class="form-request"></div>
+		<span class="wait-request hidden"><img src="<?=site_url('img/loading.gif');?>" alt="" /></span>
 		<button class="btn btn-success btn-save-disared-property" data-target="<?=($this->uri->segment(2) == 'recommended')?'refresh':'';?>" type="submit" name="submit" value="send">Save disared property</button>
 	</div>
 <?= form_close(); ?>
