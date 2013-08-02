@@ -10,10 +10,13 @@
 			<hr/>
 			<?php $this->load->view("owner_interface/includes/rightbar");?>
 			<div class="span9">
+			<?php if($this->session->userdata('current_property') === FALSE || $this->owner['seller'] || count($select) > 1):?>
 				<div class="navbar">
 					<?php $this->load->view("owner_interface/forms/set-active-property");?>
 				</div>
 				<div class="clear"></div>
+			<?php endif;?>
+				<p>See foreclosures in your area - for free!</p>
 				<div id="div-search-property" <?=($this->session->userdata('search_sql'))?'class="hidden"':'';?>>
 					<?php $this->load->view('forms/search-properties');?>
 				</div>
@@ -60,18 +63,18 @@
 									<?php endif;?>
 								</p>
 							</div>
-						<?php if($zillow_exist_id && !$zillow['potentialby']):?>
-							<?php if(!$zillow['favorite']):?>
-								<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$zillow['id'];?>">Add to favorite</button>
-								<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
-							<?php else:?>
-								<button class="btn btn-mini btn-link btn-property-remove-favorite" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
-								<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$zillow['id'];?>">Add to favorite</button>
-							<?php endif;?>
+					<?php if($zillow_exist_id && !$zillow['potentialby']):?>
+						<?php if(!$zillow['favorite']):?>
+							<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$zillow['id'];?>">Add to favorite</button>
+							<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
+						<?php else:?>
+							<button class="btn btn-mini btn-link btn-property-remove-favorite" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
+							<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$zillow['id'];?>">Add to favorite</button>
 						<?php endif;?>
+					<?php endif;?>
 						</div>
 					<?php endif;?>
-				<?php for($i=0;$i<count($properties);$i++):?>
+			<?php for($i=0;$i<count($properties);$i++):?>
 					<?php if(isset($zillow_exist_id) && ($properties[$i]['id'] == $zillow_exist_id)):?>
 						<?php continue;?>
 					<?php endif;?>
@@ -81,13 +84,14 @@
 						</a>
 						<div class="media-body">
 							<h4 class="media-heading">
-								<a href="<?=site_url('homeowner/search/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'];?></a>
+								<a href="<?=site_url('homeowner/'.$this->uri->segment(2).'/information/'.$properties[$i]['id']);?>">
+									<small>HT-<?=$properties[$i]['id'];?></small> <?=$properties[$i]['address1'];?>
+								</a>
 								<span><?= $properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code']; ?></span>
 							</h4>
 							<?php if($properties[$i]['status'] == 17):?>
 								<small>Property is not in our listing</small>
 							<?php endif;?>
-							<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 							<p>
 								$<?=$properties[$i]['price'];?> <span class="separator">|</span> 
 								<?=$properties[$i]['bedrooms'];?> Bd <span class="separator">|</span> 
@@ -107,7 +111,7 @@
 						<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
 					<?php endif;?>
 				<?php else:?>
-						<h4>Already added to potential by</h4>
+						<p class="property-owner">Already added to potential by</p>
 				<?php endif;?>
 			<?php endif;?>
 					</div>

@@ -5,10 +5,6 @@
 </head>
 <body>
 	<?php $this->load->view("broker_interface/includes/header");?>
-	
-	<link rel="stylesheet" href="http://house2trade.com/dev/css/fotorama.css" />
-	<script type="text/javascript" src="http://house2trade.com/dev/js/vendor/fotorama.js"></script>
-	
 	<div class="container">
 		<div class="row">
 			<hr/>
@@ -28,7 +24,9 @@
 					</a>
 					<div class="media-body">
 						<h4 class="media-heading">
-							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level1']['id']);?>"><?= $levels['level1']['address1'];?></a>
+							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level1']['id']);?>">
+								<small>HT-<?=$levels['level1']['id'];?></small> <?=$levels['level1']['address1'];?>
+							</a>
 							<span><?= $levels['level1']['city'].', '.$levels['level1']['state'].' '.$levels['level1']['zip_code']; ?></span>
 						</h4>
 						<p>
@@ -41,19 +39,19 @@
 						</p>
 					</div>
 				</div>
-				
 		<?php if(!empty($levels['level2'])):?>
 				<h2>Level 2</h2>
-
 				<div class="cycle-blocks-2">
 				<?php for($i=0;$i<count($levels['level2']);$i++):?>
-					<div class="media">
+					<div class="media cycle-clocks-elements">
 						<a class="none pull-left" href="#">
 							<img class="img-polaroid media-object" src="<?=site_url($levels['level2'][$i]['photo']);?>" alt="">
 						</a>
 						<div class="media-body">
 							<h4 class="media-heading">
-								<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level2'][$i]['id']);?>"><?= $levels['level2'][$i]['address1'];?></a>
+								<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level2'][$i]['id']);?>">
+									<small>HT-<?=$levels['level2'][$i]['id'];?></small> <?=$levels['level2'][$i]['address1'];?>
+								</a>
 								<span><?= $levels['level2'][$i]['city'].', '.$levels['level2'][$i]['state'].' '.$levels['level2'][$i]['zip_code']; ?></span>
 							</h4>
 							<p>
@@ -73,128 +71,172 @@
 					</div>
 				<?php endfor;?>
 				</div>
-				
+				<?php if(count($levels['level2'])>1):?>
 				<ul class="nav-cycle nav-2 clearfix">
-					<?php for($i=0;$i<count($levels['level2']);$i++):?>
-			        <li><a href="#"><img src="<?=site_url($levels['level2'][$i]['photo']);?>"></a></li>
-			        <?php endfor;?>
-			    </ul>
-				
+				<?php for($i=0;$i<count($levels['level2']);$i++):?>
+					<li><a href="#"><img src="<?=site_url($levels['level2'][$i]['photo']);?>"></a></li>
+				<?php endfor;?>
+				</ul>
+				<?php endif;?>
 			<?php if(!empty($levels['level3'])):?>
 				<h2>Level 3</h2>
+				<div class="cycle-blocks-3">
 				<?php for($i=0;$i<count($levels['level3']);$i++):?>
-				<div class="media">
-					<a class="none pull-left" href="#">
-						<img class="img-polaroid media-object" src="<?=site_url($levels['level3'][$i]['photo']);?>" alt="">
-					</a>
-					<div class="media-body">
-						<h4 class="media-heading">
-							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level3'][$i]['id']);?>"><?= $levels['level3'][$i]['address1'];?></a>
-							<span><?= $levels['level3'][$i]['city'].', '.$levels['level3'][$i]['state'].' '.$levels['level3'][$i]['zip_code']; ?></span>
-						</h4>
-						<p>
-							$<?=$levels['level3'][$i]['price'];?> <span class="separator">|</span> 
-							<?=$levels['level3'][$i]['bedrooms'];?> Bd <span class="separator">|</span> 
-							<?=$levels['level3'][$i]['bathrooms'];?> Ba <span class="separator">|</span> 
-							<?=$levels['level3'][$i]['sqf'];?> Sq Ft <span class="separator">|</span> 
-							<?=$levels['level3'][$i]['lotsize'];?> Acres <br/>
-							<?= ucfirst($levels['level3'][$i]['type']); ?> Home
-						</p>
+					<div class="media cycle-clocks-elements">
+						<a class="none pull-left" href="#">
+							<img class="img-polaroid media-object" src="<?=site_url($levels['level3'][$i]['photo']);?>" alt="">
+						</a>
+						<div class="media-body">
+							<h4 class="media-heading">
+								<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level3'][$i]['id']);?>">
+									<small>HT-<?=$levels['level3'][$i]['id'];?></small> <?=$levels['level3'][$i]['address1'];?>
+								</a>
+								<span><?= $levels['level3'][$i]['city'].', '.$levels['level3'][$i]['state'].' '.$levels['level3'][$i]['zip_code']; ?></span>
+							</h4>
+							<p>
+								$<?=$levels['level3'][$i]['price'];?> <span class="separator">|</span> 
+								<?=$levels['level3'][$i]['bedrooms'];?> Bd <span class="separator">|</span> 
+								<?=$levels['level3'][$i]['bathrooms'];?> Ba <span class="separator">|</span> 
+								<?=$levels['level3'][$i]['sqf'];?> Sq Ft <span class="separator">|</span> 
+								<?=$levels['level3'][$i]['lotsize'];?> Acres <br/>
+								<?= ucfirst($levels['level3'][$i]['type']); ?> Home
+							</p>
+						</div>
+					<?php if($levels['level3'][$i]['potentialby'] == FALSE):?>
+						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level3'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+					<?php else:?>
+						<p class="property-owner">Already added to potential by</p>
+					<?php endif;?>
 					</div>
-				<?php if($levels['level3'][$i]['potentialby'] == FALSE):?>
-					<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level3'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
-				<?php else:?>
-					<p class="property-owner">Already added to potential by</p>
-				<?php endif;?>
-				</div>
 				<?php endfor;?>
+				</div>
+				<?php if(count($levels['level3'])>1):?>
+				<ul class="nav-cycle nav-3 clearfix">
+				<?php for($i=0;$i<count($levels['level3']);$i++):?>
+					<li><a href="#"><img src="<?=site_url($levels['level3'][$i]['photo']);?>"></a></li>
+				<?php endfor;?>
+				</ul>
+				<?php endif;?>
 			<?php endif;?>
 			<?php if(!empty($levels['level4'])):?>
 				<h2>Level 4</h2>
+				<div class="cycle-blocks-4">
 				<?php for($i=0;$i<count($levels['level4']);$i++):?>
-				<div class="media">
-					<a class="none pull-left" href="#">
-						<img class="img-polaroid media-object" src="<?=site_url($levels['level4'][$i]['photo']);?>" alt="">
-					</a>
-					<div class="media-body">
-						<h4 class="media-heading">
-							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level4'][$i]['id']);?>"><?= $levels['level4'][$i]['address1'];?></a>
-							<span><?= $levels['level4'][$i]['city'].', '.$levels['level4'][$i]['state'].' '.$levels['level4'][$i]['zip_code']; ?></span>
-						</h4>
-						<p>
-							$<?=$levels['level4'][$i]['price'];?> <span class="separator">|</span> 
-							<?=$levels['level4'][$i]['bedrooms'];?> Bd <span class="separator">|</span> 
-							<?=$levels['level4'][$i]['bathrooms'];?> Ba <span class="separator">|</span> 
-							<?=$levels['level4'][$i]['sqf'];?> Sq Ft <span class="separator">|</span> 
-							<?=$levels['level4'][$i]['lotsize'];?> Acres <br/>
-							<?= ucfirst($levels['level4'][$i]['type']); ?> Home
-						</p>
+					<div class="media cycle-clocks-elements">
+						<a class="none pull-left" href="#">
+							<img class="img-polaroid media-object" src="<?=site_url($levels['level4'][$i]['photo']);?>" alt="">
+						</a>
+						<div class="media-body">
+							<h4 class="media-heading">
+								<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level4'][$i]['id']);?>">
+									<small>HT-<?=$levels['level4'][$i]['id'];?></small> <?=$levels['level4'][$i]['address1'];?>
+								</a>
+								<span><?= $levels['level4'][$i]['city'].', '.$levels['level4'][$i]['state'].' '.$levels['level4'][$i]['zip_code']; ?></span>
+							</h4>
+							<p>
+								$<?=$levels['level4'][$i]['price'];?> <span class="separator">|</span> 
+								<?=$levels['level4'][$i]['bedrooms'];?> Bd <span class="separator">|</span> 
+								<?=$levels['level4'][$i]['bathrooms'];?> Ba <span class="separator">|</span> 
+								<?=$levels['level4'][$i]['sqf'];?> Sq Ft <span class="separator">|</span> 
+								<?=$levels['level4'][$i]['lotsize'];?> Acres <br/>
+								<?= ucfirst($levels['level4'][$i]['type']); ?> Home
+							</p>
+						</div>
+					<?php if($levels['level4'][$i]['potentialby'] == FALSE):?>
+						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level4'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+					<?php else:?>
+						<p class="property-owner">Already added to potential by</p>
+					<?php endif;?>
 					</div>
-				<?php if($levels['level4'][$i]['potentialby'] == FALSE):?>
-					<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level4'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
-				<?php else:?>
-					<p class="property-owner">Already added to potential by</p>
-				<?php endif;?>
-				</div>
 				<?php endfor;?>
+				</div>
+				<?php if(count($levels['level4'])>1):?>
+				<ul class="nav-cycle nav-4 clearfix">
+				<?php for($i=0;$i<count($levels['level4']);$i++):?>
+					<li><a href="#"><img src="<?=site_url($levels['level4'][$i]['photo']);?>"></a></li>
+				<?php endfor;?>
+				</ul>
+				<?php endif;?>
 			<?php endif;?>
 			<?php if(!empty($levels['level5'])):?>
 				<h2>Level 5</h2>
+				<div class="cycle-blocks-5">
 				<?php for($i=0;$i<count($levels['level5']);$i++):?>
-				<div class="media">
-					<a class="none pull-left" href="#">
-						<img class="img-polaroid media-object" src="<?=site_url($levels['level5'][$i]['photo']);?>" alt="">
-					</a>
-					<div class="media-body">
-						<h4 class="media-heading">
-							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level5'][$i]['id']);?>"><?= $levels['level5'][$i]['address1'];?></a>
-							<span><?= $levels['level5'][$i]['city'].', '.$levels['level5'][$i]['state'].' '.$levels['level5'][$i]['zip_code']; ?></span>
-						</h4>
-						<p>
-							$<?=$levels['level5'][$i]['price'];?> <span class="separator">|</span> 
-							<?=$levels['level5'][$i]['bedrooms'];?> Bd <span class="separator">|</span> 
-							<?=$levels['level5'][$i]['bathrooms'];?> Ba <span class="separator">|</span> 
-							<?=$levels['level5'][$i]['sqf'];?> Sq Ft <span class="separator">|</span> 
-							<?=$levels['level5'][$i]['lotsize'];?> Acres <br/>
-							<?= ucfirst($levels['level5'][$i]['type']); ?> Home
-						</p>
+					<div class="media cycle-clocks-elements">
+						<a class="none pull-left" href="#">
+							<img class="img-polaroid media-object" src="<?=site_url($levels['level5'][$i]['photo']);?>" alt="">
+						</a>
+						<div class="media-body">
+							<h4 class="media-heading">
+								<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level2'][$i]['id']);?>">
+									<small>HT-<?=$levels['level2'][$i]['id'];?></small> <?=$levels['level2'][$i]['address1'];?>
+								</a>
+								<span><?= $levels['level5'][$i]['city'].', '.$levels['level5'][$i]['state'].' '.$levels['level5'][$i]['zip_code']; ?></span>
+							</h4>
+							<p>
+								$<?=$levels['level5'][$i]['price'];?> <span class="separator">|</span> 
+								<?=$levels['level5'][$i]['bedrooms'];?> Bd <span class="separator">|</span> 
+								<?=$levels['level5'][$i]['bathrooms'];?> Ba <span class="separator">|</span> 
+								<?=$levels['level5'][$i]['sqf'];?> Sq Ft <span class="separator">|</span> 
+								<?=$levels['level5'][$i]['lotsize'];?> Acres <br/>
+								<?= ucfirst($levels['level5'][$i]['type']); ?> Home
+							</p>
+						</div>
+					<?php if($levels['level5'][$i]['potentialby'] == FALSE):?>
+						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level5'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+					<?php else:?>
+						<p class="property-owner">Already added to potential by</p>
+					<?php endif;?>
 					</div>
-				<?php if($levels['level5'][$i]['potentialby'] == FALSE):?>
-					<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level5'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
-				<?php else:?>
-					<p class="property-owner">Already added to potential by</p>
-				<?php endif;?>
-				</div>
 				<?php endfor;?>
+				</div>
+				<?php if(count($levels['level5'])>1):?>
+				<ul class="nav-cycle nav-5 clearfix">
+				<?php for($i=0;$i<count($levels['level5']);$i++):?>
+					<li><a href="#"><img src="<?=site_url($levels['level5'][$i]['photo']);?>"></a></li>
+				<?php endfor;?>
+				</ul>
+				<?php endif;?>
 			<?php endif;?>
 			<?php if(!empty($levels['level6'])):?>
 				<h2>Level 6</h2>
-				<?php for($i=0;$i<count($levels['level6']);$i++):?>
-				<div class="media">
-					<a class="none pull-left" href="#">
-						<img class="img-polaroid media-object" src="<?=site_url($levels['level6'][$i]['photo']);?>" alt="">
-					</a>
-					<div class="media-body">
-						<h4 class="media-heading">
-							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level6'][$i]['id']);?>"><?= $levels['level6'][$i]['address1'];?></a>
-							<span><?= $levels['level6'][$i]['city'].', '.$levels['level6'][$i]['state'].' '.$levels['level6'][$i]['zip_code']; ?></span>
-						</h4>
-						<p>
-							$<?=$levels['level6'][$i]['price'];?> <span class="separator">|</span> 
-							<?=$levels['level6'][$i]['bedrooms'];?> Bd <span class="separator">|</span> 
-							<?=$levels['level6'][$i]['bathrooms'];?> Ba <span class="separator">|</span> 
-							<?=$levels['level6'][$i]['sqf'];?> Sq Ft <span class="separator">|</span> 
-							<?=$levels['level6'][$i]['lotsize'];?> Acres <br/>
-							<?= ucfirst($levels['level6'][$i]['type']); ?> Home
-						</p>
+				<div class="cycle-blocks-5">
+					<?php for($i=0;$i<count($levels['level6']);$i++):?>
+					<div class="media cycle-clocks-elements">
+						<a class="none pull-left" href="#">
+							<img class="img-polaroid media-object" src="<?=site_url($levels['level6'][$i]['photo']);?>" alt="">
+						</a>
+						<div class="media-body">
+							<h4 class="media-heading">
+								<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$levels['level6'][$i]['id']);?>">
+									<small>HT-<?=$levels['level6'][$i]['id'];?></small> <?=$levels['level6'][$i]['address1'];?>
+								</a>
+								<span><?= $levels['level6'][$i]['city'].', '.$levels['level6'][$i]['state'].' '.$levels['level6'][$i]['zip_code']; ?></span>
+							</h4>
+							<p>
+								$<?=$levels['level6'][$i]['price'];?> <span class="separator">|</span> 
+								<?=$levels['level6'][$i]['bedrooms'];?> Bd <span class="separator">|</span> 
+								<?=$levels['level6'][$i]['bathrooms'];?> Ba <span class="separator">|</span> 
+								<?=$levels['level6'][$i]['sqf'];?> Sq Ft <span class="separator">|</span> 
+								<?=$levels['level6'][$i]['lotsize'];?> Acres <br/>
+								<?= ucfirst($levels['level6'][$i]['type']); ?> Home
+							</p>
+						</div>
+					<?php if($levels['level6'][$i]['potentialby'] == FALSE):?>
+						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level6'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+					<?php else:?>
+						<p class="property-owner">Already added to potential by</p>
+					<?php endif;?>
 					</div>
-				<?php if($levels['level6'][$i]['potentialby'] == FALSE):?>
-					<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level6'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
-				<?php else:?>
-					<p class="property-owner">Already added to potential by</p>
-				<?php endif;?>
-				</div>
 				<?php endfor;?>
+				</div>
+				<?php if(count($levels['level6'])>1):?>
+				<ul class="nav-cycle nav-6 clearfix">
+				<?php for($i=0;$i<count($levels['level6']);$i++):?>
+					<li><a href="#"><img src="<?=site_url($levels['level6'][$i]['photo']);?>"></a></li>
+				<?php endfor;?>
+				</ul>
+				<?php endif;?>
 			<?php endif;?>
 		<?php endif;?>
 	<?php endif;?>
@@ -206,20 +248,6 @@
 	<?php $this->load->view("broker_interface/includes/scripts");?>
 	<script type="text/javascript" src="<?=site_url('js/jquery.easing.js');?>"></script>
 	<script type="text/javascript" src="<?=site_url('js/jquery.cycle.js');?>"></script>
-	<script>
-		$(document).ready(function(){ 
-	    	$('div.cycle-blocks-2').cycle({
-	        	fx:     'fade',
-	        	speed:  '1000',
-	        	easing: 'easeInOutExpo',
-	        	timeout: 0,
-	        	pager:  '.nav-2',
-			    pagerAnchorBuilder: function(idx, slide) {
-			        // return selector string for existing anchor
-			        return '.nav-2 li:eq(' + idx + ') a';
-			    }   
-	    	});
-	    });
-	</script>
+	<script type="text/javascript" src="<?=site_url('js/cabinet/cycle-config.js');?>"></script>
 </body>
 </html>

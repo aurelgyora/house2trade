@@ -4,6 +4,7 @@ class MY_Controller extends CI_Controller{
 	
 	var $account = array('id'=>0,'group'=>0);
 	var $profile = '';
+	var $owner = array('seller'=>FALSE);
 	var $loginstatus = FALSE;
 	
 	function __construct(){

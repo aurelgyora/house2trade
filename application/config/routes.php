@@ -22,6 +22,7 @@ $route['change-property-status'] = "ajax_interface/changePropertyStatus";
 $route['change-down-payment-value'] = "ajax_interface/changeDownPaymentValue";
 $route['change-match-statuses'] = "ajax_interface/changeMatchAndPropertyStatuses";
 
+$route['save-main-property'] = "ajax_interface/saveMainProperty";
 $route['save-disared-property'] = "ajax_interface/saveDisaredProperty";
 
 $route['send-forgot-password'] = "ajax_interface/send_forgot_password";
@@ -116,10 +117,16 @@ $route['homeowner/search/result/from'] = "owner_interface/searchProperty";
 $route['homeowner/search/result/from/:num'] = "owner_interface/searchProperty";
 
 $route[OWNER_START_PAGE] = "owner_interface/properties";
+
+$route['homeowner/recommended'] = "owner_interface/recommendedProperty";
+$route['homeowner/recommended/from'] = "owner_interface/recommendedProperty";
+$route['homeowner/recommended/from/:num'] = "owner_interface/recommendedProperty";
+
 $route['homeowner/:any/information'] = "owner_interface/propertyDetail";
 $route['homeowner/:any/information/:num'] = "owner_interface/propertyDetail";
-$route[OWNER_START_PAGE.'/edit'] = "owner_interface/edit_property";
-$route[OWNER_START_PAGE.'/edit/:num'] = "owner_interface/edit_property";
+
+$route[OWNER_START_PAGE.'/edit'] = "owner_interface/editProperty";
+$route[OWNER_START_PAGE.'/edit/:num'] = "owner_interface/editProperty";
 
 $route['homeowner/register-properties'] = "owner_interface/register_properties";
 

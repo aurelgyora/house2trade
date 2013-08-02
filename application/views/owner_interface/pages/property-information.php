@@ -59,7 +59,7 @@
 					<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$property['id'];?>">Add to favorite</button>
 				<?php endif;?>
 				<?php if($property['potentialby']):?>
-					<h3>Already added to potential by</h3>
+					<p class="property-owner">Already added to potential by</p>
 				<?php endif;?>
 			<?php endif;?>
 		<?php else:?>

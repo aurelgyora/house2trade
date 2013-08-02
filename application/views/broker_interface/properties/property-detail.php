@@ -32,9 +32,9 @@
 				<div class="span6">
 					<?php $this->load->view("broker_interface/forms/set-current-property");?>
 					<ul class="nav nav-tabs" id="myTab">
-						<?php if($images):?>
+					<?php if($images):?>
 						<li class="active"><a href="#photos">Photos</a></li>
-						<?php endif; ?>
+					<?php endif; ?>
 						<li><a href="#map">Map</a></li>
 						<li><a href="#panorama">Street View</a></li>
 					</ul>
@@ -42,12 +42,10 @@
 						<div class="tab-pane" id="map">
 							<div id="map-canvas" style="width: 450px; height: 300px"></div>
 						</div>
-						
 						<div class="tab-pane" id="panorama">
 							<div id="pano" style="width: 450px; height: 300px;"></div>
 						</div>
-						
-						<?php if($images): ?>
+					<?php if($images): ?>
 						<div class="tab-pane active" id="photos">
 							<div class="fotorama" data-width="460" data-height="333" data-cropToFit="true" data-loop="true" data-autoplay="true">
 							<?php for($i=0;$i<count($images);$i++):?>
@@ -55,9 +53,9 @@
 							<?php endfor;?>
 							</div>
 						</div>
-						<?php else:?>
-							<p><img src="<?=site_url('img/thumb.png');?>"></p>
-						<?php endif;?>
+					<?php else:?>
+						<p><img src="<?=site_url('img/thumb.png');?>"></p>
+					<?php endif;?>
 					</div>
 					<div class="property-actions">
 					<?php if($property['broker'] == $this->account['id']):?>
@@ -75,7 +73,7 @@
 									<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$property['id'];?>">Add to favorite</button>
 								<?php endif;?>
 							<?php else:?>
-									<h3>Already added to potential by</h3>
+									<p class="property-owner">Already added to potential by</p>
 								<?php endif;?>
 						<?php else:?>
 								<button class="btn btn-mini btn-link disabled" disabled="disabled">Add to favorite</button>
@@ -118,8 +116,8 @@
 	<?php $this->load->view("broker_interface/includes/scripts");?>
 	<script type="text/javascript" src="<?=site_url('js/vendor/fotorama.js');?>"></script>
 	<script type="text/javascript">
-		$('#myTab a').click(function (e) {
-			e.preventDefault();
+		$("#myTab a").click(function(event){
+			event.preventDefault();
 			$(this).tab('show');
 			initialize();
 		})

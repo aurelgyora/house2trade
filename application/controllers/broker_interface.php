@@ -2,6 +2,9 @@
 
 class Broker_interface extends MY_Controller{
 	
+	var $per_page = PER_PAGE_DEFAULT;
+	var $offset = 0;
+	
 	function __construct(){
 		
 		parent::__construct();

@@ -22,7 +22,9 @@
 					</a>
 					<div class="media-body">
 						<h4 class="media-heading">
-							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'];?></a>
+							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$properties[$i]['id']);?>">
+								<small>HT-<?=$properties[$i]['id'];?></small> <?=$properties[$i]['address1'];?>
+							</a>
 							<span><?= $properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code']; ?></span>
 						</h4>
 						<p>

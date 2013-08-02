@@ -4,6 +4,124 @@
 
 (function($){
 	
+	$("#edit-profile").click(function(){
+		$("#form-edit-property-info").defaultValidationErrorStatus();
+		$("#div-view-account-broker").addClass('hidden');
+		$("#div-edit-account-broker").removeClass('hidden');
+	});
+	$("#save-profile").click(function(event){
+		event.preventDefault();
+		var err = false;
+		var user_password = $("#login-password").val();
+		var user_confirm_password = $("#confirm-password").val();
+		$(".valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
+		if(!mt.matches_parameters(user_password,user_confirm_password)){$("#confirm-password").attr('data-original-title','Passwords do not match').tooltip('show');return false;}
+		if(!err && !mt.minLength(user_password,6)){$("#login-password").attr('data-original-title','length of least 6 characters').tooltip('show');err = true;}
+		if(!err){
+				var postdata = mt.formSerialize($(".FieldSend"));
+				if($("#subcribe").is(":checked")){postdata = postdata+'&subcribe=1';}else{postdata = postdata+'&subcribe=0';}
+				$.ajax({
+					url: mt.baseURL+"save-profile",data:{'postdata':postdata},type:'POST',dataType:'json',
+					beforeSend: function(){
+						$("#form-edit-property-info").defaultValidationErrorStatus();
+					},
+					success: function(data,textStatus,xhr){
+						$("div.form-request").html(data.message);
+						if(data.status){
+							mt.setJsonRequest(data.new_data,'html');
+							$("#login-password").val('');
+							$("#confirm-password").val('');
+							$("#div-view-account-broker").removeClass('hidden');
+							$("#div-edit-account-broker").addClass('hidden');
+							$("html,body").animate({scrollTop:0},400);
+						}
+					},
+					error: function(xhr,textStatus,errorThrown){
+						alert('Error!');
+					}
+				});
+			}
+	})
+	//----------------------------------------------------------------------------------
+	$("a.edit-desired-property").click(function(){
+		$("html,body").animate({scrollTop:0},400);
+		$(this).parents("form").defaultValidationErrorStatus();
+		$("div.div-manage-property").hide().addClass('hidden');
+		$("#div-edit-desired-property").hide().removeClass('hidden').fadeIn('slow');
+	})
+	$("a.btn-edit-main-property").click(function(){
+		$("html,body").animate({scrollTop:0},400);
+		$(this).parents("form").defaultValidationErrorStatus();
+		$("div.div-manage-property").hide().addClass('hidden');
+		$("#div-property-information").hide().removeClass('hidden').fadeIn('slow');
+	})
+	$("a.add-property-images").click(function(){
+		$("html,body").animate({scrollTop:0},400);
+		$(this).parents("form").defaultValidationErrorStatus();
+		$("div.div-manage-property").hide().addClass('hidden');
+		$("#div-insert-photo-properties").hide().removeClass('hidden').fadeIn('slow');
+	})
+	$("a.remove-property-images").click(function(){
+		$("html,body").animate({scrollTop:0},400);
+		$(this).parents("form").defaultValidationErrorStatus();
+		$("div.div-manage-property").hide().addClass('hidden');
+		$("#div-remove-photo-properties").hide().removeClass('hidden').fadeIn('slow');
+	})
+	$("a.show-desired-property-form").click(function(){
+		$(this).remove();
+		$("div.div-desired-property-form").removeClass('hidden');
+	})
+	//----------------------------------------------------------------------------------
+	$("button.btn-save-main-property").click(function(event){
+		event.preventDefault();
+		var _form = $("form.form-edit-main-property");
+		if(mt.validation($(_form))){
+			var postdata = mt.formSerialize($(_form).find('.FieldSend'));
+			$.ajax({
+				url: mt.baseURL+'save-main-property',data: {'postdata':postdata},type:'POST',dataType:'json',
+				beforeSend: function(){
+					$(_form).defaultValidationErrorStatus();
+				},
+				success: function(data,textStatus,xhr){
+					if(data.status){
+						$("div.form-request").html(data.message);
+					}
+				},
+				error: function(xhr,textStatus,errorThrown){
+					alert('Error!');
+				}
+			});
+		}else{
+			$("html,body").animate({scrollTop:0},400);
+		}
+	})
+	$("button.btn-save-disared-property").click(function(event){
+		event.preventDefault();
+		var _form = $("form.form-edit-desired-property");
+		var _target = $(this).attr('data-target');
+		if(mt.validation($(_form))){
+			var postdata = mt.formSerialize($(_form).find('.FieldSend'));
+			$.ajax({
+				url: mt.baseURL+'save-disared-property',data: {'postdata':postdata},type:'POST',dataType:'json',
+				beforeSend: function(){
+					$(_form).defaultValidationErrorStatus();
+				},
+				success: function(data,textStatus,xhr){
+					if(data.status){
+						$("div.form-request").html(data.message);
+					}
+					if(_target == 'refresh'){
+						mt.redirect(mt.currentURL);
+					}
+				},
+				error: function(xhr,textStatus,errorThrown){
+					alert('Error!');
+				}
+			});
+		}else{
+			$("html,body").animate({scrollTop:0},400);
+		}
+	})
 	$("button.btn-delete-property-images").click(function(event){
 		event.preventDefault();
 		var _form = $("form.form-remove-property-images");
@@ -30,8 +148,9 @@
 				alert('Error!');
 			}
 		});
-	});
+	})
 	//----------------------------------------------------------------------------------
+	
 	$("#register-properties").click(function(event){
 		event.preventDefault();
 		var err = false; var _this = this;
@@ -205,35 +324,7 @@
 		$("#form-request").empty();
 		$("#metod-block-message").empty();
 	});
-	$("#save-profile").click(function(event){
-		event.preventDefault();
-		var err = false;
-		var user_password = $("#login-password").val();
-		var user_confirm_password = $("#confirm-password").val();
-		$(".valid-required").tooltip("destroy");$("#block-message").html('');
-		$(".valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
-		if(!mt.matches_parameters(user_password,user_confirm_password)){$("#confirm-password").attr('data-original-title','Passwords do not match').tooltip('show');return false;}
-		if(!err && !mt.minLength(user_password,6)){$("#login-password").attr('data-original-title','length of least 6 characters').tooltip('show');err = true;}
-		if(!err){
-				var postdata = mt.formSerialize($(".FieldSend"));
-				if($("#subcribe").is(":checked")){postdata = postdata+'&subcribe=1';}else{postdata = postdata+'&subcribe=0';}
-				$.post(mt.baseURL+"save-profile",{'postdata':postdata},
-					function(data){
-						$("#block-message").html(data.message);
-						if(data.status){
-							mt.setJsonRequest(data.new_data,'html');
-							$("#login-password").val('');
-							$("#confirm-password").val('');
-							$("#div-view-account-broker").removeClass('hidden');
-							$("#div-edit-account-broker").addClass('hidden');
-						}
-					},"json");
-			}
-	});
-	$("#edit-profile").click(function(){
-		$("#div-view-account-broker").addClass('hidden');
-		$("#div-edit-account-broker").removeClass('hidden');
-	});
+	
 	$("#set-properties-auto-data").click(function(){
 		$(".valid-required").tooltip('destroy');
 		$("#div-account-properties").hide().addClass('hidden');

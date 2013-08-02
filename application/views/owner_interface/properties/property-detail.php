@@ -14,9 +14,15 @@
 				<div class="navbar">
 					<div class="navbar-inner">
 					<?php if($this->session->userdata('search_sql')):?>
-						<?=anchor(OWNER_START_PAGE.'/search/result','Back to search result','class="btn btn-link"');?>
+						<?=anchor('homeowner/search/result','Back to search result','class="btn btn-link"');?>
+					<?php elseif($this->uri->segment(2) == 'match'):?>
+						<?=anchor($this->session->userdata('backpath'),'Back to match','class="btn btn-link"');?>
+					<?php elseif($this->uri->segment(2) == 'instant-trade'):?>
+						<?=anchor($this->session->userdata('backpath'),'Back to instant trade','class="btn btn-link"');?>
+					<?php elseif($this->uri->segment(2) == 'favorite'):?>
+						<?=anchor($this->session->userdata('backpath'),'Back to favorite list','class="btn btn-link"');?>
 					<?php else:?>
-						<?=anchor($this->session->userdata('backpath'),'Back to my properties','class="btn btn-link"');?>
+						<?=anchor($this->session->userdata('backpath'),'Back to properties list','class="btn btn-link"');?>
 					<?php endif;?>
 					</div>
 				</div>
@@ -24,7 +30,9 @@
 			<div class="row">
 			<?php if($property):?>
 				<div class="span6">
+				<?php if($this->session->userdata('current_property') === FALSE || $this->owner['seller'] || count($select) > 1):?>
 					<?php $this->load->view("owner_interface/forms/select-property");?>
+				<?php endif;?>
 					<ul class="nav nav-tabs" id="myTab">
 					<?php if($images):?>
 						<li class="active"><a href="#photos">Photos</a></li>
@@ -52,10 +60,12 @@
 					<?php endif;?>
 					</div>
 					<div class="property-actions">
-					<?php if($property['owner'] == $this->account['id']):?>
+				<?php if($property['owner'] == $this->account['id']):?>
 						<a href="<?=site_url(OWNER_START_PAGE.'/edit/'.$property['id']);?>" class="btn btn-link btn-mini" type="button">Edit property</a>
+					<?php if($this->owner['seller']):?>
 						<a class="btn btn-mini btn-link link-operation-account" href="#confirm-user" data-toggle="modal" data-src="<?=$property['id'];?>" data-url="<?=site_url(BROKER_START_PAGE.'/delete');?>">Delete property</a>
 					<?php endif;?>
+				<?php endif;?>
 					<?php if($property['status'] != 17):?>
 						<?php if(($property['id'] != $this->session->userdata('current_property'))):?>
 							<?php if(!$property['potentialby']):?>
@@ -67,7 +77,7 @@
 									<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$property['id'];?>">Add to favorite</button>
 								<?php endif;?>
 							<?php else:?>
-									<h3>Already added to potential by</h3>
+									<p class="property-owner">Already added to potential by</p>
 								<?php endif;?>
 						<?php else:?>
 								<button class="btn btn-mini btn-link disabled" disabled="disabled">Add to favorite</button>
@@ -76,7 +86,7 @@
 					</div>
 				</div>
 				<div class="span3">
-					<h1 class="pp-title">HT-<?=$property['id'].'<br/>'.$property['address1'].'<br/>'.$property['city'].', '.$property['state'].' '.$property['zip_code'];?></h1>
+					<small>HT-<?= $property['id']; ?></small><br/><h1 class="pp-title"><?= $property['address1'].'<br/>'.$property['city'].', '.$property['state'].' '.$property['zip_code'];?></h1>
 					<h2 class="pp">Property Details</h2>
 					<p>
 						<strong>Foreclosure:</strong> $<?=$property['price'];?> <br/>
@@ -88,16 +98,16 @@
 					</p>
 					<h2 class="pp">Description</h2>
 					<p><?=$property['description'];?></p>
-					<?php if($property['status'] < 17 && isset($property['email'])):?>
+				<?php if($property['status'] < 17 && isset($property['email'])):?>
 					<h2 class="pp">Contacts</h2>
 					<p>
 						<strong>Phone:</strong> <?=$property['phone'];?><br/>
 						<strong>Cell:</strong> <?=$property['cell'];?><br/>
 						<strong>Email:</strong> <?=$property['email'];?>
 					</p>
-					<?php else:?>
+				<?php else:?>
 					<p>Not from our listing</p>
-					<?php endif;?>
+				<?php endif;?>
 				</div>
 			<?php else:?>
 				<h3>Information is missing</h3>

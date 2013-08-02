@@ -1,4 +1,3 @@
-<?php if($this->session->userdata('current_property') === FALSE || $this->owner['seller'] || count($select) > 1):?>
 <select class="span6 select-property" name="current_property">
 <?php if($this->session->userdata('current_property') === FALSE):?>
 	<option value="" selected="selected">Select property</option>
@@ -9,4 +8,3 @@
 	</option>
 <?php endfor;?>
 </select>
-<?php endif;?>

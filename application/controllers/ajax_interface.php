@@ -772,8 +772,7 @@ class Ajax_interface extends MY_Controller{
 			show_error('Аccess denied');
 		endif;
 		$json_request = array('status'=>FALSE,'message'=>'Profile saved','new_data'=>array(),'redirect'=>'');
-		$data = trim($this->input->post('postdata'));
-		if($data):
+		if($data = trim($this->input->post('postdata'))):
 			$data = preg_split("/&/",$data);
 			for($i=0;$i<count($data);$i++):
 				$dataid = preg_split("/=/",$data[$i]);
@@ -803,8 +802,9 @@ class Ajax_interface extends MY_Controller{
 					unset($dataval['password']);unset($dataval['confirm']);unset($dataval['subcribe']);unset($dataval['id']);
 					if(isset($dataval['company'])):
 						$this->load->model('company');
-						$dataval['company'] = $this->company->read_field($dataval['company'],'company','title');
-						if(empty($dataval['compant'])):
+						if($companyTitle = $this->company->read_field($dataval['company'],'company','title')):
+							$dataval['company'] = $companyTitle;
+						else:
 							$dataval['company'] = 'The company is not listed';
 						endif;
 					endif;
@@ -828,21 +828,23 @@ class Ajax_interface extends MY_Controller{
 			else:
 				$json_request['redirect'] = site_url(OWNER_START_PAGE);
 			endif;
-			$images = $this->images->read_records($propertyID);
-			for($i=0;$i<count($images);$i++):
-				$this->filedelete($images[$i]['photo']);
-			endfor;
-			$this->images->delete_records($propertyID);
-			$owner = $this->properties->read_field($propertyID,'properties','owner');
-			$ownerID = $this->users->read_field($owner,'users','account');
-			$this->properties->delete_record($propertyID,'properties');
-			$this->users->delete_record($owner,'users');
-			$this->owners->delete_record($ownerID,'owners');
-			$desiredPropert = $this->desired_properties->getDesiredByPropertyID($propertyID);
-			$this->desired_properties->delete_record($desiredPropert['id'],'desired_properties');
-			$json_request['status'] = TRUE;
-			$this->session->unset_userdata(array('current_property'=>'','property_id'=>''));
-			$this->session->set_userdata('msgs','Property deleted');
+			if($this->account['group'] == 2 || $this->owner['seller']):
+				$images = $this->images->read_records($propertyID);
+				for($i=0;$i<count($images);$i++):
+					$this->filedelete($images[$i]['photo']);
+				endfor;
+				$this->images->delete_records($propertyID);
+				$owner = $this->properties->read_field($propertyID,'properties','owner');
+				$ownerID = $this->users->read_field($owner,'users','account');
+				$this->properties->delete_record($propertyID,'properties');
+				$this->users->delete_record($owner,'users');
+				$this->owners->delete_record($ownerID,'owners');
+				$desiredPropert = $this->desired_properties->getDesiredByPropertyID($propertyID);
+				$this->desired_properties->delete_record($desiredPropert['id'],'desired_properties');
+				$json_request['status'] = TRUE;
+				$this->session->unset_userdata(array('current_property'=>'','property_id'=>''));
+				$this->session->set_userdata('msgs','Property deleted');
+			endif;
 		else:
 			$json_request['message'] = 'Error deleting<hr/>';
 		endif;

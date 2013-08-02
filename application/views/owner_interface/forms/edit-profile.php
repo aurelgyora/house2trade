@@ -1,5 +1,5 @@
-<?=form_open($this->uri->uri_string(),array('class'=>'form-horizontal')); ?>
-	<legend>Account</legend>
+<?=form_open($this->uri->uri_string(),array('class'=>'form-horizontal','id'=>'form-edit-property-info')); ?>
+	<legend>Account data</legend>
 	<div class="span4">
 		<fieldset>
 			<div class="control-group">
@@ -25,25 +25,6 @@
 		</fieldset>
 	</div>
 	<div class="clear"></div>
-	<legend>Company</legend>
-	<div class="span4">
-		<fieldset>
-			<div class="control-group">
-				<label for="company">Company name*: </label>
-				<select class="FieldSend" name="company">
-				<option value="0">The company is not listed</option>
-				<?php for($i=0;$i<count($companies);$i++):?>
-					<option value="<?=$companies[$i]['id'];?>" <?=($companies[$i]['id'] == $profile['info']['company'])?'selected="selected"':'';?>><?=$companies[$i]['title'];?></option>
-				<?php endfor;?>
-				</select>
-			</div>
-			<div class="control-group">
-				<label for="cphone">Company license: </label>
-				<input class="span4 FieldSend" name="license" <?=TOOLTIP_FIELD_BLANK;?> type="text" value="<?=($profile['info']['license'])?$profile['info']['license']:'';?>">
-			</div>
-		</fieldset>
-	</div>
-	<div class="clear"></div>
 <?php if($profile['id'] == $this->account['id']):?>
 	<legend>Change password</legend>
 	<div class="span4">
@@ -59,17 +40,17 @@
 		</fieldset>
 	</div>
 	<div class="clear"></div>
-	<legend>Subscribe</legend>
-	<div class="span9">
+	<div class="span9 hidden">
 		<p class="register-check">
 			<span class="checky">
-				<input <?=($profile['info']['subcribe'])?'checked="checked" ':'';?> id="subcribe" name="subcribe" type="checkbox" value="1">
+				<input id="subcribe" name="subcribe" type="checkbox" value="0">
 			</span>
 			Add me to the House2Trade mailing list to receive announcements.
 		</p>
 	</div>
 	<div class="clear"></div>
 	<div class="form-actions">
+		<div class="form-request"></div>
 		<button class="btn btn-success" id="save-profile" type="submit" name="submit" value="send">Save profile</button>
 	</div>
 <?php endif;?>

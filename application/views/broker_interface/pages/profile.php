@@ -43,8 +43,8 @@
 					</div>
 					<div class="clear"></div>
 					<div class="form-actions">
-						<button class="btn btn-success" id="edit-profile">Edit information</button>
-						<span id="block-message"></span>
+						<div class="form-request"></div>
+						<button class="btn btn-success" id="edit-profile">Edit profile</button>
 					</div>
 				</div>
 				<div class="clear"></div>

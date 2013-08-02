@@ -4,6 +4,7 @@
 <script type="text/javascript" src="<?=site_url('js/libs/base.js');?>"></script>
 <script type="text/javascript" src="<?=site_url('js/logined.js');?>"></script>
 <script type="text/javascript" src="<?=site_url('js/cabinet/selects.js');?>"></script>
+<script type="text/javascript" src="<?=site_url('js/cabinet/owner.js');?>"></script>
 <script type="text/javascript">
 <?php if($this->uri->total_segments() == 2):?>
 	$("li[data-active='<?=$this->uri->segment(2);?>']").addClass('active');

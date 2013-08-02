@@ -10,10 +10,12 @@
 			<hr/>
 			<?php $this->load->view("owner_interface/includes/rightbar");?>
 			<div class="span9">
+			<?php if($this->session->userdata('current_property') === FALSE || $this->owner['seller'] || count($select) > 1):?>
 				<div class="navbar">
-				<?php $this->load->view("owner_interface/forms/set-active-property");?>
+					<?php $this->load->view("owner_interface/forms/set-active-property");?>
 				</div>
 				<div class="clear"></div>
+			<?php endif;?>
 		<?php if($this->session->userdata('current_property') === FALSE || !$match):?>
 				<p>Match is missing or is not selected current seller</p>
 		<?php else:?>
@@ -31,12 +33,10 @@
 		<?php elseif($match['status'] == 0 && $match[$match['my_status_field']] == 1):?>
 			<div class="alert alert-info">
 				You have approved the match!
-				<!--<a href="<?=site_url('broker/match?action=cancel&match='.$match['id'].'&field='.$match['my_status_field']);?>">Click to restore</a>-->
 			</div>
 		<?php else:?>
 			<div class="alert alert-info">
 				The match cycle is approved by all participants!
-				<!--<a href="<?=site_url('broker/match?action=cancel&match='.$match['id'].'&field='.$match['my_status_field']);?>">Click to restore</a>-->
 			</div>
 		<?php endif;?>
 			<?php array_push($properties,$properties[0]);?>
@@ -47,7 +47,9 @@
 					</a>
 					<div class="media-body">
 						<h4 class="media-heading">
-							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$properties[$i]['id']);?>"><?=$properties[$i]['address1'];?></a>
+							<a href="<?=site_url('homeowner/'.$this->uri->segment(2).'/information/'.$properties[$i]['id']);?>">
+								<small>HT-<?=$properties[$i]['id'];?></small> <?=$properties[$i]['address1'];?>
+							</a>
 							<span><?=$properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code']; ?></span>
 						</h4>
 						<p>
@@ -59,7 +61,7 @@
 							<?= ucfirst($properties[$i]['type']); ?> Home <br/>
 						</p>
 						<?php if($properties[$i]['id'] == $this->session->userdata('current_property')):?>
-							<p>This is your property</p>
+							<p class="property-owner">This is your property</p>
 						<?php endif;?>
 					</div>
 				</div>
@@ -73,9 +75,9 @@
 					<?php endif?>
 					%
 					<?php if($match['status'.$matchIndex] == 1):?>
-						<p class="text-success">Approve</p>
+						<p class="property-owner text-success">Approved</p>
 					<?php else:?>
-						<p class="text-info">Not approve</p>
+						<p class="property-owner text-info">Not approved</p>
 					<?php endif?>
 				<?php endif;?>
 			<?php endfor;?>

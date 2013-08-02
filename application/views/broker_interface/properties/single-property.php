@@ -25,7 +25,9 @@
 					</a>
 					<div class="media-body">
 						<h4 class="media-heading">
-							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$property['id']);?>"><small>HT-<?=$property['id'].'</small> '.$property['address1'];?></a>
+							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$property['id']);?>">
+								<small>HT-<?=$property['id'];?></small> <?=$property['address1'];?>
+							</a>
 							<span><?= $property['city'].', '.$property['state'].' '.$property['zip_code']; ?></span>
 						</h4>
 						<p>
@@ -36,17 +38,6 @@
 							<?=$property['lotsize'];?> Acres <br/>
 							<?= ucfirst($property['type']); ?> Home
 						</p>
-						<!-- 
-						<p><em><?=word_limiter($property['description'],50);?></em></p>
-						<p>
-							For Sale: $<?=$property['price'];?> <br/>
-							Bedrooms: <?=$property['bedrooms'];?> beds <br/>
-							Bathrooms: <?=$property['bathrooms'];?> baths <br/>
-							<?= ucfirst($property['type']); ?>: <?=$property['sqf'];?> sq ft<br/>
-							Lot: <?= $property['sqf'];?> sq ft <br/>
-							Tax: $<?= $property['tax']; ?>
-						</p>
-						-->
 						<?=getPropertyStatus($property['id'],$property['status'],$this->profile['group']);?>
 					</div>
 				</div>

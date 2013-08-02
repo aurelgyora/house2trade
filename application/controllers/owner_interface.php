@@ -2,7 +2,6 @@
 
 class Owner_interface extends MY_Controller{
 	
-	var $owner = array('seller'=>FALSE);
 	var $per_page = PER_PAGE_DEFAULT;
 	var $offset = 0;
 	
@@ -16,8 +15,7 @@ class Owner_interface extends MY_Controller{
 			$this->owner['seller'] = $this->owners->read_field($this->profile['account'],'owners','seller');
 			if($this->owner['seller'] == 0 && !$this->session->userdata('current_property')):
 				$this->load->model('properties');
-				$property = $this->properties->record_exist('properties','owner',$this->account['id']);
-				if($property):
+				if($property = $this->properties->record_exist('properties','owner',$this->account['id'])):
 					$this->session->set_userdata('current_property',$property);
 				endif;
 			endif;
@@ -189,6 +187,42 @@ class Owner_interface extends MY_Controller{
 		$this->load->view("owner_interface/pages/match",$pagevar);
 	}
 	
+	public function recommendedProperty(){
+		
+		$this->load->model(array('desired_properties','union','property_type'));
+		$from = (int)$this->uri->segment(4);
+		
+		$pagevar = array(
+			'select' => $this->union->selectOwnerProperties($this->account['id']),
+			'property_type'=>$this->property_type->read_records('property_type'),
+			'desired_property' => array(),
+			'properties' => array(),
+			'pages' => NULL,
+		);
+		if($this->session->userdata('current_property') == FALSE):
+			$this->session->set_userdata('current_property',0);
+		else:
+			if(!$pagevar['desired_property'] = $this->desired_properties->getDesiredByPropertyID($this->session->userdata('current_property'))):
+				$this->load->model('properties');
+				if($mainProperty = $this->properties->read_record($this->session->userdata('current_property'),'properties')):
+					$desiredPropertyID = $this->createClearDesiredProperty($mainProperty);
+					$pagevar['desired_property'] = $this->desired_properties->read_record($desiredPropertyID,'desired_properties');
+				endif;
+			endif;
+			if(!empty($pagevar['desired_property']['zip_code'])):
+				if($pagevar['properties'] = $this->union->recommendedList($pagevar['desired_property'],7,$from)):
+					$pagevar['pages'] = $this->pagination('broker/recommended',4,$this->union->recommendedCount($pagevar['desired_property']),7);
+					$pagevar['properties'] = $this->propertiesImagesTypes($pagevar['properties'],TRUE);
+					$pagevar['properties'] = $this->propertiesPotentiaByAndFavorite($pagevar['properties']);
+				endif;
+			endif;
+			$this->session->set_userdata('property_id',$this->session->userdata('current_property'));
+		endif;
+		$this->session->set_userdata('backpath',uri_string());
+		$this->load->view("owner_interface/properties/recommended",$pagevar);
+	}
+	
+	
 	/********************************************* properties ********************************************************/
 	
 	public function properties(){
@@ -273,7 +307,7 @@ class Owner_interface extends MY_Controller{
 		$this->load->view("owner_interface/properties/property-detail",$pagevar);
 	}
 	
-	public function edit_property(){
+	public function editProperty(){
 
 		$current_property = $this->session->userdata('property_id');
 		if($this->uri->total_segments() == 4):
@@ -282,18 +316,20 @@ class Owner_interface extends MY_Controller{
 		elseif(!$current_property && $this->uri->total_segments() == 3):
 			redirect(OWNER_START_PAGE);
 		endif;
-		$this->load->model('properties');
-		$this->load->model('images');
-		$this->load->model('property_type');
+		$this->load->model(array('properties','images','property_type'));
 		$pagevar = array(
 			'property' => $this->properties->read_record($current_property,'properties'),
+			'desired_property' => array(),
 			'images' => $this->images->read_records($current_property,$this->account['id']),
 			'property_type'=>$this->property_type->read_records('property_type')
 		);
 		if($pagevar['property']['owner'] != $this->account['id']):
 			show_error('Access Denied!');
 		endif;
+		$this->load->model('desired_properties');
+		if(!$pagevar['desired_property'] = $this->desired_properties->getDesiredByPropertyID($pagevar['property']['id'],'desired_properties')):
+			$this->createClearDesiredProperty($pagevar['property']);
+		endif;
 		$this->load->view("owner_interface/properties/property-card",$pagevar);
 	}
-
 }

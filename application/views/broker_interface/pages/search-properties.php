@@ -82,13 +82,14 @@
 						</a>
 						<div class="media-body">
 							<h4 class="media-heading">
-								<a href="<?=site_url('broker/search/information/'.$properties[$i]['id']);?>"><?= $properties[$i]['address1'];?></a>
+								<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$properties[$i]['id']);?>">
+									<small>HT-<?=$properties[$i]['id'];?></small> <?=$properties[$i]['address1'];?>
+								</a>
 								<span><?= $properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code']; ?></span>
 							</h4>
 							<?php if($properties[$i]['status'] == 17):?>
 								<small>Property is not in our listing</small>
 							<?php endif;?>
-							<p><em><?=word_limiter($properties[$i]['description'],50);?></em></p>
 							<p>
 								$<?=$properties[$i]['price'];?> <span class="separator">|</span> 
 								<?=$properties[$i]['bedrooms'];?> Bd <span class="separator">|</span> 
@@ -108,7 +109,7 @@
 						<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
 					<?php endif;?>
 				<?php else:?>
-						<h4>Already added to potential by</h4>
+						<p class="property-owner">Already added to potential by</p>
 				<?php endif;?>
 			<?php endif;?>
 					</div>

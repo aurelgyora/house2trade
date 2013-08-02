@@ -11,7 +11,7 @@
 			<?php $this->load->view("broker_interface/includes/rightbar");?>
 			<div class="span9">
 				<div class="navbar">
-				<?php $this->load->view("broker_interface/forms/select-property");?>
+					<?php $this->load->view("broker_interface/forms/select-property");?>
 				<?php if($this->uri->segment(2) == 'properties'):?>
 					<a href="<?=site_url('broker/register-properties');?>" class="btn btn-small btn-link" type="button">Add new Property</a>
 				<?php endif;?>
@@ -25,7 +25,9 @@
 					</a>
 					<div class="media-body">
 						<h4 class="media-heading">
-							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$properties[$i]['id']);?>"><small>HT-<?=$properties[$i]['id'].'</small> '.$properties[$i]['address1'];?></a>
+							<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$properties[$i]['id']);?>">
+								<small>HT-<?=$properties[$i]['id'];?></small> <?=$properties[$i]['address1'];?>
+							</a>
 							<span><?= $properties[$i]['city'].', '.$properties[$i]['state'].' '.$properties[$i]['zip_code']; ?></span>
 						</h4>
 						<p>
