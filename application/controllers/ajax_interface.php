@@ -247,41 +247,27 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 	
-	function seller_signup_properties(){
+	function sellerSignupProperties(){
 		
 		if(!$this->input->is_ajax_request()):
 			show_error('Аccess denied');
 		endif;
 		$json_request = array('status'=>FALSE,'message'=>'Signup is impossible');
-		$data = trim($this->input->post('postdata'));
-		if($data):
-			$data = preg_split("/&/",$data);
-			for($i=0;$i<count($data);$i++):
-				$dataid = preg_split("/=/",$data[$i]);
-				if(!isset($dataid[0]) || !isset($dataid[1])):
-					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> An error while retrieving the data. try again';
-					echo json_encode($json_request);
-					exit();
-				else:
-					$dataval[trim($dataid[0])] = trim(htmlspecialchars($dataid[1]));
+		if($propertyData = $this->getPropertySingUpData($this->input->post('postdata'))):
+			$this->load->model(array('properties','desired_properties'));
+			if(!$this->properties->properties_exits($propertyData['state'],$propertyData['zip_code'])):
+				$propertyData['user_id'] = $this->account['id'];
+				if($propertyID = $this->properties->insert_record($propertyData)):
+					$this->getPropertyImages($propertyData,$propertyID);
+					$propertyData['desired_property_id'] = $propertyID;
+					$this->desired_properties->insert_record($propertyData);
 				endif;
-			endfor;
-			$this->load->model('owners');
-			if($dataval && $this->owners->read_field($this->profile['account'],'owners','seller')):
-				$this->load->model('properties');
-				if(!$this->properties->properties_exits($dataval['state'],$dataval['zip_code'])):
-					$dataval['user_id'] = $this->account['id'];
-					$property_id = $this->properties->insert_record($dataval);
-					if($property_id):
-						$this->getPropertyImages($dataval,$property_id);
-					endif;
-					$this->properties->update_field($property_id,'status',1,'properties');
-					$json_request['status'] = TRUE;
-					$json_request['message'] = '<img src="'.site_url("img/check.png").'" alt="" /> Property added successfully';
-					$this->session->set_userdata('property_id',$property_id);
-				else:
-					$json_request['message'] = '<img src="'.site_url("img/no-check.png").'" alt="" /> Property already exist';
-				endif;
+				$this->properties->update_field($propertyID,'status',$this->profile['status'],'properties');
+				$json_request['status'] = TRUE;
+				$this->session->set_userdata(array('current_property'=>$propertyID,'property_id'=>$propertyID));
+				$json_request['message'] = 'Property added';
+			else:
+				$json_request['message'] = 'Property already exist';
 			endif;
 		endif;
 		echo json_encode($json_request);

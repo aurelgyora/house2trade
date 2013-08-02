@@ -73,6 +73,7 @@
 	<div class="clear"></div>
 	<div class="form-actions">
 		<div class="form-request"></div>
+		<span class="wait-request hidden"><img src="<?=site_url('img/loading.gif');?>" alt="" /></span>
 		<button class="btn btn-success btn-save-main-property" type="submit" name="submit" value="send">Save main property</button>
 	</div>
 <?= form_close(); ?>

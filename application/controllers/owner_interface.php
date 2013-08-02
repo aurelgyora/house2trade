@@ -222,7 +222,6 @@ class Owner_interface extends MY_Controller{
 		$this->load->view("owner_interface/properties/recommended",$pagevar);
 	}
 	
-	
 	/********************************************* properties ********************************************************/
 	
 	public function properties(){

@@ -3,7 +3,7 @@
  */
 
 $(function(){
-	$("button.btn-broker-register-property").click(function(){
+	$("button.btn-owner-register-property").click(function(){
 		var step = $(this).attr('data-register-step').trim();
 		var _form = $("#form-property-register");
 		var _this = this;
@@ -14,8 +14,10 @@ $(function(){
 					url: mt.baseURL+"valid/property-exist",data:{'postdata':postdata},type:'POST',dataType:'json',
 					beforeSend: function(){
 						$(_form).defaultValidationErrorStatus();
+						$(".wait-request").removeClass('hidden');
 					},
 					success: function(data,textStatus,xhr){
+						$(_form).defaultValidationErrorStatus();
 						if(data.status == false){
 							$("#form-request").html(data.message);
 						}else{
@@ -27,28 +29,34 @@ $(function(){
 							$("#set-properties-auto-data").remove();
 							$(_this).html('Add property');
 							$("html,body").animate({scrollTop:0},400);
+							$("#photos-block-message").html(data.message);
 						}
 					},
 					error: function(xhr,textStatus,errorThrown){
+						$(_form).defaultValidationErrorStatus();
 						alert('Error!');
 					}
 				});
 			}else if(step == 2){
 				var postdata = mt.formSerialize($(_form).find('.FieldSend'));
 				$.ajax({
-					url: mt.baseURL+'signup-property',data: {'postdata':postdata},type:'POST',dataType:'json',
+					url: mt.baseURL+'seller-signup-properties',data: {'postdata':postdata},type:'POST',dataType:'json',
 					beforeSend: function(){
 						$(_form).defaultValidationErrorStatus();
+						$(".wait-request").removeClass('hidden');
 					},
 					success: function(data,textStatus,xhr){
+						$(_form).defaultValidationErrorStatus();
 						if(data.status){
 							$("#div-choise-metod").remove();
 							$("#div-account-properties").remove();
 							$("#div-insert-photo-properties").removeClass('hidden');
 							$("#photos-block-message").html(data.message);
+							$("html,body").animate({scrollTop:0},400);
 						}
 					},
 					error: function(xhr,textStatus,errorThrown){
+						$(_form).defaultValidationErrorStatus();
 						alert('Error!');
 					}
 				});

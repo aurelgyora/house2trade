@@ -18,13 +18,13 @@
 				</div>
 				<div class="clear"></div>
 				<div id="div-choise-metod">
-				<h1>New property</h1>
-				<p>
-					You can get information about your property, specifying the address and ZIP code or state name. 
-					You also can fill all fields about your property manually. In this case you should click on the 
-					"Add property manually" button.
-				</p>
-				<?php $this->load->view('forms/metod-properties-register');?>
+					<h1>New property</h1>
+					<p>
+						You can get information about your property, specifying the address and ZIP code or state name. 
+						You also can fill all fields about your property manually. In this case you should click on the 
+						"Add property manually" button.
+					</p>
+					<?php $this->load->view('forms/metod-properties-register');?>
 				</div>
 				<div class="clear"></div>
 				<div id="div-account-properties" class="hidden">
