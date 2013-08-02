@@ -5,7 +5,6 @@
 		<nav class="grid_8">
 		<?php if ( $this->loginstatus ) : ?>
 			<ul class="auth">
-				<!-- <li><?=$this->user['name'];?></li> -->
 				<?php 
 				$cabinetLink = '';
 				switch($this->account['group']):
@@ -27,7 +26,6 @@
 		<?php endif; ?>
 			<ul class="main-nav">
 				<li><?=anchor('','Home');?></li>
-				<!--<li><?=anchor('search','Search');?></li>-->
 				<li><?=anchor('how-it-works','How It Works');?></li>
 				<li><?=anchor('trading-concepts','Trading Concepts');?></li>
 				<li><?=anchor('about-us','About Us');?></li>
