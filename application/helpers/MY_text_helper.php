@@ -37,7 +37,7 @@
 			<button type="button" data-property-status="11" class="change-property-status btn btn-mini<?=($status == 11)?' btn-success active':'';?>">DEACTIVATED</button>
 		<?php endif;?>
 		<?php if($group == 3):?>
-			<button type="button" data-property-status="12" class="change-property-status btn btn-mini<?=($status == 11)?' btn-success active':'';?>">DEACTIVATED</button>
+			<button type="button" data-property-status="12" class="change-property-status btn btn-mini<?=($status == 12)?' btn-success active':'';?>">DEACTIVATED</button>
 		<?php endif;?>
 		</div>
 		<?php return ob_get_clean();
