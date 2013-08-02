@@ -16,7 +16,7 @@
 			<div class="span4">
 				<div class="control-group">
 					<label for="email">Email*: </label>
-					<input id="login-email" class="span2 valid-required unique-email FieldSend" name="email" type="text" value="">
+					<input id="login-email" class="span2 valid-required FieldSend" name="email" type="text" value="">
 				</div>
 			</div>
 		</fieldset>

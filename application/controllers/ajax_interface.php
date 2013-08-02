@@ -194,14 +194,9 @@ class Ajax_interface extends MY_Controller{
 		$json_request = array('status'=>TRUE,'message'=>'');
 		if($propertyData = $this->getPropertySingUpData($this->input->post('postdata'))):
 			$this->load->model('properties');
-			if(!$this->users->user_exist('email',$propertyData['email'])):
-				if($this->properties->properties_exits($propertyData['state'],$propertyData['zip_code'])):
-					$json_request['message'] = 'Property already exist';
-					$json_request['status'] = FALSE;
-				endif;
-			else:
+			if($this->properties->properties_exits($propertyData['state'],$propertyData['zip_code'])):
+				$json_request['message'] = 'Property already exist';
 				$json_request['status'] = FALSE;
-				$json_request['message'] = 'Homeowner already exist';
 			endif;
 		endif;
 		echo json_encode($json_request);
@@ -214,36 +209,39 @@ class Ajax_interface extends MY_Controller{
 		endif;
 		$json_request = array('status'=>FALSE,'message'=>'Signup is impossible');
 		if($propertyData = $this->getPropertySingUpData($this->input->post('postdata'))):
-			$this->load->model(array('properties','desired_properties'));
-			if(!$this->users->user_exist('email',$propertyData['email'])):
-				if(!$this->properties->properties_exits($propertyData['state'],$propertyData['zip_code'])):
+			$this->load->model(array('properties','desired_properties','owners'));
+			if(!$this->properties->properties_exits($propertyData['state'],$propertyData['zip_code'])):
+				$registerNewUser = FALSE;
+				if(!$accountID = $this->users->user_exist('email',$propertyData['email'])):
 					$this->load->helper('string');
 					$propertyData['password'] = random_string('alnum',12);
-					$propertyData['user_id'] = $this->users->insert_record($propertyData);
-					if($propertyData['user_id']):
-						$this->load->model('owners');
-						$ownerID = $this->owners->insert_record($propertyData);
-						if($propertyID = $this->properties->insert_record($propertyData)):
-							$this->getPropertyImages($propertyData,$propertyID);
-							$propertyData['desired_property_id'] = $propertyID;
-							$this->desired_properties->insert_record($propertyData);
-						endif;
-						$this->users->update_field($propertyData['user_id'],'account',$ownerID,'users');
-						$this->users->update_field($propertyData['user_id'],'group',3,'users');
-						$this->properties->update_field($propertyID,'status',$this->profile['status'],'properties');
-						$this->parseAndSendMail(2,array(
-							'email'=>$propertyData['email'],'user_first_name'=>$propertyData['fname'],'user_last_name'=>$propertyData['lname'],
-							'user_login'=>$propertyData['email'],'user_password'=>$propertyData['password'],'cabinet_link'=>site_url(OWNER_START_PAGE)
-						));
-						$json_request['message'] = 'The letter with registration confirmation was sent to homeowner email';
-						$json_request['status'] = TRUE;
-						$this->session->set_userdata(array('current_property'=>$propertyID,'property_id'=>$propertyID));
+					$accountID = $this->users->insert_record($propertyData);
+					$ownerID = $this->owners->insert_record($propertyData);
+					$this->users->update_field($accountID,'account',$ownerID,'users');
+					$this->users->update_field($accountID,'group',3,'users');
+					$this->parseAndSendMail(2,array(
+						'email'=>$propertyData['email'],'user_first_name'=>$propertyData['fname'],'user_last_name'=>$propertyData['lname'],
+						'user_login'=>$propertyData['email'],'user_password'=>$propertyData['password'],'cabinet_link'=>site_url(OWNER_START_PAGE)
+					));
+					$registerNewUser = TRUE;
+					$json_request['message'] = 'The letter with registration confirmation was sent to homeowner email';
+				endif;
+				if($accountID):
+					$propertyData['user_id'] = $accountID;
+					if($propertyID = $this->properties->insert_record($propertyData)):
+						$this->getPropertyImages($propertyData,$propertyID);
+						$propertyData['desired_property_id'] = $propertyID;
+						$this->desired_properties->insert_record($propertyData);
 					endif;
-				else:
-					$json_request['message'] = 'Property already exist';
+					$this->properties->update_field($propertyID,'status',$this->profile['status'],'properties');
+					$json_request['status'] = TRUE;
+					$this->session->set_userdata(array('current_property'=>$propertyID,'property_id'=>$propertyID));
+					if($registerNewUser === FALSE):
+						$json_request['message'] = 'Property added';
+					endif;
 				endif;
 			else:
-				$json_request['message'] = 'Homeowner already exist';
+				$json_request['message'] = 'Property already exist';
 			endif;
 		endif;
 		echo json_encode($json_request);

@@ -5594,9 +5594,9 @@ a.thumbnail:focus {
   margin-top: 15px;
 }
 
-.media:first-child {
+/*.media:first-child {
   margin-top: 0;
-}
+}*/
 
 .media-object {
   display: block;

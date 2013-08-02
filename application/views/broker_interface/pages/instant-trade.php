@@ -200,7 +200,7 @@
 			<?php endif;?>
 			<?php if(!empty($levels['level6'])):?>
 				<h2>Level 6</h2>
-				<div class="cycle-blocks-5">
+				<div class="cycle-blocks-6">
 					<?php for($i=0;$i<count($levels['level6']);$i++):?>
 					<div class="media cycle-clocks-elements">
 						<a class="none pull-left" href="#">

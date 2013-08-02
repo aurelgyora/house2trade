@@ -103,7 +103,7 @@ form#search-properties { border: 1px solid #CCC; padding: 5px 20px; border-radiu
 .block-separator-3 { background: url('../img/separator_3.png') repeat-x; }
 .block-separator-4 { background: url('../img/separator_4.png') repeat-x; }
 
-.nav-cycle { width: auto; margin: 0 0 2em -8px; }
+.nav-cycle { width: auto; margin: 10px 0 2em -8px; }
 .nav-cycle li { width: 50px; float: left; margin: 8px; list-style: none }
 .nav-cycle a { width: 50px; padding: 3px; display: block; border: 1px solid #ccc; }
 .nav-cycle li.activeSlide a { background: #88f }

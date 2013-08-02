@@ -27,6 +27,7 @@ $(function(){
 							$("#set-properties-auto-data").remove();
 							$(_this).html('Add property');
 							$("html,body").animate({scrollTop:0},400);
+							$("#photos-block-message").html(data.message);
 						}
 					},
 					error: function(xhr,textStatus,errorThrown){
@@ -39,6 +40,7 @@ $(function(){
 					url: mt.baseURL+'signup-property',data: {'postdata':postdata},type:'POST',dataType:'json',
 					beforeSend: function(){
 						$(_form).defaultValidationErrorStatus();
+						$("#form-request").html('Please wait ...');
 					},
 					success: function(data,textStatus,xhr){
 						if(data.status){
