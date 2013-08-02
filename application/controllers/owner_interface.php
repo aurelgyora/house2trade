@@ -218,7 +218,7 @@ class Owner_interface extends MY_Controller{
 			endif;
 			$this->session->set_userdata('property_id',$this->session->userdata('current_property'));
 		endif;
-		$this->session->set_userdata('backpath',uri_string());
+		$this->session->set_userdata('backpath',site_url(uri_string()));
 		$this->load->view("owner_interface/properties/recommended",$pagevar);
 	}
 	
