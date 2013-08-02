@@ -26,15 +26,15 @@
 		<div class="span4">
 			<div class="control-group">
 				<label for="bathrooms">Bathrooms: </label>
-				<input class="span2 digital FieldSend" name="desired_bathrooms" type="text" value="<?=($desired_property['zip_code'])?$desired_property['bathrooms']:'';?>">
+				<input class="span2 digital FieldSend" name="desired_bathrooms" type="text" value="<?=($desired_property['bathrooms'])?$desired_property['bathrooms']:'';?>">
 			</div>
 			<div class="control-group">
 				<label for="bedrooms">Bedrooms: </label>
-				<input class="span2 digital FieldSend" name="desired_bedrooms" type="text" value="<?=($desired_property['zip_code'])?$desired_property['bedrooms']:'';?>">
+				<input class="span2 digital FieldSend" name="desired_bedrooms" type="text" value="<?=($desired_property['bedrooms'])?$desired_property['bedrooms']:'';?>">
 			</div>
 			<div class="control-group">
 				<label for="price">Max price*: </label>
-				<input class="span2 numeric-float valid-required FieldSend" name="desired_max_price" type="text" value="<?=($desired_property['zip_code'])?$desired_property['max_price']:'';?>">
+				<input class="span2 numeric-float valid-required FieldSend" name="desired_max_price" type="text" value="<?=($desired_property['max_price'])?$desired_property['max_price']:'';?>">
 			</div>
 		</div>
 	</fieldset>

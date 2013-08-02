@@ -206,11 +206,11 @@ class Broker_interface extends MY_Controller{
 					$pagevar['properties'] = $this->propertiesPotentiaByAndFavorite($pagevar['properties']);
 				endif;
 			endif;
+			$this->session->set_userdata('property_id',$this->session->userdata('current_property'));
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("broker_interface/properties/recommended",$pagevar);
 	}
-	
 	
 	/********************************************* properties ********************************************************/
 	

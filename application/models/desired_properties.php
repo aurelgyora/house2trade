@@ -43,7 +43,7 @@ class Desired_properties extends MY_Model{
 	}
 	
 	function update_record($id,$data){
-
+	
 		$this->db->set('zip_code',$data['desired_zip_code']);
 		$this->db->set('bathrooms',$data['desired_bathrooms']);
 		$this->db->set('bedrooms',$data['desired_bedrooms']);
