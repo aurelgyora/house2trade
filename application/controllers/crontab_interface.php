@@ -13,7 +13,6 @@ class Crontab_interface extends MY_Controller{
 		echo 'Начало работы: '.date("d.m.Y H:i:s").'<br/>';flush();
 		echo "\n---------------------------------------------<br/>\n";flush();
 		$this->load->model(array('match'));
-		
 		if($matches = $this->match->getWaitingMatches()):
 			foreach($matches as $key => $match):
 				$propertiesIDs = $this->getMatchPropertiesIDs($match);
@@ -21,6 +20,8 @@ class Crontab_interface extends MY_Controller{
 				$this->match->update_field($match['id'],'mailing_date',date("Y-m-d"),'match');
 				echo 'Номер Match ID:'.$match['id'].'<br/>';flush();
 			endforeach;
+		else:
+			echo 'No new Match<br/>';flush();
 		endif;
 		echo "\n---------------------------------------------\n<br/>";flush();
 		$exec_time = round((microtime(true) - $start_time),2);
