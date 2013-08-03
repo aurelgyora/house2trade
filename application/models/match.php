@@ -14,5 +14,13 @@ class Match extends MY_Model{
 		if(!empty($data)) return $data[0];
 		return NULL;
 	}
-	
+	function getWaitingMatches($status = 0){
+		
+		$querySting = "SELECT * FROM `match` WHERE (`status` = $status) AND (`mailing_date` IS NULL OR `mailing_date` < NOW())";
+		$query = $this->db->query($querySting);
+		if($data = $query->result_array()):
+			return $data;
+		endif;
+		return NULL;
+	}
 }

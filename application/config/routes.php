@@ -10,6 +10,7 @@ $route['valid/property-exist'] = "ajax_interface/propertyExist";
 /*************************************************** CRON INTRERFACE ***********************************************/
 $route['csv-export-properties'] = "scripts_interface/csvExportProperties";
 $route['remove-images-by-zipcode'] = "scripts_interface/removeImagesByZipcode";
+$route['sending-email-about-new-match'] = "crontab_interface/sendingEmailAboutNewMatch";
 
 /*************************************************** AJAX INTRERFACE ***********************************************/
 

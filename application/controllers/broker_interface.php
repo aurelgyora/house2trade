@@ -167,7 +167,7 @@ class Broker_interface extends MY_Controller{
 			'match' => array(),
 			'properties' => array(),
 		);
-		if($this->session->userdata('current_property') > 0):
+		if($this->session->userdata('current_property')):
 			$pagevar['match'] = $this->match->parseMatchPropertyID($this->session->userdata('current_property'));
 			$matchesPropertiesIDs = $this->getMatchPropertiesIDs($pagevar['match']);
 			$pagevar['properties'] = $this->getMatchPropertiesInformationList($matchesPropertiesIDs);
