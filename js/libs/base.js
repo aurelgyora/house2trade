@@ -113,6 +113,12 @@ $.fn.hideToolTip = function(){
 			}
 	});
 }
+mt.setDesiredPropertyData = function(){
+	$(".disired-city").val($("#property-city").val().trim());
+	$(".disired-state").val($("#property-state").val().trim());
+	$(".disired-zipcode").val($("#property-zipcode").val().trim());
+	
+}
 $(function(){
 	$.fn.exists = function(){return $(this).length;}
 	$.fn.emptyValue = function(){if($(this).val() == ''){return true;}else{return false;}}

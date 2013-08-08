@@ -30,6 +30,7 @@ $(function(){
 							$(_this).html('Add property');
 							$("html,body").animate({scrollTop:0},400);
 							$("#photos-block-message").html(data.message);
+							mt.setDesiredPropertyData();
 						}
 					},
 					error: function(xhr,textStatus,errorThrown){

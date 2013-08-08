@@ -18,6 +18,7 @@ class Match extends MY_Model{
 		
 		$now = date("Y-m-d");
 		$querySting = "SELECT * FROM `match` WHERE (`status` = $status) AND (`mailing_date` IS NULL OR `mailing_date` < '$now')";
+		//$querySting = "SELECT * FROM `match` WHERE (`status` = $status) AND `mailing_date` IS NULL";
 		$query = $this->db->query($querySting);
 		if($data = $query->result_array()):
 			return $data;

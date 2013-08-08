@@ -100,11 +100,11 @@
 			<div class="span4">
 				<div class="control-group">
 					<label for="city">City*: </label>
-					<input class="span2 valid-required FieldSend" name="desired_city" type="text" value="">
+					<input class="span2 valid-required FieldSend disired-city" name="desired_city" type="text" value="">
 				</div>
 				<div class="control-group">
 					<label for="state">State*: </label>
-					<input class="span2 valid-required FieldSend" name="desired_state" type="text" value="">
+					<input class="span2 valid-required FieldSend disired-state" name="desired_state" type="text" value="">
 				</div>
 				<div class="control-group">
 					<label for="type">Type*: </label>
@@ -116,7 +116,7 @@
 				</div>
 				<div class="control-group">
 					<label for="state">Zip code*: </label>
-					<input class="span2 valid-required FieldSend" name="desired_zip_code" type="text" value="">
+					<input class="span2 valid-required FieldSend disired-zipcode" name="desired_zip_code" type="text" value="">
 				</div>
 			</div>
 			<div class="span4">
