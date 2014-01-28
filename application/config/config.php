@@ -2,7 +2,7 @@
 
 $config['base_url'] 			= "http://house2trade/";
 $config['ckfinder_base_url']	= 'http://house2trade/download/';
-$config['ckfinder_base_dir']	= 's:/home/house2trade/www/download/';
+$config['ckfinder_base_dir']	= 'e:/home/house2trade/download/';
 $config['index_page'] 			= '';
 $config['uri_protocol']			= 'AUTO';
 $config['url_suffix'] 			= '';

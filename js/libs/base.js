@@ -3,7 +3,7 @@
  */
  
 var mt = mt || {};
-mt.baseURL = window.location.protocol+'//'+window.location.hostname+'/';
+mt.baseURL = window.location.protocol+'//'+window.location.hostname+'/dev/';
 mt.currentURL = window.location.href;
 mt.redirect = function(path){window.location=path;}
 mt.currentElement = 0;

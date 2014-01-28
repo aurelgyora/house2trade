@@ -15,10 +15,16 @@ class Crontab_interface extends MY_Controller{
 		$this->load->model(array('match'));
 		if($matches = $this->match->getWaitingMatches()):
 			foreach($matches as $key => $match):
-				$propertiesIDs = $this->getMatchPropertiesIDs($match);
-				$this->sendMultiMailsPropertiesIDs(12,$propertiesIDs);
-				$this->match->update_field($match['id'],'mailing_date',date("Y-m-d"),'match');
-				echo 'Номер Match ID:'.$match['id'].'<br/>';flush();
+				if(is_null($match['mailing_date']) || empty($match['mailing_date'])):
+					$propertiesIDs = $this->getMatchPropertiesIDs($match);
+					$this->sendMultiMailsPropertiesIDs(12,$propertiesIDs);
+					$this->match->update_field($match['id'],'mailing_date',date("Y-m-d"),'match');
+					echo 'Уведомление о новом. Номер Match ID:'.$match['id'].'<br/>';flush();
+				elseif($propertiesIDs = $this->getMatchPropertiesIDsNonZeroStatus($match)):
+					$this->sendMultiMailsPropertiesIDs(13,$propertiesIDs);
+					$this->match->update_field($match['id'],'mailing_date',date("Y-m-d"),'match');
+					echo 'Уведомление о незавершенном. Номер Match ID:'.$match['id'].'<br/>';flush();
+				endif;
 			endforeach;
 		else:
 			echo 'No new Match<br/>';flush();

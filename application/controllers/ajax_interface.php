@@ -972,4 +972,56 @@ class Ajax_interface extends MY_Controller{
 		echo json_encode($json_request);
 	}
 
+	function adminSearchProperty(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$json_request = array('status'=>FALSE,'redirect'=>site_url(ADM_START_PAGE.'/properties'),'messages'=>'');
+		if($data = $this->input->post('postdata')):
+			$data = preg_split("/&/",$data);
+			for($i=0;$i<count($data);$i++):
+				$dataid = preg_split("/=/",$data[$i]);
+				$dataval[$dataid[0]] = trim($dataid[1]);
+			endfor;
+			if($dataval):
+				$sql = 'SELECT properties.* FROM properties WHERE TRUE';
+				if(!empty($dataval['property_address'])):
+					$sql .= ' AND properties.address1 LIKE "%'.$dataval['property_address'].'%"';
+				endif;
+				if(!empty($dataval['property_zip'])):
+					$sql .= ' AND (properties.state LIKE "%'.$dataval['property_zip'].'%" OR properties.city LIKE "%'.$dataval['property_zip'].'%" OR properties.zip_code LIKE "%'.$dataval['property_zip'].'%")';
+				endif;
+				if(!empty($dataval['beds_num'])):
+					$sql .= ' AND properties.bedrooms = '.$dataval['beds_num'];
+				endif;
+				if(!empty($dataval['baths_num'])):
+					$sql .= ' AND properties.bathrooms = '.$dataval['baths_num'];
+				endif;
+				if(!empty($dataval['property_min_price'])):
+					$sql .= ' AND properties.price >= '.$dataval['property_min_price'];
+				endif;
+				if(!empty($dataval['property_max_price'])):
+					$sql .= ' AND properties.price <= '.$dataval['property_max_price'];
+				endif;
+				if(!empty($dataval['square_feet'])):
+					$sql .= ' AND properties.sqf >= '.$dataval['square_feet'];
+				endif;
+				if(!empty($dataval['type'])):
+					$sql .= ' AND properties.type = '.$dataval['type'];
+				endif;
+				$sql .= ' ORDER BY properties.address1 ASC, properties.state ASC, properties.zip_code ASC';
+				$this->load->model('properties');
+				if($properties = $this->properties->query_execute($sql)):
+					$this->session->set_userdata('search_sql',$sql);
+					$this->session->set_userdata('search_json_data',json_encode($dataval));
+					$json_request['status'] = TRUE;
+				else:
+					$json_request['message'] = 'Nothing found';
+				endif;
+			endif;
+		endif;
+		echo json_encode($json_request);
+	}
+
 }

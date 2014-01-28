@@ -286,6 +286,21 @@ class MY_Controller extends CI_Controller{
 		endif;
 	}
 	
+	public function getMatchPropertiesIDsNonZeroStatus($match){
+		
+		if(!empty($match)):
+			$propertiesIDs = array();
+			for($i=1;$i<=$match['level'];$i++):
+				if($match['status'.$i] == 0):
+					$propertiesIDs[] = $match['property_id'.$i];
+				endif;
+			endfor;
+			return array_reverse($propertiesIDs);
+		else:
+			return NULL;
+		endif;
+	}
+	
 	public function getMatchPropertiesInformationList($propertiesIDs){
 		
 		if(!is_null($propertiesIDs)):
@@ -505,8 +520,7 @@ class MY_Controller extends CI_Controller{
 		if(!$image):
 			$image = file_get_contents(getcwd().'/img/thumb.png');
 		endif;
-		header('Content-type: image/gif');
-		
+		header('Content-type: image/jpeg');
 		echo $image;
 	}
 	

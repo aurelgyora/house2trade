@@ -17,7 +17,9 @@
 						<a class="brand" href="<?=site_url(ADM_START_PAGE.'/properties');?>">Properties</a>
 					</div>
 				</div>
-				<?php $this->load->view('forms/select-chosen-property');?>
+				<div id="div-search-property">
+					<?php $this->load->view('admin_interface/forms/search-properties');?>
+				</div>
 				<?php $this->load->helper('text');?>
 			<?php for($i=0;$i<count($properties);$i++):?>
 				<div class="media">
@@ -52,8 +54,5 @@
 	</div>
 	<?php $this->load->view("admin_interface/includes/footer");?>
 	<?php $this->load->view("admin_interface/includes/scripts");?>
-	
-<script type="text/javascript" src="<?=site_url('js/vendor/chosen.jquery.js');?>"></script>
-<script type="text/javascript" src="<?=site_url('js/libs/chosen.js');?>"></script>
 </body>
 </html>

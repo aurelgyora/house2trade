@@ -2,8 +2,7 @@
  *  http://grapheme.ru/
  */
 
-(function($){
-	
+$(function(){
 	$("#edit-profile").click(function(){
 		$("#form-edit-property-info").defaultValidationErrorStatus();
 		$("#div-view-account-broker").addClass('hidden');
@@ -430,4 +429,4 @@
 		$("#addToPotentialBy > .modal-body > p:last").addClass('hidden').siblings('p').removeClass('hidden').siblings('#hidden-block').addClass('hidden').find('input').val('');
 		$("button.btn-comfirm-add-potential-by").html('Yes').removeClass('btn-success').addClass('btn-primary');
 	})
-})(window.jQuery);
+});

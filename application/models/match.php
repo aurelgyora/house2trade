@@ -16,9 +16,9 @@ class Match extends MY_Model{
 	}
 	function getWaitingMatches($status = 0){
 		
-		$now = date("Y-m-d");
-		$querySting = "SELECT * FROM `match` WHERE (`status` = $status) AND (`mailing_date` IS NULL OR `mailing_date` < '$now')";
-		//$querySting = "SELECT * FROM `match` WHERE (`status` = $status) AND `mailing_date` IS NULL";
+//		$now = date("Y-m-d");
+//		$querySting = "SELECT * FROM `match` WHERE (`status` = $status) AND (`mailing_date` IS NULL OR `mailing_date` < '$now')";
+		$querySting = "SELECT * FROM `match` WHERE `status` = $status";
 		$query = $this->db->query($querySting);
 		if($data = $query->result_array()):
 			return $data;

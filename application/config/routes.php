@@ -46,6 +46,8 @@ $route['add-to-potential-by'] = "ajax_interface/addToPotentialBy";
 $route['remove-to-potential-by'] = "ajax_interface/removeToPotentialBy";
 $route['get-property-zillow-api'] = "ajax_interface/getPropertyZillowAPI";
 
+$route['admin-search-properties'] = "ajax_interface/adminSearchProperty";
+
 /*************************************************** USERS INTRERFACE ***********************************************/
 
 $route['login'] = "users_interface/login";
@@ -75,9 +77,7 @@ $route['loadimage/:any/:num'] = "users_interface/loadimage";
 /*************************************************** BROKERS INTRERFACE ***********************************************/
 
 $route[BROKER_START_PAGE] = "broker_interface/properties";
-$route[BROKER_START_PAGE.'/full-list'] = "broker_interface/propertiesFullList";
-$route[BROKER_START_PAGE.'/full-list/from'] = "broker_interface/propertiesFullList";
-$route[BROKER_START_PAGE.'/full-list/from/:num'] = "broker_interface/propertiesFullList";
+$route[BROKER_START_PAGE.'/full-list(\/:any)*?'] = "broker_interface/propertiesFullList";
 
 $route['broker/:any/information'] = "broker_interface/propertyDetail";
 $route['broker/:any/information/:num'] = "broker_interface/propertyDetail";
@@ -88,21 +88,10 @@ $route[BROKER_START_PAGE.'/edit'] = "broker_interface/editProperty";
 $route[BROKER_START_PAGE.'/edit/:num'] = "broker_interface/editProperty";
 
 $route['broker/search'] = "broker_interface/searchProperty";
-$route['broker/search/result'] = "broker_interface/searchProperty";
-$route['broker/search/result/from'] = "broker_interface/searchProperty";
-$route['broker/search/result/from/:num'] = "broker_interface/searchProperty";
-
-$route['broker/favorite'] = "broker_interface/favoriteProperty";
-$route['broker/favorite/from'] = "broker_interface/favoriteProperty";
-$route['broker/favorite/from/:num'] = "broker_interface/favoriteProperty";
-
-$route['broker/recommended'] = "broker_interface/recommendedProperty";
-$route['broker/recommended/from'] = "broker_interface/recommendedProperty";
-$route['broker/recommended/from/:num'] = "broker_interface/recommendedProperty";
-
-$route['broker/potential-by'] = "broker_interface/potentialByProperty";
-$route['broker/potential-by/from'] = "broker_interface/potentialByProperty";
-$route['broker/potential-by/from/:num'] = "broker_interface/potentialByProperty";
+$route['broker/search/result(\/:any)*?'] = "broker_interface/searchProperty";
+$route['broker/favorite(\/:any)*?'] = "broker_interface/favoriteProperty";
+$route['broker/recommended(\/:any)*?'] = "broker_interface/recommendedProperty";
+$route['broker/potential-by(\/:any)*?'] = "broker_interface/potentialByProperty";
 
 $route['broker/profile'] = "broker_interface/profile";
 $route['broker/set-password'] = "broker_interface/setPassword";
@@ -113,15 +102,11 @@ $route['broker/match'] = "broker_interface/match";
 /*************************************************** OWNERS INTRERFACE ***********************************************/
 
 $route['homeowner/search'] = "owner_interface/searchProperty";
-$route['homeowner/search/result'] = "owner_interface/searchProperty";
-$route['homeowner/search/result/from'] = "owner_interface/searchProperty";
-$route['homeowner/search/result/from/:num'] = "owner_interface/searchProperty";
+$route['homeowner/search/result(\/:any)*?'] = "owner_interface/searchProperty";
 
 $route[OWNER_START_PAGE] = "owner_interface/properties";
 
-$route['homeowner/recommended'] = "owner_interface/recommendedProperty";
-$route['homeowner/recommended/from'] = "owner_interface/recommendedProperty";
-$route['homeowner/recommended/from/:num'] = "owner_interface/recommendedProperty";
+$route['homeowner/recommended(\/:any)*?'] = "owner_interface/recommendedProperty";
 
 $route['homeowner/:any/information'] = "owner_interface/propertyDetail";
 $route['homeowner/:any/information/:num'] = "owner_interface/propertyDetail";
@@ -131,12 +116,8 @@ $route[OWNER_START_PAGE.'/edit/:num'] = "owner_interface/editProperty";
 
 $route['homeowner/register-properties'] = "owner_interface/register_properties";
 
-$route['homeowner/favorite'] = "owner_interface/favoriteProperty";
-$route['homeowner/favorite/from'] = "owner_interface/favoriteProperty";
-$route['homeowner/favorite/from/:num'] = "owner_interface/favoriteProperty";
-$route['homeowner/potential-by'] = "owner_interface/potentialByProperty";
-$route['homeowner/potential-by/from'] = "owner_interface/potentialByProperty";
-$route['homeowner/potential-by/from/:num'] = "owner_interface/potentialByProperty";
+$route['homeowner/favorite(\/:any)*?'] = "owner_interface/favoriteProperty";
+$route['homeowner/potential-by(\/:any)*?'] = "owner_interface/potentialByProperty";
 
 $route['homeowner/instant-trade'] = "owner_interface/instantTrade";
 $route['homeowner/match'] = "owner_interface/match";
@@ -150,20 +131,15 @@ $route[ADM_START_PAGE] = "admin_interface/control_panel";
 $route[ADM_START_PAGE.'/pages'] = "admin_interface/control_pages";
 $route[ADM_START_PAGE.'/pages/:any'] = "admin_interface/control_pages";
 
-$route[ADM_START_PAGE.'/companies'] = "admin_interface/companies";
-$route[ADM_START_PAGE.'/companies/pages'] = "admin_interface/companies";
-$route[ADM_START_PAGE.'/companies/pages/:any'] = "admin_interface/companies";
+$route[ADM_START_PAGE.'/companies(\/:any)*?'] = "admin_interface/companies";
 $route[ADM_START_PAGE.'/companies/insert'] = "admin_interface/insertCompany";
 $route[ADM_START_PAGE.'/companies/edit/:num'] = "admin_interface/editCompany";
 $route[ADM_START_PAGE.'/companies/delete/:num'] = "admin_interface/deleteCompany";
 
-$route[ADM_START_PAGE.'/:any/accounts'] = "admin_interface/control_accounts";
-$route[ADM_START_PAGE.'/:any/accounts/from'] = "admin_interface/control_accounts";
-$route[ADM_START_PAGE.'/:any/accounts/from/:num'] = "admin_interface/control_accounts";
+$route[ADM_START_PAGE.'/:any/accounts(\/:any)*?'] = "admin_interface/control_accounts";
 
-$route[ADM_START_PAGE.'/properties'] = "admin_interface/properties";
-$route[ADM_START_PAGE.'/properties/from'] = "admin_interface/properties";
-$route[ADM_START_PAGE.'/properties/from/:num'] = "admin_interface/properties";
+$route[ADM_START_PAGE.'/properties/full-list'] = "admin_interface/propertiesSetFullList";
+$route[ADM_START_PAGE.'/properties(\/:any)*?'] = "admin_interface/properties";
 $route[ADM_START_PAGE.'/properties/information/:num'] = "admin_interface/propertyDetail";
 
 $route[ADM_START_PAGE.'/control-panel/mails'] = "admin_interface/mailsText";

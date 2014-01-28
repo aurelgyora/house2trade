@@ -145,6 +145,44 @@ class Admin_interface extends MY_Controller{
 		
 		$offset = intval($this->uri->segment(4));
 		$per_page = 10;
+		$this->load->model(array('union','property_type','properties'));
+		$pagevar = array(
+			'property_type'=>$this->property_type->read_records('property_type'),
+			'properties' => array(),
+			'pagination' => array(),
+			'parameters' => json_decode($this->session->userdata('search_json_data'))
+		);
+		if($this->session->userdata('search_sql')):
+			if($pagevar['properties'] = $this->getPropertiesFromSearch($offset,$per_page)):
+				$count = count($this->properties->query_execute($this->session->userdata('search_sql')));
+				$pagevar['pagination'] = $this->pagination(ADM_START_PAGE.'/properties',4,$count,$per_page);
+			else:
+				$pagevar['properties'] = NULL;
+				$pagevar['pagination'] = NULL;
+			endif;
+		else:
+			if($pagevar['properties'] = $this->properties->getLimit($per_page,$offset)):
+				$pagevar['pagination'] = $this->pagination(ADM_START_PAGE.'/properties',4,$this->properties->countRecords(),$per_page);
+				$pagevar['properties'] = $this->propertiesImagesTypes($pagevar['properties'],TRUE);
+				$pagevar['properties'] = $this->propertiesPotentiaByAndFavorite($pagevar['properties']);
+			endif;
+		endif;
+		$this->session->set_userdata('backpath',site_url(uri_string()));
+		$this->load->view("admin_interface/pages/properties-list",$pagevar);
+	}
+	
+	public function propertiesSetFullList(){
+		
+		if($this->session->userdata('search_sql') !== FALSE):
+			$this->session->unset_userdata(array('search_sql'=>'','search_json_data'=>''));
+		endif;
+		redirect(ADM_START_PAGE.'/properties');
+	}
+	
+	public function function_for_delete(){
+		
+		$offset = intval($this->uri->segment(4));
+		$per_page = 10;
 		$this->load->model('properties');
 		$pagevar = array(
 			'properties_titles' => $this->properties->getAllTitles(),
