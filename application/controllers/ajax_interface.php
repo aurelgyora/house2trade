@@ -929,8 +929,14 @@ class Ajax_interface extends MY_Controller{
 				if(!empty($dataval['property_address'])):
 					$sql .= ' AND properties.address1 LIKE "%'.$dataval['property_address'].'%"';
 				endif;
+				if(!empty($dataval['property_city'])):
+					$sql .= ' AND properties.city LIKE "%'.$dataval['property_city'].'%"';
+				endif;
+				if(!empty($dataval['property_state'])):
+					$sql .= ' AND properties.state LIKE "%'.$dataval['property_state'].'%"';
+				endif;
 				if(!empty($dataval['property_zip'])):
-					$sql .= ' AND (properties.state LIKE "%'.$dataval['property_zip'].'%" OR properties.city LIKE "%'.$dataval['property_zip'].'%" OR properties.zip_code LIKE "%'.$dataval['property_zip'].'%")';
+					$sql .= ' AND properties.zip_code LIKE "%'.$dataval['property_zip'].'%"';
 				endif;
 				if(!empty($dataval['beds_num'])):
 					$sql .= ' AND properties.bedrooms = '.$dataval['beds_num'];

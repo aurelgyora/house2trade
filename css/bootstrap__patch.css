@@ -93,7 +93,7 @@ footer { position: absolute; left: 0; bottom: 0; height: 390px; width: 100%; }
 
 /* Property details */
 .property-actions { margin: 1em 0; }
-form .span3 { margin-left: 0; }
+form .span3,form .span9 { margin-left: 0; }
 #div-search-property-result { margin: 1em 0 0; }
 form#search-properties { border: 1px solid #CCC; padding: 5px 20px; border-radius: 3px; box-shadow: 0 0 5px #CCC; }
 

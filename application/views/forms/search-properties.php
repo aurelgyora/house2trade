@@ -2,21 +2,17 @@
 	<input id="community_id" name="community_id" type="hidden" value="372" />
 	<input id="user_username" name="username" type="hidden" value="<?=$this->profile['fname'].' '.$this->profile['lname'];?>" />
 	<input id="user_identity_url" name="identity_url" type="hidden" />
-	<!--
-	<ul class="form-selector">
-		<li class="active"><a class="none" href="">For Sale</a></li>
-		<li><a class="none" href="">For Rent</a></li>
-		<li><a class="none" href="">Sold</a></li>
-	</ul>
-	-->
 	<p>
 		<div class="span3">
 			<label>Address</label>
 			<input id="property_mls" value="<?=(isset($parameters->property_address) && $parameters->property_address)?$parameters->property_address:'';?>" name="property_address" size="" type="text" placeholder="Enter property address">
 		</div>
-		<div class="span3">
+		<div class="clear"> </div>
+		<div class="span9">
 			<label>City, State, ZIP</label>
-			<input id="property_zip" value="<?=(isset($parameters->property_zip) && $parameters->property_zip)?$parameters->property_zip:'';?>" name="property_zip" size="15" type="text" placeholder="City, State and/or ZIP code">
+			<input id="property_city" value="<?=(isset($parameters->property_city) && $parameters->property_city)?$parameters->property_city:'';?>" name="property_city" size="15" type="text" placeholder="City">
+			<input id="property_state" value="<?=(isset($parameters->property_state) && $parameters->property_state)?$parameters->property_state:'';?>" name="property_state" size="15" type="text" placeholder="State">
+			<input id="property_zip" value="<?=(isset($parameters->property_zip) && $parameters->property_zip)?$parameters->property_zip:'';?>" name="property_zip" size="15" type="text" placeholder="ZIP code">
 		</div>
 		<div class="clear"> </div>
 		<label>Price range</label>
