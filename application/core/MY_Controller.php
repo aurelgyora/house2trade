@@ -115,7 +115,7 @@ class MY_Controller extends CI_Controller{
 		);
 		if($images = $this->arrayImagesFromPage($zillow_result['page-content'])):
 			$random = array_rand($images);
-			if(isset($random) && $random):
+			if(!is_null($random)):
 				$property['photo'] = $images[$random];
 			endif;
 		endif;
@@ -439,6 +439,18 @@ class MY_Controller extends CI_Controller{
 			$ids[] = $array[$i][$value];
 		endfor;
 		return $ids;
+	}
+	
+	public function getValuesInString($array,$char = ','){
+		
+		$string = '';
+		for($i=0;$i<count($array);$i++):
+			$string .= $array[$i];
+			if(isset($array[$i+1])):
+				$string .= $char;
+			endif;
+		endfor;
+		return $string;
 	}
 	
 	/*************************************************************************************************************/
@@ -806,4 +818,45 @@ class MY_Controller extends CI_Controller{
 		endif;
 		return $properties;
 	}
+
+	public function createSearchSQL($dataval){
+		
+		$sql = 'SELECT properties.* FROM properties WHERE TRUE';
+		if(!empty($dataval['property_address'])):
+			$sql .= ' AND properties.address1 LIKE "%'.$dataval['property_address'].'%"';
+		endif;
+		if(!empty($dataval['property_city'])):
+			$sql .= ' AND properties.city LIKE "%'.$dataval['property_city'].'%"';
+		endif;
+		if(!empty($dataval['property_state'])):
+			$sql .= ' AND properties.state LIKE "%'.$dataval['property_state'].'%"';
+		endif;
+		if(!empty($dataval['property_zip'])):
+			$sql .= ' AND properties.zip_code LIKE "%'.$dataval['property_zip'].'%"';
+		endif;
+		if(!empty($dataval['beds_num'])):
+			$sql .= ' AND properties.bedrooms = '.$dataval['beds_num'];
+		endif;
+		if(!empty($dataval['baths_num'])):
+			$sql .= ' AND properties.bathrooms = '.$dataval['baths_num'];
+		endif;
+		if(!empty($dataval['property_min_price'])):
+			$sql .= ' AND properties.price >= '.$dataval['property_min_price'];
+		endif;
+		if(!empty($dataval['property_max_price'])):
+			$sql .= ' AND properties.price <= '.$dataval['property_max_price'];
+		endif;
+		if(!empty($dataval['square_feet'])):
+			$sql .= ' AND properties.sqf >= '.$dataval['square_feet'];
+		endif;
+		if(!empty($dataval['type'])):
+			$sql .= ' AND properties.type = '.$dataval['type'];
+		endif;
+		if($excludedProperties = $this->db->get_where('excluded_properties',array('account'=>$this->account['id']))->result_array()):
+			$excludedPropertiesIDs = $this->getValuesInArray($excludedProperties,'property');
+			$sql .= ' AND properties.id NOT IN ('.$this->getValuesInString($excludedPropertiesIDs).')';
+		endif;
+		return $sql .= ' ORDER BY properties.address1 ASC, properties.state ASC, properties.zip_code ASC';
+	}
+
 }

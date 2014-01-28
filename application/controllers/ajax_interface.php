@@ -511,6 +511,23 @@ class Ajax_interface extends MY_Controller{
 	
 	/************************************** favorite & potential by **********************************************/
 	
+	function excludeProperty(){
+		
+		if(!$this->input->is_ajax_request()):
+			show_error('Access denied');
+		endif;
+		$json_request['status'] = FALSE;
+		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Error removing';
+		if($this->input->post('parameter') !== FALSE):
+			$this->load->model('excluded_properties');
+			$this->excluded_properties->insert_record($this->input->post('parameter'));
+			$sql = $this->createSearchSQL(json_decode($this->session->userdata('search_json_data'),TRUE));
+			$this->session->set_userdata('search_sql',$sql);
+			$json_request['status'] = TRUE;
+		endif;
+		echo json_encode($json_request);
+	}
+	
 	function addToFavorite(){
 		
 		if(!$this->input->is_ajax_request()):
@@ -925,46 +942,15 @@ class Ajax_interface extends MY_Controller{
 				if($this->account['group'] == 3):
 					$json_request['redirect'] = site_url('homeowner/search/result');
 				endif;
-				$sql = 'SELECT properties.* FROM properties WHERE TRUE';
-				if(!empty($dataval['property_address'])):
-					$sql .= ' AND properties.address1 LIKE "%'.$dataval['property_address'].'%"';
-				endif;
-				if(!empty($dataval['property_city'])):
-					$sql .= ' AND properties.city LIKE "%'.$dataval['property_city'].'%"';
-				endif;
-				if(!empty($dataval['property_state'])):
-					$sql .= ' AND properties.state LIKE "%'.$dataval['property_state'].'%"';
-				endif;
-				if(!empty($dataval['property_zip'])):
-					$sql .= ' AND properties.zip_code LIKE "%'.$dataval['property_zip'].'%"';
-				endif;
-				if(!empty($dataval['beds_num'])):
-					$sql .= ' AND properties.bedrooms = '.$dataval['beds_num'];
-				endif;
-				if(!empty($dataval['baths_num'])):
-					$sql .= ' AND properties.bathrooms = '.$dataval['baths_num'];
-				endif;
-				if(!empty($dataval['property_min_price'])):
-					$sql .= ' AND properties.price >= '.$dataval['property_min_price'];
-				endif;
-				if(!empty($dataval['property_max_price'])):
-					$sql .= ' AND properties.price <= '.$dataval['property_max_price'];
-				endif;
-				if(!empty($dataval['square_feet'])):
-					$sql .= ' AND properties.sqf >= '.$dataval['square_feet'];
-				endif;
-				if(!empty($dataval['type'])):
-					$sql .= ' AND properties.type = '.$dataval['type'];
-				endif;
-				$sql .= ' ORDER BY properties.address1 ASC, properties.state ASC, properties.zip_code ASC';
 				$this->load->model('properties');
+				$sql = $this->createSearchSQL($dataval);
 				$properties = $this->properties->query_execute($sql);
 				$zillow_result = FALSE;
-				if(!empty($dataval['property_address']) && !empty($dataval['property_zip'])):
-					$this->session->set_userdata(array('zillow_address'=>$dataval['property_address'],'zillow_zip'=>$dataval['property_zip']));
-					$zillow_result = $this->zillowApi($dataval['property_address'],$dataval['property_zip']);
+				if(!empty($dataval['property_address']) && (!empty($dataval['property_zip']) || !empty($dataval['property_state']) || !empty($dataval['property_city']))):
+					$this->session->set_userdata(array('zillow_address'=>$dataval['property_address'],'zillow_zip'=>$dataval['property_zip'],'zillow_state'=>$dataval['property_state'],'zillow_city'=>$dataval['property_city']));
+					$zillow_result = $this->zillowApi($dataval['property_address'],$dataval['property_zip'].' '.$dataval['property_state'].' '.$dataval['property_city']);
 				else:
-					$this->session->unset_userdata(array('zillow_address'=>'','zillow_zip'=>''));
+					$this->session->unset_userdata(array('zillow_address'=>'','zillow_zip'=>'','zillow_state'=>'','zillow_city'=>''));
 				endif;
 				if($properties || $zillow_result):
 					$this->session->set_userdata('search_sql',$sql);

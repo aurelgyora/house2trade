@@ -428,5 +428,28 @@ $(function(){
 	$("#addToPotentialBy").on('hidden',function(){
 		$("#addToPotentialBy > .modal-body > p:last").addClass('hidden').siblings('p').removeClass('hidden').siblings('#hidden-block').addClass('hidden').find('input').val('');
 		$("button.btn-comfirm-add-potential-by").html('Yes').removeClass('btn-success').addClass('btn-primary');
-	})
+	});
+	$(".btn-exclude-property").click(function(){
+		
+		if(!confirm('Are you sure?')){
+			return false;
+		}
+		var _this = this;
+		var parameter = $(this).attr('data-src');
+		$.ajax({
+			url: mt.baseURL+'exclude-property',
+			data: {'parameter':parameter},type:'POST',dataType:'json',
+			beforeSend: function(){},
+			success: function(data,textStatus,xhr){
+				if(data.status){
+					$(_this).parents(".media").fadeOut(500,function(){$(this).remove();});
+				}else{
+					$(_this).html('Error adding');
+				}
+			},
+			error: function(xhr,textStatus,errorThrown){
+				alert('Error!');
+			}
+		});
+	});
 });

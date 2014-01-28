@@ -1,6 +1,6 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Owner_interface extends MY_Controller{
+class Owner_interface extends MY_Controller {
 	
 	var $per_page = PER_PAGE_DEFAULT;
 	var $offset = 0;
@@ -82,9 +82,9 @@ class Owner_interface extends MY_Controller{
 			'parameters' => json_decode($this->session->userdata('search_json_data'))
 		);
 		if($this->session->userdata('search_sql')):
-			if($this->session->userdata('zillow_address') && $this->session->userdata('zillow_zip')):
-				if($zillow_result = $this->zillowApi($this->session->userdata('zillow_address'),$this->session->userdata('zillow_zip'))):
-					if($pagevar['zillow_exist_id'] = $this->properties->properties_exits($zillow_result['property-state'],$zillow_result['property-zipcode'])):
+			if($this->session->userdata('zillow_address') && ($this->session->userdata('zillow_zip') || $this->session->userdata('zillow_state') || $this->session->userdata('zillow_city'))):
+				if($zillow_result = $this->zillowApi($this->session->userdata('zillow_address'),$this->session->userdata('zillow_zip').' '.$this->session->userdata('zillow_state').' '.$this->session->userdata('zillow_city'))):
+					if($pagevar['zillow_exist_id'] = $this->properties->properties_exits($zillow_result['property-state'],$zillow_result['property-zipcode'],$zillow_result['property-address1'])):
 						$pagevar['zillow'] = $this->getPropertyFromZillow($zillow_result,$pagevar['parameters']);
 					else:
 						$pagevar['zillow'] = $this->getUnshiftProperty($zillow_result);

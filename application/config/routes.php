@@ -41,6 +41,7 @@ $route[BROKER_START_PAGE.'/delete'] = "ajax_interface/deleteProperty";
 $route[OWNER_START_PAGE.'/delete/seller'] = "ajax_interface/deletePropertySeller";
 $route['search-properties'] = "ajax_interface/searchProperty";
 $route['add-to-favorite'] = "ajax_interface/addToFavorite";
+$route['exclude-property'] = "ajax_interface/excludeProperty";
 $route['remove-to-favorite'] = "ajax_interface/removeToFavorite";
 $route['add-to-potential-by'] = "ajax_interface/addToPotentialBy";
 $route['remove-to-potential-by'] = "ajax_interface/removeToPotentialBy";

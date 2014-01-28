@@ -31,7 +31,7 @@
 							</a>
 							<div class="media-body">
 								<h4 class="media-heading">
-								<?php if($zillow_exist_id != FALSE):?>
+								<?php if($zillow_exist_id !== FALSE):?>
 									<a href="<?=site_url('broker/'.$this->uri->segment(2).'/information/'.$zillow['id']);?>"><?=$zillow['address1'];?></a>
 									<span><?=$zillow['city'].', '.$zillow['state'].' '.$zillow['zip_code']; ?></span>
 									<?php if($zillow['status'] == 17):?>
@@ -108,6 +108,7 @@
 						<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
 						<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
 					<?php endif;?>
+						<button class="btn btn-mini btn-link btn-exclude-property" data-src="<?=$properties[$i]['id'];?>">Remove From Search</button>
 				<?php else:?>
 						<p class="property-owner">Already added to potential by</p>
 				<?php endif;?>
