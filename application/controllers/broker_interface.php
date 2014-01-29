@@ -145,10 +145,25 @@ class Broker_interface extends MY_Controller{
 		$this->load->model('union');
 		$pagevar = array(
 			'select' => $this->union->selectBrokerProperties($this->account['id']),
-			'levels' => array('level2'=>array(),'level3'=>array(),'level4'=>array(),'level5'=>array(),'level6'=>array())
+			'levels' => array('level1'=>array(),'level2'=>array(),'level3'=>array(),'level4'=>array(),'level5'=>array(),'level6'=>array())
 		);
 		if($this->session->userdata('current_property') == TRUE):
-			$pagevar['levels'] = $this->getInstantTradeAllLevels($this->session->userdata('current_property'));
+			$sellers = $this->db->query('SELECT `seller_id` AS property_id,COUNT(*) AS cnt FROM `property_potentialby` GROUP BY `seller_id` ORDER BY `seller_id`')->result_array();
+			$sellers = $this->allocationCount($sellers);
+			$buyers = $this->db->query('SELECT `buyer_id` AS property_id,COUNT(*) AS cnt FROM `property_potentialby` GROUP BY `buyer_id` ORDER BY `buyer_id`')->result_array();
+			$buyers = $this->allocationCount($buyers);
+			$levels = $this->getInstantTradeAllLevels($this->session->userdata('current_property'));
+			foreach($levels as $level_number => $level):
+				if($level_number == 'level1'):
+					$pagevar['levels'][$level_number] = $this->addSellersBuyersCounts($level,$level['id'],$sellers,$buyers);
+					continue;
+				endif;
+				if(!empty($level)):
+					foreach($level as $property):
+						$pagevar['levels'][$level_number][] = $this->addSellersBuyersCounts($property,$property['id'],$sellers,$buyers);
+					endforeach;
+				endif;
+			endforeach;
 		endif;
 		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("broker_interface/pages/instant-trade",$pagevar);
@@ -214,6 +229,7 @@ class Broker_interface extends MY_Controller{
 		$this->session->set_userdata('backpath',uri_string());
 		$this->load->view("broker_interface/properties/recommended",$pagevar);
 	}
+	
 	
 	/********************************************* properties ********************************************************/
 	

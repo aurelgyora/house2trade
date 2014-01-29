@@ -1,7 +1,7 @@
 <div id="addToPotentialBy" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="addToPotentialBy" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 id="myModalLabel">Add to potential by</h3>
+		<h3 id="myModalLabel">Add to potential buy</h3>
 	</div>
 	<div class="modal-body">
 		<p>Have you seen this property?</p>

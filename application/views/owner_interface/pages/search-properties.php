@@ -65,11 +65,11 @@
 							</div>
 					<?php if($zillow_exist_id && !$zillow['potentialby']):?>
 						<?php if(!$zillow['favorite']):?>
-							<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$zillow['id'];?>">Add to favorite</button>
-							<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
+							<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$zillow['id'];?>">Add to worth seeing list</button>
+							<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-src="<?=$zillow['id'];?>">Remove from worth seeing</button>
 						<?php else:?>
-							<button class="btn btn-mini btn-link btn-property-remove-favorite" data-src="<?=$zillow['id'];?>">Remove from favorite</button>
-							<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$zillow['id'];?>">Add to favorite</button>
+							<button class="btn btn-mini btn-link btn-property-remove-favorite" data-src="<?=$zillow['id'];?>">Remove from worth seeing</button>
+							<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$zillow['id'];?>">Add to worth seeing list</button>
 						<?php endif;?>
 					<?php endif;?>
 						</div>
@@ -104,15 +104,15 @@
 			<?php if($properties[$i]['owner'] != $this->account['id']):?>
 				<?php if(!$properties[$i]['potentialby']):?>
 					<?php if(!$properties[$i]['favorite']):?>
-						<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
-						<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
+						<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$properties[$i]['id'];?>">Add to worth seeing list</button>
+						<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from worth seeing</button>
 					<?php else:?>
-						<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
-						<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$properties[$i]['id'];?>">Add to favorite</button>
+						<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="null" data-src="<?=$properties[$i]['id'];?>">Remove from worth seeing</button>
+						<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$properties[$i]['id'];?>">Add to worth seeing list</button>
 					<?php endif;?>
 						<button class="btn btn-mini btn-link btn-exclude-property" data-src="<?=$properties[$i]['id'];?>">Remove From Search</button>
 				<?php else:?>
-						<p class="property-owner">Already added to potential by</p>
+						<p class="property-owner">Already added to potential buy</p>
 				<?php endif;?>
 			<?php endif;?>
 					</div>

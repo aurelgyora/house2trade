@@ -21,6 +21,12 @@
 			<?php else:?>
 				<h2>Level 1</h2>
 				<div class="media">
+					<?php if($levels['level1']['seller_number'] > 0):?>
+						<span title="Sellers count" class="badge badge-info seller-number"><?=$levels['level1']['seller_number'];?></span>
+					<?php endif;?>
+					<?php if($levels['level1']['buyer_number'] > 0):?>
+						<span title="Buyers count" class="badge badge-success buyer-number"><?=$levels['level1']['buyer_number'];?></span>
+					<?php endif;?>
 					<a class="none pull-left" href="#">
 						<img class="img-polaroid media-object" src="<?=site_url($levels['level1']['photo']);?>" alt="">
 					</a>
@@ -46,6 +52,12 @@
 				<div class="cycle-blocks-2">
 				<?php for($i=0;$i<count($levels['level2']);$i++):?>
 					<div class="media cycle-clocks-elements">
+					<?php if($levels['level2'][$i]['seller_number'] > 0):?>
+						<span title="Sellers count" class="badge badge-info seller-number"><?=$levels['level2'][$i]['seller_number'];?></span>
+					<?php endif;?>
+					<?php if($levels['level2'][$i]['buyer_number'] > 0):?>
+						<span title="Buyers count" class="badge badge-success buyer-number"><?=$levels['level2'][$i]['buyer_number'];?></span>
+					<?php endif;?>
 						<a class="none pull-left" href="#">
 							<img class="img-polaroid media-object" src="<?=site_url($levels['level2'][$i]['photo']);?>" alt="">
 						</a>
@@ -66,15 +78,15 @@
 							</p>
 						</div>
 					<?php if($levels['level2'][$i]['potentialby'] == FALSE):?>
-						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level2'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level2'][$i]['id'];?>" data-toggle="modal">Add to potential buy</a>
 					<?php else:?>
-						<p class="property-owner">Already added to potential by</p>
+						<p class="property-owner">Already added to potential buy</p>
 					<?php endif;?>
 					</div>
 				<?php endfor;?>
 				</div>
 			<?php if(count($levels['level2'])>1):?>
-				<ul class="nav-cycle nav-2 clearfix">
+				<ul data-index="2" class="nav-cycle nav-2 clearfix">
 				<?php for($i=0;$i<count($levels['level2']);$i++):?>
 					<li><a href="#"><img src="<?=site_url($levels['level2'][$i]['photo']);?>"></a></li>
 				<?php endfor;?>
@@ -85,6 +97,12 @@
 				<div class="cycle-blocks-3">
 				<?php for($i=0;$i<count($levels['level3']);$i++):?>
 					<div class="media cycle-clocks-elements">
+					<?php if($levels['level3'][$i]['seller_number'] > 0):?>
+						<span title="Sellers count" class="badge badge-info seller-number"><?=$levels['level3'][$i]['seller_number'];?></span>
+					<?php endif;?>
+					<?php if($levels['level3'][$i]['buyer_number'] > 0):?>
+						<span title="Buyers count" class="badge badge-success buyer-number"><?=$levels['level3'][$i]['buyer_number'];?></span>
+					<?php endif;?>
 						<a class="none pull-left" href="#">
 							<img class="img-polaroid media-object" src="<?=site_url($levels['level3'][$i]['photo']);?>" alt="">
 						</a>
@@ -105,15 +123,15 @@
 							</p>
 						</div>
 					<?php if($levels['level3'][$i]['potentialby'] == FALSE):?>
-						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level3'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level3'][$i]['id'];?>" data-toggle="modal">Add to potential buy</a>
 					<?php else:?>
-						<p class="property-owner">Already added to potential by</p>
+						<p class="property-owner">Already added to potential buy</p>
 					<?php endif;?>
 					</div>
 				<?php endfor;?>
 				</div>
 				<?php if(count($levels['level3'])>1):?>
-				<ul class="nav-cycle nav-3 clearfix">
+				<ul data-index="3" class="nav-cycle nav-3 clearfix">
 				<?php for($i=0;$i<count($levels['level3']);$i++):?>
 					<li><a href="#"><img src="<?=site_url($levels['level3'][$i]['photo']);?>"></a></li>
 				<?php endfor;?>
@@ -125,6 +143,12 @@
 				<div class="cycle-blocks-4">
 				<?php for($i=0;$i<count($levels['level4']);$i++):?>
 					<div class="media cycle-clocks-elements">
+					<?php if($levels['level4'][$i]['seller_number'] > 0):?>
+						<span title="Sellers count" class="badge badge-info seller-number"><?=$levels['level4'][$i]['seller_number'];?></span>
+					<?php endif;?>
+					<?php if($levels['level4'][$i]['buyer_number'] > 0):?>
+						<span title="Buyers count" class="badge badge-success buyer-number"><?=$levels['level4'][$i]['buyer_number'];?></span>
+					<?php endif;?>
 						<a class="none pull-left" href="#">
 							<img class="img-polaroid media-object" src="<?=site_url($levels['level4'][$i]['photo']);?>" alt="">
 						</a>
@@ -145,15 +169,15 @@
 							</p>
 						</div>
 					<?php if($levels['level4'][$i]['potentialby'] == FALSE):?>
-						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level4'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level4'][$i]['id'];?>" data-toggle="modal">Add to potential buy</a>
 					<?php else:?>
-						<p class="property-owner">Already added to potential by</p>
+						<p class="property-owner">Already added to potential buy</p>
 					<?php endif;?>
 					</div>
 				<?php endfor;?>
 				</div>
 				<?php if(count($levels['level4'])>1):?>
-				<ul class="nav-cycle nav-4 clearfix">
+				<ul data-index="4" class="nav-cycle nav-4 clearfix">
 				<?php for($i=0;$i<count($levels['level4']);$i++):?>
 					<li><a href="#"><img src="<?=site_url($levels['level4'][$i]['photo']);?>"></a></li>
 				<?php endfor;?>
@@ -165,6 +189,12 @@
 				<div class="cycle-blocks-5">
 				<?php for($i=0;$i<count($levels['level5']);$i++):?>
 					<div class="media cycle-clocks-elements">
+					<?php if($levels['level5'][$i]['seller_number'] > 0):?>
+						<span title="Sellers count" class="badge badge-info seller-number"><?=$levels['level5'][$i]['seller_number'];?></span>
+					<?php endif;?>
+					<?php if($levels['level5'][$i]['buyer_number'] > 0):?>
+						<span title="Buyers count" class="badge badge-success buyer-number"><?=$levels['level5'][$i]['buyer_number'];?></span>
+					<?php endif;?>
 						<a class="none pull-left" href="#">
 							<img class="img-polaroid media-object" src="<?=site_url($levels['level5'][$i]['photo']);?>" alt="">
 						</a>
@@ -185,15 +215,15 @@
 							</p>
 						</div>
 					<?php if($levels['level5'][$i]['potentialby'] == FALSE):?>
-						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level5'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level5'][$i]['id'];?>" data-toggle="modal">Add to potential buy</a>
 					<?php else:?>
-						<p class="property-owner">Already added to potential by</p>
+						<p class="property-owner">Already added to potential buy</p>
 					<?php endif;?>
 					</div>
 				<?php endfor;?>
 				</div>
 				<?php if(count($levels['level5'])>1):?>
-				<ul class="nav-cycle nav-5 clearfix">
+				<ul data-index="5" class="nav-cycle nav-5 clearfix">
 				<?php for($i=0;$i<count($levels['level5']);$i++):?>
 					<li><a href="#"><img src="<?=site_url($levels['level5'][$i]['photo']);?>"></a></li>
 				<?php endfor;?>
@@ -205,6 +235,12 @@
 				<div class="cycle-blocks-6">
 				<?php for($i=0;$i<count($levels['level6']);$i++):?>
 					<div class="media cycle-clocks-elements">
+					<?php if($levels['level6'][$i]['seller_number'] > 0):?>
+						<span title="Sellers count" class="badge badge-info seller-number"><?=$levels['level6'][$i]['seller_number'];?></span>
+					<?php endif;?>
+					<?php if($levels['level6'][$i]['buyer_number'] > 0):?>
+						<span title="Buyers count" class="badge badge-success buyer-number"><?=$levels['level6'][$i]['buyer_number'];?></span>
+					<?php endif;?>
 						<a class="none pull-left" href="#">
 							<img class="img-polaroid media-object" src="<?=site_url($levels['level6'][$i]['photo']);?>" alt="">
 						</a>
@@ -225,15 +261,15 @@
 							</p>
 						</div>
 					<?php if($levels['level6'][$i]['potentialby'] == FALSE):?>
-						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level6'][$i]['id'];?>" data-toggle="modal">Add to potential by</a>
+						<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="null" data-propery-id="<?=$levels['level6'][$i]['id'];?>" data-toggle="modal">Add to potential buy</a>
 					<?php else:?>
-						<p class="property-owner">Already added to potential by</p>
+						<p class="property-owner">Already added to potential buy</p>
 					<?php endif;?>
 					</div>
 				<?php endfor;?>
 				</div>
 				<?php if(count($levels['level6'])>1):?>
-				<ul class="nav-cycle nav-6 clearfix">
+				<ul data-index="6" class="nav-cycle nav-6 clearfix">
 				<?php for($i=0;$i<count($levels['level6']);$i++):?>
 					<li><a href="#"><img src="<?=site_url($levels['level6'][$i]['photo']);?>"></a></li>
 				<?php endfor;?>

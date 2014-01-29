@@ -39,18 +39,18 @@
 		<?php if($properties[$i]['owner_id'] != $this->session->userdata('current_owner')):?>
 			<?php if(($this->uri->segment(2) == 'favorite')):?>
 				<?php if($properties[$i]['favorite']):?>
-					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from favorite</button>
+					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from worth seeing</button>
 				<?php endif;?>
 				<?php if(!$properties[$i]['potentialby']):?>
-					<button class="btn btn-mini btn-link btn-property-add-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Add to potential by</button>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+					<button class="btn btn-mini btn-link btn-property-add-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Add to potential buy</button>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential buy</button>
 				<?php elseif($properties[$i]['potentialby']):?>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by hidden" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential buy</button>
 				<?php endif;?>
 			<?php endif;?>
 			<?php if(($this->uri->segment(2) == 'potential-by')):?>
 				<?php if($properties[$i]['potentialby']):?>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential buy</button>
 				<?php endif;?>
 			<?php endif;?>
 		<?php endif;?>

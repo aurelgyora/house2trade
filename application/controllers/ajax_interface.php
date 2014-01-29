@@ -29,15 +29,14 @@ class Ajax_interface extends MY_Controller{
 		if(!$this->input->is_ajax_request()):
 			show_error('Access denied');
 		endif;
-		$json_request = array('status'=>FALSE,'result'=>array(),'messages'=>'');
+		$json_request = array('status'=>FALSE,'result'=>array(),'messages'=>'','question'=>FALSE);
 		$json_request['messages'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> nothing found';
-		$address = trim($this->input->post('address'));
-		$zip = trim($this->input->post('zip'));
-		if($address && $zip):
-			$json_request['result'] = $this->zillowApi($address,$zip);
-			if($json_request['result']):
-				$json_request['status'] = TRUE;
+		if($json_request['result'] = $this->zillowApi($this->input->post('address'),$this->input->post('city').' '.$this->input->post('state').' '.$this->input->post('zip'))):
+			if($json_request['result']['property-address1'] != $this->input->post('address')):
+				$json_request['question'] = TRUE;
+				$json_request['messages'] = 'The requested address is different from '.$json_request['result']['property-address1']."\nIs it your property?";
 			endif;
+			$json_request['status'] = TRUE;
 		endif;
 		echo json_encode($json_request);
 	}
@@ -509,7 +508,7 @@ class Ajax_interface extends MY_Controller{
 		return FALSE;
 	}
 	
-	/************************************** favorite & potential by **********************************************/
+	/************************************** favorite & potential buy **********************************************/
 	
 	function excludeProperty(){
 		
@@ -584,7 +583,7 @@ class Ajax_interface extends MY_Controller{
 		endif;
 		$property = (int)$this->input->post('parameter');
 		$down_payment = (int)$this->input->post('down_payment');
-		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Property not add to potential by';
+		$json_request['message'] = '<img src="'.site_url('img/no-check.png').'" alt="" /> Property not add to potential buy';
 		if($property):
 			$this->load->model(array('property_potentialby','properties'));
 			if($this->properties->record_exist('properties','id',$property) && !$this->property_potentialby->record_exist($this->session->userdata('current_property'),$property)):
@@ -606,7 +605,7 @@ class Ajax_interface extends MY_Controller{
 						$this->changePropertiesStatus(0,$insert['seller_id'],$insert['buyer_id']);
 						$this->sendMailBySellerAndBuyerPropertyID(5,$insert['seller_id'],$insert['buyer_id']);
 					endif;
-					$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added to potential by<br/><br/>At the moment you have selected the prefered property and you also have potential buyer. So you can wait for a match. As soon as the match will be ready you will get email notification.';
+					$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property added to potential buy<br/><br/>At the moment you have selected the prefered property and you also have potential buyer. So you can wait for a match. As soon as the match will be ready you will get email notification.';
 				endif;
 			endif;
 		endif;
@@ -626,7 +625,7 @@ class Ajax_interface extends MY_Controller{
 			$potentialByID = $this->property_potentialby->record_exist($this->session->userdata('current_property'),$property);
 			if($potentialByID):
 				$this->property_potentialby->delete_record($potentialByID,'property_potentialby');
-				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from potential by';
+				$json_request['message'] = '<img src="'.site_url('img/check.png').'" alt="" /> Property removed from potential buy';
 				$changeStatus = TRUE;
 				if($this->property_potentialby->record_exist($this->session->userdata('current_property'),NULL)):
 					$changeStatus = FALSE;

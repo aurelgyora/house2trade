@@ -66,17 +66,17 @@
 						<?php if(($property['id'] != $this->session->userdata('current_property'))):?>
 							<?php if(!$property['potentialby']):?>
 								<?php if(!$property['favorite']):?>
-									<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$property['id'];?>">Add to favorite</button>
-									<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$property['id'];?>">Remove from favorite</button>
+									<button class="btn btn-mini btn-link btn-property-add-favorite" data-src="<?=$property['id'];?>">Add to worth seeing list</button>
+									<button class="btn btn-mini btn-link btn-property-remove-favorite hidden" data-target="null" data-src="<?=$property['id'];?>">Remove from worth seeing</button>
 								<?php else:?>
-									<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="null" data-src="<?=$property['id'];?>">Remove from favorite</button>
-									<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$property['id'];?>">Add to favorite</button>
+									<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="null" data-src="<?=$property['id'];?>">Remove from worth seeing</button>
+									<button class="btn btn-mini btn-link btn-property-add-favorite hidden" data-src="<?=$property['id'];?>">Add to worth seeing list</button>
 								<?php endif;?>
 							<?php else:?>
-									<p class="property-owner">Already added to potential by</p>
+									<p class="property-owner">Already added to potential buy</p>
 								<?php endif;?>
 						<?php else:?>
-								<button class="btn btn-mini btn-link disabled" disabled="disabled">Add to favorite</button>
+								<button class="btn btn-mini btn-link disabled" disabled="disabled">Add to worth seeing list</button>
 						<?php endif;?>
 					<?php endif;?>
 					</div>

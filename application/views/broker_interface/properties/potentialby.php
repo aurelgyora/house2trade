@@ -36,7 +36,7 @@
 							<?= ucfirst($properties[$i]['type']); ?> Home
 						</p>
 					</div>
-					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential by</button>
+					<button class="btn btn-mini btn-link btn-property-remove-potential-by" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from potential buy</button>
 				</div>
 			<?php endfor;?>
 			<?php if($this->session->userdata('current_property') === FALSE || !$properties):?>

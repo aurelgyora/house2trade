@@ -191,11 +191,15 @@ $(function(){
 		$("input.valid-required").tooltip("destroy");$("#block-message").html('');
 		$("#form-metod-property-register .valid-required").each(function(i,element){if($(element).emptyValue()){$(element).tooltip('show');err = true;}});
 		if(!err){
-			var address = $("#address-parameter").val();
-			var zip = $("#zipcode-parameter").val();
 			$(_this).addClass('disabled').attr('disabled','disabled');
 			$("span.wait-request").removeClass('hidden');
-			$.post(mt.baseURL+"get-property-zillow-api",{'address':address,'zip':zip},
+			$.post(mt.baseURL+"get-property-zillow-api",
+				{
+					'address':$("#address-parameter").val(),
+					'city':$("#city-parameter").val(),
+					'state':$("#state-parameter").val(),
+					'zip':$("#zipcode-parameter").val(),
+				},
 				function(data){
 					$("span.wait-request").addClass('hidden');
 					$(_this).removeClass('disabled').removeAttr('disabled');
@@ -203,6 +207,11 @@ $(function(){
 						mt.setJsonRequest(data.result,'val');
 						$("#property-type :contains('"+data.result['property-type']+"')").attr("selected","selected");
 						$("#set-properties-manual-data").click()
+						if(data.question){
+							if(confirm(data.messages) === false){
+								$('#set-properties-auto-data').click();
+							}
+						}
 					}else{
 						$("#metod-block-message").html(data.messages);
 					}
@@ -372,7 +381,7 @@ $(function(){
 	});
 	$("button.btn-property-add-potential-by").click(function(){addPotentialBy(this);});
 	$("button.btn-property-remove-potential-by").click(function(){
-		if(confirm('Confirm remove from potential by?') == false) return false;
+		if(confirm('Confirm remove from potential buy?') == false) return false;
 		var parameter = $(this).attr('data-src');
 		var _this = this;
 		$.post(mt.baseURL+"remove-to-potential-by",{'parameter':parameter},
@@ -418,7 +427,7 @@ $(function(){
 				if(target === 'remove'){
 					$("a.show-modal-confirm[data-propery-id="+parameter+"]").parents('div.media').html(data.message);
 				}else{
-					$("a.show-modal-confirm[data-propery-id="+parameter+"]").replaceWith('<h3>Added to potential by</h3>');
+					$("a.show-modal-confirm[data-propery-id="+parameter+"]").replaceWith('<h3>Added to potential buy</h3>');
 				}
 				$("#addToPotentialBy").modal('hide');
 			}

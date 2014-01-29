@@ -1,14 +1,16 @@
 <?= form_open($this->uri->uri_string(),array('id'=>'form-metod-property-register')); ?>
 	<legend>Get information about your property</legend>
-	<div class="span2">
+	<div class="span9">
 		<fieldset>
 			<div class="control-group">
 				<label for="address">Address *</label>
-				<input class="span2 valid-required FieldSend" id="address-parameter" name="address" <?=TOOLTIP_FIELD_BLANK;?> type="text">
+				<input class="valid-required FieldSend" id="address-parameter" name="address" <?=TOOLTIP_FIELD_BLANK;?> type="text">
 			</div>
 			<div class="control-group">
-				<label for="zip_code">City, State, Zip code *</label>
-				<input class="span2 digital valid-required FieldSend" id="zipcode-parameter" name="zip_code" <?=TOOLTIP_FIELD_BLANK;?> type="text">
+				<label>City, State, ZIP *</label>
+				<input class="FieldSend" id="city-parameter" value="" name="property_city" type="text" placeholder="City">
+				<input class="FieldSend" id="state-parameter" value="" name="property_state" type="text" placeholder="State">
+				<input class="digital valid-required FieldSend" id="zipcode-parameter" value="" name="property_zip" type="text" <?=TOOLTIP_FIELD_BLANK;?> placeholder="ZIP code">
 			</div>
 		</fieldset>
 	</div>

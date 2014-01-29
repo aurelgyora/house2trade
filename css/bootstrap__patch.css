@@ -90,6 +90,20 @@ button.btn-link { font-size: 0.8em; }
 	float: right;
 }
 
+span.buyer-number {
+	cursor: pointer;
+	position: relative;
+	top: 70px;
+	left: -165px;
+}
+
+span.seller-number{
+	cursor: pointer;
+	position: relative;
+	top: 70px;
+	left: -45px;
+}
+
 html { position: relative; min-height: 100%; }
 body { margin: 0 0 390px; /* bottom = footer height */ }
 footer { position: absolute; left: 0; bottom: 0; height: 390px; width: 100%; }

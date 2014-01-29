@@ -222,7 +222,7 @@ class MY_Controller extends CI_Controller{
 	
 	public function changePropertiesStatus($operationCode = 0,$sellerID = NULL,$buyerID = NULL,$propertiesIDs = NULL){
 		/*$operationCode = {
-			'0' => add to potential by;
+			'0' => add to potential buy;
 			'1' => owner or broker cancel match;
 			'7' => match approved by owner or broker;
 			'8' => match approved by All !!!;
@@ -859,4 +859,25 @@ class MY_Controller extends CI_Controller{
 		return $sql .= ' ORDER BY properties.address1 ASC, properties.state ASC, properties.zip_code ASC';
 	}
 
+	public function addSellersBuyersCounts($property,$property_id,$sellers,$buyers){
+		
+		$property['seller_number'] = $property['buyer_number'] = 0;
+		if(array_key_exists($property_id,$sellers)):
+			$property['seller_number'] = $sellers[$property_id];
+		endif;
+		if(array_key_exists($property_id,$buyers)):
+			$property['buyer_number'] = $buyers[$property_id];
+		endif;
+		return $property;
+	}
+	
+	public function allocationCount($array){
+		
+		$new_array = array();
+		foreach($array as $value):
+			$new_array[$value['property_id']] = $value['cnt'];
+		endforeach;
+		return $new_array;
+	}
+	
 }
