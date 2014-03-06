@@ -5,7 +5,7 @@
 	</div>
 	<div class="modal-body">
 		<p id="seen_property">Have you seen this property?</p>
-		<p id="not_seen_property">This very important that you see this property if you really want to buy it. Too many homeowners will relay on your decision.</p>
+		<p style="display: none;" id="not_seen_property">This very important that you see this property if you really want to buy it. Too many homeowners will relay on your decision.</p>
 		<p class="hidden">
 			Attention. Another user will depend on your decision, and it is important that you do it consciously.<br/>
 			Please  specify down payment:
