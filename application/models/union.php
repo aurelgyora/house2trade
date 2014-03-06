@@ -19,6 +19,10 @@ class Union extends CI_Model{
 	
 	function favoriteList($seller,$count,$from){
 		
+		if($seller == FALSE):
+			return NULL;
+		endif;
+		
 		$query = "SELECT properties.*,property_favorite.id AS fid FROM properties,property_favorite WHERE properties.id = property_favorite.buyer_id AND property_favorite.seller_id = $seller ORDER BY properties.address1,properties.state,properties.zip_code LIMIT $from,$count";
 		$query = $this->db->query($query);
 		$data = $query->result_array();
@@ -27,6 +31,10 @@ class Union extends CI_Model{
 	}
 	
 	function potentialByList($seller,$count,$from){
+		
+		if($seller == FALSE):
+			return NULL;
+		endif;
 		
 		$query = "SELECT properties.*,property_potentialby.id AS pbid FROM properties,property_potentialby WHERE properties.id = property_potentialby.buyer_id AND property_potentialby.seller_id = $seller ORDER BY properties.address1,properties.state,properties.zip_code LIMIT $from,$count";
 		$query = $this->db->query($query);

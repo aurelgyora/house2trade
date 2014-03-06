@@ -38,6 +38,10 @@
 							<?= ucfirst($properties[$i]['type']); ?> Home
 						</p>
 					</div>
+				<?php if($properties[$i]['status'] == 3):?>
+					<p class="property-owner">Property under contract</p>
+					<div class="clear"></div>
+				<?php endif;?>
 					<button class="btn btn-mini btn-link btn-property-remove-favorite" data-target="remove" data-src="<?=$properties[$i]['id'];?>">Remove from worth seeing</button>
 				<?php if($properties[$i]['status'] != 17):?>
 					<a href="#addToPotentialBy" role="button" class="btn btn-mini btn-link show-modal-confirm" data-propery-target="remove" data-propery-id="<?=$properties[$i]['id'];?>" data-toggle="modal">Add to potential buy</a>

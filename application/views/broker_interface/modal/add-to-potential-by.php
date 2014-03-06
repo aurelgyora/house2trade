@@ -4,7 +4,8 @@
 		<h3 id="myModalLabel">Add to potential buy</h3>
 	</div>
 	<div class="modal-body">
-		<p>Have you seen this property?</p>
+		<p id="seen_property">Have you seen this property?</p>
+		<p id="not_seen_property">This very important that you see this property if you really want to buy it. Too many homeowners will relay on your decision.</p>
 		<p class="hidden">
 			Attention. Another user will depend on your decision, and it is important that you do it consciously.<br/>
 			Please  specify down payment:
@@ -23,7 +24,8 @@
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button data-target="null" data-src="" class="btn btn-primary btn-comfirm-add-potential-by">Yes</button>
-		<button class="btn" data-dismiss="modal" aria-hidden="true">No</button>
+		<button id="modal-btn-yes" data-target="null" data-src="" class="btn btn-primary btn-comfirm-add-potential-by">Yes</button>
+		<button id="modal-btn-no" class="btn">No</button>
+		<button id="modal-btn-cancel" class="btn" style="display: none;" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>

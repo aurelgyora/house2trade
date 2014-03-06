@@ -1,6 +1,6 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Ajax_interface extends MY_Controller{
+class Ajax_interface extends MY_Controller {
 	
 	function __construct(){
 		
@@ -74,9 +74,7 @@ class Ajax_interface extends MY_Controller{
 			endif;
 		endif;
 	}
-	
 	/********************************************** OWNER *******************************************************/
-	
 	function showDetailProperty(){
 		
 		if(!$this->input->is_ajax_request()):
@@ -145,9 +143,7 @@ class Ajax_interface extends MY_Controller{
 		endif;
 		echo json_encode($json_request);
 	}
-	
 	/******************************************** company *******************************************************/
-	
 	function saveCompany(){
 		
 		if(!$this->input->is_ajax_request()):
@@ -182,9 +178,7 @@ class Ajax_interface extends MY_Controller{
 		endif;
 		echo json_encode($json_request);
 	}
-	
 	/******************************************** property *******************************************************/
-	
 	function propertyExist(){
 		
 		if(!$this->input->is_ajax_request()):
@@ -193,8 +187,14 @@ class Ajax_interface extends MY_Controller{
 		$json_request = array('status'=>TRUE,'message'=>'');
 		if($propertyData = $this->getPropertySingUpData($this->input->post('postdata'))):
 			$this->load->model('properties');
-			if($this->properties->properties_exits($propertyData['state'],$propertyData['zip_code'])):
-				$json_request['message'] = 'Property already exist';
+			if($propertyID = $this->properties->properties_exits($propertyData['state'],$propertyData['zip_code'])):
+				if($this->account['group'] == 2):
+					$json_request['message'] = 'Property already exists. You can check it '.anchor(BROKER_START_PAGE.'/information/'.$propertyID,'here',array('target'=>'_blank')).'.';
+				elseif($this->account['group'] == 3):
+					$json_request['message'] = 'Property already exists. You can check it '.anchor(OWNER_START_PAGE.'/information/'.$propertyID,'here',array('target'=>'_blank')).'.';
+				else:
+					$json_request['message'] = 'Property already exists.';
+				endif;
 				$json_request['status'] = FALSE;
 			endif;
 		endif;
@@ -223,7 +223,7 @@ class Ajax_interface extends MY_Controller{
 						'user_login'=>$propertyData['email'],'user_password'=>$propertyData['password'],'cabinet_link'=>site_url(OWNER_START_PAGE)
 					));
 					$registerNewUser = TRUE;
-					$json_request['message'] = 'The letter with registration confirmation was sent to homeowner email';
+					$json_request['message'] = 'Your property successfully added to our database. Now you can add photos of your property or you can do it later.<br/>The letter with registration confirmation was sent to homeowner email';
 				endif;
 				if($accountID):
 					$propertyData['user_id'] = $accountID;
@@ -236,7 +236,7 @@ class Ajax_interface extends MY_Controller{
 					$json_request['status'] = TRUE;
 					$this->session->set_userdata(array('current_property'=>$propertyID,'property_id'=>$propertyID));
 					if($registerNewUser === FALSE):
-						$json_request['message'] = 'Property added';
+						$json_request['message'] = 'Your property successfully added to our database. Now you can add photos of your property or you can do it later.';
 					endif;
 				endif;
 			else:
@@ -366,6 +366,7 @@ class Ajax_interface extends MY_Controller{
 						$ownerID = $this->users->read_field($accountID,'users','account');
 						$this->owners->update_field($ownerID,'fname',$propertyData['fname'],'owners');
 						$this->owners->update_field($ownerID,'lname',$propertyData['lname'],'owners');
+						$this->owners->update_field($ownerID,'phone',$propertyData['phone'],'owners');
 					endif;
 				endif;
 				$this->properties->update_record($this->session->userdata('property_id'),$propertyData);
@@ -507,9 +508,7 @@ class Ajax_interface extends MY_Controller{
 		endif;
 		return FALSE;
 	}
-	
 	/************************************** favorite & potential buy **********************************************/
-	
 	function excludeProperty(){
 		
 		if(!$this->input->is_ajax_request()):
@@ -651,9 +650,7 @@ class Ajax_interface extends MY_Controller{
 		endif;
 		echo json_encode($json_request);
 	}
-	
 	/******************************************** accounts *******************************************************/
-	
 	function login(){
 		
 		if(!$this->input->is_ajax_request()):

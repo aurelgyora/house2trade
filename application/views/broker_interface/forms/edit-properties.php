@@ -1,16 +1,20 @@
-<?=form_open($this->uri->uri_string(),array('class'=>'form-horizontal form-edit-main-property')); ?>
+<?=form_open(uri_string(),array('class'=>'form-horizontal form-edit-main-property')); ?>
 	<legend>HomeOwner data</legend>
 	<fieldset>
 		<div class="span4">
 			<div class="control-group">
-				<label for="fname">First Name*: </label>
-				<input class="span2 valid-required FieldSend" name="fname" type="text" value="<?=$property['owner']['fname'];?>">
+				<label for="fname">First Name: </label>
+				<input class="span2 FieldSend" name="fname" type="text" value="<?=$property['owner']['fname'];?>">
+			</div>
+			<div class="control-group">
+				<label for="lname">Last Name: </label>
+				<input class="span2 FieldSend" name="lname" type="text" value="<?=$property['owner']['lname'];?>">
 			</div>
 		</div>
 		<div class="span4">
 			<div class="control-group">
-				<label for="lname">Last Name*: </label>
-				<input class="span2 valid-required FieldSend" name="lname" type="text" value="<?=$property['owner']['lname'];?>">
+				<label for="phone">Phone: </label>
+				<input id="login-phone" class="span2 FieldSend" name="phone" type="text" value="<?=$property['owner']['phone'];?>">
 			</div>
 		</div>
 	</fieldset>

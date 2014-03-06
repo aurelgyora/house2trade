@@ -1,6 +1,6 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Owners extends MY_Model{
+class Owners extends MY_Model {
 	
 	var $id = 0; var $seller = 0;
 	var $fname = ''; var $lname = ''; var $cell = ''; var $phone = '';
@@ -38,5 +38,4 @@ class Owners extends MY_Model{
 		$this->db->update('owners');
 		return $this->db->affected_rows();
 	}
-	
 }

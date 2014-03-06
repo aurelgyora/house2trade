@@ -461,4 +461,20 @@ $(function(){
 			}
 		});
 	});
+	//----------------------------------------------------------------------------------
+	$("#modal-btn-no").click(function(){
+		$("#seen_property").fadeOut('fast',function(){
+			$("#not_seen_property").fadeIn('fast');
+			$("#modal-btn-yes").hide();
+			$("#modal-btn-no").hide();
+			$("#modal-btn-cancel").show();
+		});
+	});
+	$("#addToPotentialBy").on('hidden',function(){
+		$("#modal-btn-yes").show();
+		$("#modal-btn-no").show();
+		$("#modal-btn-cancel").hide();
+		$("#seen_property").show();
+		$("#not_seen_property").hide();
+	});
 });

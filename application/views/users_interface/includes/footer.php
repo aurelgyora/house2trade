@@ -5,7 +5,7 @@
 				<h3 class="footer-title">Properties</h3>
 				<div class="menu-container">
 					<ul id="menu-properties" class="menu">
-						<li><?=anchor('search-for-one','Search for one');?></li>
+						<!--<li><?=anchor('search-for-one','Search for one');?></li>-->
 						<li><?=anchor('advanced-search','Advanced search');?></li>
 						<li><?=anchor('lastest-offers','Lastest offers');?></li>
 						<li><?=anchor('properties-for-sale','Properties for sale');?></li>

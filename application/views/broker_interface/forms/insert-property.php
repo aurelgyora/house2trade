@@ -1,22 +1,26 @@
-<?=form_open($this->uri->uri_string(),array('class'=>'form-horizontal','id'=>'form-property-register')); ?>
+<?=form_open(uri_string(),array('class'=>'form-horizontal','id'=>'form-property-register')); ?>
 	<legend>Add property manually - Step <span id="span-step-number">1</span></legend>
 	<div class="div-register-property register-property-step-1">
 		<legend>HomeOwner data</legend>
 		<fieldset>
 			<div class="span4">
 				<div class="control-group">
-					<label for="fname">First Name*: </label>
-					<input id="property-fname" class="span2 valid-required FieldSend" name="fname" type="text" value="">
+					<label for="fname">First Name: </label>
+					<input id="property-fname" class="span2 FieldSend" name="fname" type="text" value="">
 				</div>
 				<div class="control-group">
-					<label for="lname">Last Name*: </label>
-					<input id="property-lname" class="span2 valid-required FieldSend" name="lname" type="text" value="">
+					<label for="lname">Last Name: </label>
+					<input id="property-lname" class="span2 FieldSend" name="lname" type="text" value="">
 				</div>
 			</div>
 			<div class="span4">
 				<div class="control-group">
 					<label for="email">Email*: </label>
 					<input id="login-email" class="span2 valid-required FieldSend" name="email" type="text" value="">
+				</div>
+				<div class="control-group">
+					<label for="phone">Phone: </label>
+					<input id="login-phone" class="span2 FieldSend" name="phone" type="text" value="">
 				</div>
 			</div>
 		</fieldset>

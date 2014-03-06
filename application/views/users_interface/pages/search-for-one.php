@@ -15,7 +15,7 @@
 			</div>
 			<div class="clear"> </div>
 			<div class="grid_10">
-				<?=$page['content'];>
+				<?=$page['content'];?>
 			</div>
 			<div class="clear"> </div>
 		</div>
