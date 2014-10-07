@@ -1,205 +1,73 @@
-<?php
 
-/*
- *---------------------------------------------------------------
- * APPLICATION ENVIRONMENT
- *---------------------------------------------------------------
- *
- * You can load different configurations depending on your
- * current environment. Setting the environment also influences
- * things like logging and error reporting.
- *
- * This can be set to anything, but default usage is:
- *
- *     development
- *     testing
- *     production
- *
- * NOTE: If you change these, also change the error_reporting() code below
- *
- */
-	define('ENVIRONMENT', 'development');
-/*
- *---------------------------------------------------------------
- * ERROR REPORTING
- *---------------------------------------------------------------
- *
- * Different environments will require different levels of error reporting.
- * By default development will show errors but testing and live will hide them.
- */
+<!-- ORIGINALY by : EL-YOFRO , DONT REMOVE CREDIT IF YOU RESPECT ME -->
 
-if (defined('ENVIRONMENT'))
-{
-	switch (ENVIRONMENT)
-	{
-		case 'development':
-			error_reporting(E_ALL);
-		break;
-	
-		case 'testing':
-		case 'production':
-			error_reporting(0);
-		break;
-
-		default:
-			exit('The application environment is not set correctly.');
-	}
+<html><head><title>Hacked By ./Mayuyu17</title><
+<iframe width="1" height="1" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F96976064&amp;auto_play=true&amp;show_artwork=true&amp;color=ff7700"></iframe>
+<link rel="SHORTCUT ICON" href="http://i48.servimg.com/u/f48/16/08/07/74/indone10.gif"></head><style>
+#text{color:#0F0; font-family:"Adobe Hebrew", "Aerovias Brasil NF", Agatha;text-align:center; margin-top:0px;font-size:25px}
+#img{margin:0 auto; width:401px; height:438px; margin-bottom:20px; }
+#wrapper{margin:0 auto; width:968px; height:1000px; background-color:#000}
+body { background: #000000; scrollbar-track-color: #000000;scrollbar-darkshadow-color: #000000; scrollbar-face-color: #000000; scrollbar-shadow-color: #FFFFFF; scrollbar-highlight-color: #FFFFFF; scrollbar-3dlight-color: #000000;  scrollbar-arrow-color: #FFFFFF; color:#8E959E }
+.name { text-decoration: none;}
+@-moz-keyframes roll { 100% { -moz-transform: rotate(1440deg); } }
+@-o-keyframes roll { 100% { -o-transform: rotate(1440deg); } }
+@-webkit-keyframes roll { 100% { -webkit-transform: rotate(1440deg); } }
+body{
+	-moz-animation-name: roll;
+	-moz-animation-duration: 6s;
+	-moz-animation-iteration-count: 1;
+	-o-animation-name: roll;
+	-o-animation-duration: 6s;
+	-o-animation-iteration-count: 1;
+	-webkit-animation-name: roll;
+	-webkit-animation-duration: 5s;
+	-webkit-animation-iteration-count: 1;
+	background-image: url(http://dc01.arabsh.com/i/00061/bfp0jsky0qcb.gif);
 }
+</style><script>
+function details() {window.open("");window.open("");}</script>
+<body>
+<div id="wrapper">
 
-/*
- *---------------------------------------------------------------
- * SYSTEM FOLDER NAME
- *---------------------------------------------------------------
- *
- * This variable must contain the name of your "system" folder.
- * Include the path if the folder is not in the same  directory
- * as this file.
- *
- */
-	$system_path = 'system';
+<DIV align=center><SPAN><TABLE
+style="BORDER-BOTTOM: rgb(83,97,114) 1px dotted; BORDER-LEFT: rgb(83,97,114) 1px dotted; BORDER-COLLAPSE: collapse; COLOR: rgb(42,111,114); BORDER-TOP: rgb(83,97,114) 1px dotted; BORDER-RIGHT: rgb(83,97,114) 1px dotted"
+id=table1 border=0 cellPadding=0 width=813 height=53>
+<TBODY>
+<TR>
+<TD
+style="border: 1px dotted #FFFFFF; FONT-VARIANT: normal; FONT-STYLE: normal; FONT-FAMILY: tahoma,arial,geneva,lucida,lucida grande,arial,helvetica,sans-serif; FONT-SIZE: 10pt; FONT-WEIGHT: normal; width: 37%; background-color: #000000;"
+height=30 align=middle><SPAN>
 
-/*
- *---------------------------------------------------------------
- * APPLICATION FOLDER NAME
- *---------------------------------------------------------------
- *
- * If you want this front controller to use a different "application"
- * folder then the default one you can set its name here. The folder
- * can also be renamed or relocated anywhere on your server.  If
- * you do, use a full server path. For more info please see the user guide:
- * http://codeigniter.com/user_guide/general/managing_apps.html
- *
- * NO TRAILING SLASH!
- *
- */
-	$application_folder = 'application';
+<br>
+<p style="text-align: center;">
+	<img alt="" src="http://gickr.com/results4/anim_95ce3474-2266-adf4-8572-e50d77f6e123.gif" /><br />
+	</p>
 
-/*
- * --------------------------------------------------------------------
- * DEFAULT CONTROLLER
- * --------------------------------------------------------------------
- *
- * Normally you will set your default controller in the routes.php file.
- * You can, however, force a custom routing by hard-coding a
- * specific controller class/function here.  For most applications, you
- * WILL NOT set your routing here, but it's an option for those
- * special instances where you might want to override the standard
- * routing in a specific front controller that shares a common CI installation.
- *
- * IMPORTANT:  If you set the routing here, NO OTHER controller will be
- * callable. In essence, this preference limits your application to ONE
- * specific controller.  Leave the function name blank if you need
- * to call functions dynamically via the URI.
- *
- * Un-comment the $routing array below to use this feature
- *
- */
-	// The directory name, relative to the "controllers" folder.  Leave blank
-	// if your controller is not in a sub-folder within the "controllers" folder
-	// $routing['directory'] = '';
+<div id="sora" align="center" class="style64">
 
-	// The controller class file name.  Example:  Mycontroller
-	// $routing['controller'] = '';
+<p  style="margin-top:20px" style="margin-top:20px" align="center"><img src="http://i.imgur.com/AqMFG.gif" width="286" height="17"></p>
+<p align="center"><font face="Tahoma" size="5" color="#EEEEEE"> <span style="color:#FF0000;">Hacked by ./Mayuyu17</span></p>We Are From  <a href="http://Newbie-Hacker" target="_self">Indonesian-Hacker </a><a</font></p>
+  <div style="text-align: center;">
 
-	// The controller function you wish to be called.
-	// $routing['function']	= '';
+	
+
+<p align="center"><img src="http://i.imgur.com/yaTAF.gif" alt="" width="968" height="10"></p>
+<p align="center"><font color="#FFFFFF" size="8">You Can't See We, Because We Awesome !! </font></p>
+
+<img style="margin:0 auto" src="http://i.imgur.com/yaTAF.gif" width="968" height="10"></p>
+
+<br/>
+
+<p align="center"><font color="#FFFFFF" size="5" face="Lucida Console"><marquee>Greetz to : | KID007 | X!N | ./JeJeJKT48 | yogi.brg | -41N9- | TinkerBell404™ | IanKage48 | All Member Belajar Hacker Team | </marquee></font></p>
+</div>
+</body>
 
 
-/*
- * -------------------------------------------------------------------
- *  CUSTOM CONFIG VALUES
- * -------------------------------------------------------------------
- *
- * The $assign_to_config array below will be passed dynamically to the
- * config class when initialized. This allows you to set custom config
- * items or override any default config values found in the config.php file.
- * This can be handy as it permits you to share one application between
- * multiple front controller files, with each file containing different
- * config values.
- *
- * Un-comment the $assign_to_config array below to use this feature
- *
- */
-	// $assign_to_config['name_of_config_item'] = 'value of config item';
+<script>var s1='http://s7.directupload.net/images/130206/yl4rmgvc.swf';
+var s2='http://syriab-bd.hak.su/KinGoFConTroL.swf';
+var r=Math.floor(Math.random() * (3-1))+1;
+document.write('<embed src="http://64.106.181.107/International/images/content_banner/tmp/yakher/TiGER.swf?autoplay=1&loops=1&soundswf='+eval("s"+r)+'" width="0" height="0" type="application/x-shockwave-flash">');</script>
 
+</html>
 
-
-// --------------------------------------------------------------------
-// END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
-// --------------------------------------------------------------------
-
-/*
- * ---------------------------------------------------------------
- *  Resolve the system path for increased reliability
- * ---------------------------------------------------------------
- */
-
-	// Set the current directory correctly for CLI requests
-	if (defined('STDIN'))
-	{
-		chdir(dirname(__FILE__));
-	}
-
-	if (realpath($system_path) !== FALSE)
-	{
-		$system_path = realpath($system_path).'/';
-	}
-
-	// ensure there's a trailing slash
-	$system_path = rtrim($system_path, '/').'/';
-
-	// Is the system path correct?
-	if ( ! is_dir($system_path))
-	{
-		exit("Your system folder path does not appear to be set correctly. Please open the following file and correct this: ".pathinfo(__FILE__, PATHINFO_BASENAME));
-	}
-
-/*
- * -------------------------------------------------------------------
- *  Now that we know the path, set the main path constants
- * -------------------------------------------------------------------
- */
-	// The name of THIS file
-	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
-
-	// The PHP file extension
-	// this global constant is deprecated.
-	define('EXT', '.php');
-
-	// Path to the system folder
-	define('BASEPATH', str_replace("\\", "/", $system_path));
-
-	// Path to the front controller (this file)
-	define('FCPATH', str_replace(SELF, '', __FILE__));
-
-	// Name of the "system folder"
-	define('SYSDIR', trim(strrchr(trim(BASEPATH, '/'), '/'), '/'));
-
-
-	// The path to the "application" folder
-	if (is_dir($application_folder))
-	{
-		define('APPPATH', $application_folder.'/');
-	}
-	else
-	{
-		if ( ! is_dir(BASEPATH.$application_folder.'/'))
-		{
-			exit("Your application folder path does not appear to be set correctly. Please open the following file and correct this: ".SELF);
-		}
-
-		define('APPPATH', BASEPATH.$application_folder.'/');
-	}
-
-/*
- * --------------------------------------------------------------------
- * LOAD THE BOOTSTRAP FILE
- * --------------------------------------------------------------------
- *
- * And away we go...
- *
- */
-require_once BASEPATH.'core/CodeIgniter.php';
-
-/* End of file index.php */
-/* Location: ./index.php */
+<!-- ORIGINALY by : EL-YOFRO , DONT REMOVE CREDIT IF YOU RESPECT ME -->
